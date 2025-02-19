@@ -1,0 +1,842 @@
+info:
+  title: Isaacus API
+  version: 0.1.0
+  description: A RESTful API for using Isaacus legal AI models, data and other solutions.
+  termsOfService: https://isaacus.com/terms
+  contact:
+    name: Isaacus Support
+    url: https://isaacus.com/support
+    email: support@isaacus.com
+  license:
+    name: Apache 2.0
+    url: https://github.com/isaacus-dev/openapi/blob/main/LICENSE
+openapi: 3.1.0
+servers:
+- url: https://api.isaacus.com/v1
+paths:
+  /classifications/universal: 
+    post:
+      tags:
+      - Classifications
+      summary: Universal classification
+      description: Classify the relevance of a legal document to a query using an
+        Isaacus universal legal AI classifier.
+      operationId: CreateUniversalClassification
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UniversalClassificationRequest'
+        required: true
+      responses:
+        '200':
+          description: The classification of the text.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UniversalClassificationResponse'
+        '400':
+          description: The request was invalid or could not be processed.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+              examples:
+                Validation error:
+                  summary: Validation error
+                  value:
+                    type: about:blank
+                    title: Validation error
+                    status: 400
+                    detail: The request was invalid or could not be processed.
+                    instance: null
+                Invalid IQL query error:
+                  summary: Invalid IQL query error
+                  value:
+                    type: about:blank
+                    title: Invalid IQL query error
+                    status: 400
+                    detail: The provided query is not valid Isaacus Query Language
+                      (IQL) syntax.
+                    instance: null
+                Query too long error:
+                  summary: Query too long error
+                  value:
+                    type: about:blank
+                    title: Query too long error
+                    status: 400
+                    detail: The provided query exceeds the model's maximum input length
+                      less overhead.
+                    instance: null
+        '413':
+          description: The request is larger than the server is willing or able to
+            process.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/RequestTooLargeError'
+              examples:
+                Request too large error:
+                  summary: Request too large error
+                  value:
+                    type: about:blank
+                    title: Request too large error
+                    status: 413
+                    detail: The request is larger than the server is willing or able
+                      to process.
+                    instance: null
+        '403':
+          description: You are not allowed to access this resource.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AccessForbiddenError'
+              examples:
+                Access forbidden error:
+                  summary: Access forbidden error
+                  value:
+                    type: about:blank
+                    title: Access forbidden error
+                    status: 403
+                    detail: You are not allowed to access this resource.
+                    instance: null
+                No subscription error:
+                  summary: No subscription error
+                  value:
+                    type: about:blank
+                    title: No subscription error
+                    status: 403
+                    detail: You do not have an active subscription to our zero-flat
+                      fee, usage-based API plan.
+                    instance: null
+        '500':
+          description: An unexpected error occurred while processing the request.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+              examples:
+                Internal server error:
+                  summary: Internal server error
+                  value:
+                    type: about:blank
+                    title: Internal server error
+                    status: 500
+                    detail: An unexpected error occurred while processing the request.
+                    instance: null
+                Chunking timeout error:
+                  summary: Chunking timeout error
+                  value:
+                    type: about:blank
+                    title: Chunking timeout error
+                    status: 500
+                    detail: Chunking timed out. Did you try to chunk a very large
+                      text with a very low chunk size or very little variation in
+                      levels of whitespace?
+                    instance: null
+        '402':
+          description: Your account is overdue, please pay any outstanding invoices
+            to continue using our services.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AccountOverdueError'
+              examples:
+                Account overdue error:
+                  summary: Account overdue error
+                  value:
+                    type: about:blank
+                    title: Account overdue error
+                    status: 402
+                    detail: Your account is overdue, please pay any outstanding invoices
+                      to continue using our services.
+                    instance: null
+        '401':
+          description: The API key you provided does not exist, is expired or revoked,
+            or is not authorized to access this resource.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedAPIKeyError'
+              examples:
+                Unauthorized API key error:
+                  summary: Unauthorized API key error
+                  value:
+                    type: about:blank
+                    title: Unauthorized API key error
+                    status: 401
+                    detail: The API key you provided does not exist, is expired or
+                      revoked, or is not authorized to access this resource.
+                    instance: null
+                Incorrect API key error:
+                  summary: Incorrect API key error
+                  value:
+                    type: about:blank
+                    title: Incorrect API key error
+                    status: 401
+                    detail: The API key you provided does not exist or is expired
+                      or revoked.
+                    instance: null
+      deprecated: false
+components:
+  schemas:
+    AccessForbiddenError:
+      properties:
+        type:
+          type: string
+          minLength: 1
+          description: A URI reference that identifies the problem type.
+          default: about:blank
+          examples:
+          - about:blank
+        title:
+          type: string
+          minLength: 1
+          description: A short, human-readable summary of the problem type.
+          default: Access forbidden error
+          examples:
+          - Access forbidden error
+        status:
+          type: integer
+          const: 403
+          description: The HTTP status code generated by the origin server for this
+            occurrence of the problem.
+          default: 403
+          examples:
+          - 403
+        detail:
+          oneOf:
+          - type: string
+            title: Non-empty string
+            description: A string with at least one character.
+            default: You are not allowed to access this resource.
+            examples:
+            - A string.
+          - type: 'null'
+          description: A human-readable explanation specific to this occurrence of
+            the problem.
+          default: You are not allowed to access this resource.
+          examples:
+          - You are not allowed to access this resource.
+        instance:
+          oneOf:
+          - type: string
+            title: Non-empty string
+            description: A string with at least one character.
+            examples:
+            - A string.
+          - type: 'null'
+          description: A URI reference that identifies the specific occurrence of
+            the problem.
+          examples:
+          - null
+      type: object
+      required: []
+      title: Access forbidden error
+      description: An RFC 7807 problem detail object.
+      examples:
+      - type: about:blank
+        title: Access forbidden error
+        status: 403
+        detail: You are not allowed to access this resource.
+        instance: null
+    AccountOverdueError:
+      properties:
+        type:
+          type: string
+          minLength: 1
+          description: A URI reference that identifies the problem type.
+          default: about:blank
+          examples:
+          - about:blank
+        title:
+          type: string
+          minLength: 1
+          description: A short, human-readable summary of the problem type.
+          default: Account overdue error
+          examples:
+          - Account overdue error
+        status:
+          type: integer
+          const: 402
+          description: The HTTP status code generated by the origin server for this
+            occurrence of the problem.
+          default: 402
+          examples:
+          - 402
+        detail:
+          oneOf:
+          - type: string
+            title: Non-empty string
+            description: A string with at least one character.
+            default: Your account is overdue, please pay any outstanding invoices
+              to continue using our services.
+            examples:
+            - A string.
+          - type: 'null'
+          description: A human-readable explanation specific to this occurrence of
+            the problem.
+          default: Your account is overdue, please pay any outstanding invoices to
+            continue using our services.
+          examples:
+          - Your account is overdue, please pay any outstanding invoices to continue
+            using our services.
+        instance:
+          oneOf:
+          - type: string
+            title: Non-empty string
+            description: A string with at least one character.
+            examples:
+            - A string.
+          - type: 'null'
+          description: A URI reference that identifies the specific occurrence of
+            the problem.
+          examples:
+          - null
+      type: object
+      required: []
+      title: Account overdue error
+      description: An RFC 7807 problem detail object.
+      examples:
+      - type: about:blank
+        title: Account overdue error
+        status: 402
+        detail: Your account is overdue, please pay any outstanding invoices to continue
+          using our services.
+        instance: null
+    ChunkingOptions:
+      properties:
+        size:
+          oneOf:
+          - type: integer
+            minimum: 1.0
+            title: Positive integer
+            description: A whole number greater than or equal to 1.
+            examples:
+            - 1
+          - type: 'null'
+          description: 'The maximum number of tokens allowed in a chunk.
+
+
+            If `null`, the maximum input length of the model will be used less overhead.'
+          examples:
+          - 512
+        overlap_ratio:
+          oneOf:
+          - type: number
+            exclusiveMaximum: 1.0
+            minimum: 0.0
+            title: Unit interval (closed, open)
+            description: A number greater than or equal to 0 and less than 1.
+            examples:
+            - 0.5
+          - type: 'null'
+          description: 'The proportion of the chunk size by which chunks should overlap.
+
+
+            The ratio must be less than 1.
+
+
+            If `null`, no overlapping will occur unless `overlap_tokens` is set.
+
+
+            `overlap_ratio` and `overlap_tokens` cannot both be set.'
+          examples:
+          - 0.1
+          - null
+        overlap_tokens:
+          oneOf:
+          - type: integer
+            exclusiveMinimum: -1.0
+            title: Non-negative integer
+            description: A whole number greater than -1.
+            examples:
+            - 0
+          - type: 'null'
+          description: 'The number of tokens by which chunks should overlap.
+
+
+            If `null`, no overlapping will occur unless `overlap_ratio` is set.
+
+
+            `overlap_tokens` and `overlap_ratio` cannot both be set.'
+          examples:
+          - null
+          - 10
+      type: object
+      required: []
+      title: Chunking options
+      description: Options for how to split text into smaller chunks.
+      examples:
+      - size: 512
+        overlap_ratio: 0.1
+      - size: 512
+        overlap_tokens: 10
+      - size: 512
+    InternalServerError:
+      properties:
+        type:
+          type: string
+          minLength: 1
+          description: A URI reference that identifies the problem type.
+          default: about:blank
+          examples:
+          - about:blank
+        title:
+          type: string
+          minLength: 1
+          description: A short, human-readable summary of the problem type.
+          default: Internal server error
+          examples:
+          - Internal server error
+        status:
+          type: integer
+          const: 500
+          description: The HTTP status code generated by the origin server for this
+            occurrence of the problem.
+          default: 500
+          examples:
+          - 500
+        detail:
+          oneOf:
+          - type: string
+            title: Non-empty string
+            description: A string with at least one character.
+            default: An unexpected error occurred while processing the request.
+            examples:
+            - A string.
+          - type: 'null'
+          description: A human-readable explanation specific to this occurrence of
+            the problem.
+          default: An unexpected error occurred while processing the request.
+          examples:
+          - An unexpected error occurred while processing the request.
+        instance:
+          oneOf:
+          - type: string
+            title: Non-empty string
+            description: A string with at least one character.
+            examples:
+            - A string.
+          - type: 'null'
+          description: A URI reference that identifies the specific occurrence of
+            the problem.
+          examples:
+          - null
+      type: object
+      required: []
+      title: Internal server error
+      description: An RFC 7807 problem detail object.
+      examples:
+      - type: about:blank
+        title: Internal server error
+        status: 500
+        detail: An unexpected error occurred while processing the request.
+        instance: null
+    RequestTooLargeError:
+      properties:
+        type:
+          type: string
+          minLength: 1
+          description: A URI reference that identifies the problem type.
+          default: about:blank
+          examples:
+          - about:blank
+        title:
+          type: string
+          minLength: 1
+          description: A short, human-readable summary of the problem type.
+          default: Request too large error
+          examples:
+          - Request too large error
+        status:
+          type: integer
+          const: 413
+          description: The HTTP status code generated by the origin server for this
+            occurrence of the problem.
+          default: 413
+          examples:
+          - 413
+        detail:
+          oneOf:
+          - type: string
+            title: Non-empty string
+            description: A string with at least one character.
+            default: The request is larger than the server is willing or able to process.
+            examples:
+            - A string.
+          - type: 'null'
+          description: A human-readable explanation specific to this occurrence of
+            the problem.
+          default: The request is larger than the server is willing or able to process.
+          examples:
+          - The request is larger than the server is willing or able to process.
+        instance:
+          oneOf:
+          - type: string
+            title: Non-empty string
+            description: A string with at least one character.
+            examples:
+            - A string.
+          - type: 'null'
+          description: A URI reference that identifies the specific occurrence of
+            the problem.
+          examples:
+          - null
+      type: object
+      required: []
+      title: Request too large error
+      description: An RFC 7807 problem detail object.
+      examples:
+      - type: about:blank
+        title: Request too large error
+        status: 413
+        detail: The request is larger than the server is willing or able to process.
+        instance: null
+    UnauthorizedAPIKeyError:
+      properties:
+        type:
+          type: string
+          minLength: 1
+          description: A URI reference that identifies the problem type.
+          default: about:blank
+          examples:
+          - about:blank
+        title:
+          type: string
+          minLength: 1
+          description: A short, human-readable summary of the problem type.
+          default: Unauthorized API key error
+          examples:
+          - Unauthorized API key error
+        status:
+          type: integer
+          const: 401
+          description: The HTTP status code generated by the origin server for this
+            occurrence of the problem.
+          default: 401
+          examples:
+          - 401
+        detail:
+          oneOf:
+          - type: string
+            title: Non-empty string
+            description: A string with at least one character.
+            default: The API key you provided does not exist, is expired or revoked,
+              or is not authorized to access this resource.
+            examples:
+            - A string.
+          - type: 'null'
+          description: A human-readable explanation specific to this occurrence of
+            the problem.
+          default: The API key you provided does not exist, is expired or revoked,
+            or is not authorized to access this resource.
+          examples:
+          - The API key you provided does not exist, is expired or revoked, or is
+            not authorized to access this resource.
+        instance:
+          oneOf:
+          - type: string
+            title: Non-empty string
+            description: A string with at least one character.
+            examples:
+            - A string.
+          - type: 'null'
+          description: A URI reference that identifies the specific occurrence of
+            the problem.
+          examples:
+          - null
+      type: object
+      required: []
+      title: Unauthorized API key error
+      description: An RFC 7807 problem detail object.
+      examples:
+      - type: about:blank
+        title: Unauthorized API key error
+        status: 401
+        detail: The API key you provided does not exist, is expired or revoked, or
+          is not authorized to access this resource.
+        instance: null
+    UniversalClassificationChunk:
+      properties:
+        text:
+          type: string
+          minLength: 1
+          description: The text of the chunk.
+          examples:
+          - I agree not to tell anyone about the document.
+        start:
+          type: integer
+          exclusiveMinimum: -1.0
+          description: The start index of the chunk in the original text.
+          examples:
+          - 0
+        end:
+          type: integer
+          minimum: 1.0
+          description: The end index of the chunk in the original text.
+          examples:
+          - 46
+        confidence:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          description: 'The model''s score of the likelihood that the query expressed
+            about the chunk is supported by the chunk.
+
+
+            A score greater than `0.5` indicates that the chunk supports the query,
+            while a score less than `0.5` indicates that the chunk does not support
+            the query.'
+          examples:
+          - 0.7481262778280844
+      type: object
+      required:
+      - confidence
+      - end
+      - start
+      - text
+      title: Universal classification chunk
+      description: A chunk of a text that has been classified by an Isaacus universal
+        legal AI classifier.
+      examples:
+      - text: I agree not to tell anyone about the document.
+        start: 0
+        end: 46
+        confidence: 0.7481262778280844
+    UniversalClassificationRequest:
+      properties:
+        model:
+          type: string
+          enum:
+          - kanon-uniclassifier
+          - kanon-uniclassifier-mini
+          description: The ID of the model to use for universal classification.
+          examples:
+          - kanon-uniclassifier
+        query:
+          type: string
+          maxLength: 5000
+          minLength: 1
+          pattern: \S
+          description: 'The Isaacus Query Language (IQL) query or, if IQL is disabled,
+            the statement, to evaluate the text against.
+
+
+            The query must contain at least one non-whitespace character.'
+          examples:
+          - This is a confidentiality clause.
+          - '{IS confidentiality clause} AND {IS clause obligating "Supplier"} AND
+            {IS unilateral clause}'
+        text:
+          type: string
+          maxLength: 10000000
+          minLength: 1
+          pattern: \S
+          description: 'The text to classify.
+
+
+            The text must contain at least one non-whitespace character.'
+          examples:
+          - I agree not to tell anyone about the document.
+        is_iql:
+          type: boolean
+          description: Whether the query should be interpreted as an Isaacus Query
+            Language (IQL) query or else as a statement.
+          default: true
+          examples:
+          - true
+        scoring_method:
+          type: string
+          enum:
+          - auto
+          - chunk_max
+          - chunk_avg
+          - chunk_min
+          description: 'The method to use for producing an overall confidence score.
+
+
+            `auto` is the default scoring method and is recommended for most use cases.
+            Currently, it is equivalent to `chunk_max`. In the future, it will automatically
+            select the best method based on the model and input.
+
+
+            `chunk_max` uses the highest confidence score of all of the text''s chunks.
+
+
+            `chunk_avg` averages the confidence scores of all of the text''s chunks.
+
+
+            `chunk_min` uses the lowest confidence score of all of the text''s chunks.'
+          default: auto
+          examples:
+          - auto
+        chunking_options:
+          oneOf:
+          - $ref: '#/components/schemas/ChunkingOptions'
+          - type: 'null'
+          description: 'Settings for how the text should be chunked into smaller segments
+            before classification.
+
+
+            If `null`, the text will not be chunked and will instead be truncated
+            to the maximum input length of the model less overhead if found to exceed
+            that limit.'
+          examples:
+          - size: 512
+            overlap_ratio: null
+            overlap_tokens: null
+      type: object
+      required:
+      - model
+      - query
+      - text
+      title: Universal classification request
+      description: A request to classify the relevance of a legal document to a query
+        using an Isaacus universal legal AI classifier.
+      examples:
+      - model: kanon-uniclassifier
+        query: This is a confidentiality clause.
+        text: I agree not to tell anyone about the document.
+    UniversalClassificationResponse:
+      properties:
+        score:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          description: 'A score of the likelihood that the query expressed about the
+            text is supported by the text.
+
+
+            A score greater than `0.5` indicates that the text supports the query,
+            while a score less than `0.5` indicates that the text does not support
+            the query.'
+          examples:
+          - 0.7481262778280844
+        chunks:
+          oneOf:
+          - items:
+              $ref: '#/components/schemas/UniversalClassificationChunk'
+            type: array
+          - type: 'null'
+          description: 'The text broken into chunks, each with their own confidence
+            score.
+
+
+            If no chunking occurred, this will be `null`.'
+          examples:
+          - - text: I agree not to tell anyone about the document.
+              start: 0
+              end: 46
+              confidence: 0.7481262778280844
+        usage:
+          $ref: '#/components/schemas/UniversalClassificationUsage'
+      type: object
+      required:
+      - chunks
+      - score
+      - usage
+      title: Universal classification response
+      description: A classification of the relevance of a legal document to a query
+        produced by an Isaacus universal legal AI classifier.
+      examples:
+      - score: 0.7481262778280844
+        chunks:
+        - text: I agree not to tell anyone about the document.
+          start: 0
+          end: 46
+          confidence: 0.7481262778280844
+        usage:
+          input_tokens: 19
+    UniversalClassificationUsage:
+      properties:
+        input_tokens:
+          type: integer
+          minimum: 1.0
+          description: The number of tokens inputted to the model.
+          examples:
+          - 19
+      type: object
+      required:
+      - input_tokens
+      title: Universal classification usage
+      description: Statistics about the usage of resources in the process of classifying
+        the text.
+      examples:
+      - input_tokens: 19
+    ValidationError:
+      properties:
+        type:
+          type: string
+          minLength: 1
+          description: A URI reference that identifies the problem type.
+          default: about:blank
+          examples:
+          - about:blank
+        title:
+          type: string
+          minLength: 1
+          description: A short, human-readable summary of the problem type.
+          default: Validation error
+          examples:
+          - Validation error
+        status:
+          type: integer
+          const: 400
+          description: The HTTP status code generated by the origin server for this
+            occurrence of the problem.
+          default: 400
+          examples:
+          - 400
+        detail:
+          oneOf:
+          - type: string
+            title: Non-empty string
+            description: A string with at least one character.
+            default: The request was invalid or could not be processed.
+            examples:
+            - A string.
+          - type: 'null'
+          description: A human-readable explanation specific to this occurrence of
+            the problem.
+          default: The request was invalid or could not be processed.
+          examples:
+          - The request was invalid or could not be processed.
+        instance:
+          oneOf:
+          - type: string
+            title: Non-empty string
+            description: A string with at least one character.
+            examples:
+            - A string.
+          - type: 'null'
+          description: A URI reference that identifies the specific occurrence of
+            the problem.
+          examples:
+          - null
+      type: object
+      required: []
+      title: Validation error
+      description: An RFC 7807 problem detail object.
+      examples:
+      - type: about:blank
+        title: Validation error
+        status: 400
+        detail: The request was invalid or could not be processed.
+        instance: null
+  securitySchemes:
+    APIKeyBearerTokenAuth:
+      type: http
+      description: 'An Isaacus-issued API key passed as a bearer token via the `Authorization`
+        header in the format `Authorization: Bearer YOUR_API_KEY`.'
+      scheme: bearer
+      bearerFormat: iuak_v1_APIKEYSECRET_CHECKSUM
+security:
+- APIKeyBearerTokenAuth: []
+tags:
+- name: Classifications
+  description: Classify legal documents with Isaacus legal AI classifiers.
+externalDocs:
+  url: https://docs.isaacus.com/api
+  description: Reference documentation for the Isaacus API.
