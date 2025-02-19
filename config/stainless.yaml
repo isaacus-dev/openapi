@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=https://app.stainlessapi.com/config.schema.json
+
+organization:
+  name: isaacus
+  docs: https://docs.isaacus.com
+  contact: support@isaacus.com
+  security_contact: security@isaacus.com
+  github_org: isaacus-dev
+  upload_spec: true
+
+targets:
+  python:
+    readme_title: Isaacus Python
+    package_name: isaacus
+    production_repo: isaacus-dev/isaacus-python
+    publish:
+      pypi: false
+  typescript:
+    readme_title: Isaacus Typescript
+    package_name: isaacus
+    production_repo: isaacus-dev/isaacus-typescript
+    publish:
+      npm: false
+
+environments:
+  production: https://api.isaacus.com/v1
+
+client_settings:
+  opts:
+    bearer_token:
+      type: string
+      description: An Isaacus-issued API key passed as a bearer token via the
+        `Authorization` header.
+      nullable: false
+      read_env: ISAACUS_API_KEY
+      auth:
+        security_scheme: APIKeyBearerTokenAuth
+        role: value
+
+resources:
+  classifications:
+    subresources:
+      universal:
+        models:
+          universal_classification: "#/components/schemas/UniversalClassificationResponse"
+        methods:
+          create: post /classifications/universal
+
+settings:
+  disable_mock_tests: true
+  license: Apache-2.0
+
+readme:
+  example_requests:
+    default:
+      type: request
+      endpoint: post /classifications/universal
+      params: {}
+    headline:
+      type: request
+      endpoint: post /classifications/universal
+      params: {}
+
+openapi:
+  code_samples: mintlify
