@@ -24,12 +24,16 @@ jobs:
           output_path: "openapi.autodocumented.json"
           project_name: "isaacus"
           commit_message: "feat: added latest OpenAPI specification"
+      - name: JSON to YAML
+        run: |
+          pip install pyyaml && \
+          python -c "import sys, json, yaml; yaml.safe_dump(json.load(sys.stdin), sys.stdout, default_flow_style=False)" < openapi.autodocumented.json > openapi.yaml
       - name: Push autodocumented OpenAPI specification to Mintlify
         uses: dmnemec/copy_file_to_another_repo_action@main
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_FOR_DOCS_GITHUB_REPO }}
         with:
-          source_file: "artifacts/openapi.autodocumented.json"
+          source_file: "openapi.yaml"
           destination_repo: "isaacus-dev/docs"
           destination_folder: "api"
           user_email: "admin@isaacus.com"
