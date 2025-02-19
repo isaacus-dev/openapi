@@ -5,9 +5,9 @@ on:
   push:
     branches: [main]
     paths:
-      - 'openapi.yaml'
-      - '.github/workflows/upload-to-stainless-and-mintlify.yaml'
-      - 'config/stainless.yaml'
+      - "openapi.yaml"
+      - ".github/workflows/upload-to-stainless-and-mintlify.yaml"
+      - "config/stainless.yaml"
 
 jobs:
   stainless:
