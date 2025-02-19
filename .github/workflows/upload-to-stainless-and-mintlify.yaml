@@ -18,7 +18,7 @@ jobs:
           config_path: 'config/stainless.yaml'
           output_path: 'artifacts/openapi.autodocumented.yaml'
           project_name: 'isaacus'
-          commit_message: 'Added latest OpenAPI specification'
+          commit_message: 'feat: added latest OpenAPI specification'
       - name: Push autodocumented OpenAPI specification to Mintlify
         uses: dmnemec/copy_file_to_another_repo_action@main
         env:
@@ -29,4 +29,4 @@ jobs:
             destination_folder: 'api'
             user_email: 'admin@isaacus.com'
             user_name: 'isaacus-dev'
-            commit_message: 'Added latest autodocumented OpenAPI specification'
+            commit_message: 'docs: added latest autodocumented OpenAPI specification'
