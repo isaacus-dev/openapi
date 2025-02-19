@@ -3,6 +3,10 @@ name: Upload the Isaacus API OpenAPI specification to Stainless and Mintlify
 on:
   push:
     branches: [main]
+    paths:
+      - 'openapi.yaml'
+      - '.github/workflows/upload-to-stainless-and-mintlify.yaml'
+      - 'config/stainless.yaml'
 
 jobs:
   stainless:
@@ -14,19 +18,19 @@ jobs:
         uses: stainless-api/upload-openapi-spec-action@main
         with:
           stainless_api_key: ${{ secrets.STAINLESS_API_KEY }}
-          input_path: 'openapi.yaml'
-          config_path: 'config/stainless.yaml'
-          output_path: 'artifacts/openapi.autodocumented.yaml'
-          project_name: 'isaacus'
-          commit_message: 'feat: added latest OpenAPI specification'
+          input_path: "openapi.yaml"
+          config_path: "config/stainless.yaml"
+          output_path: "artifacts/openapi.autodocumented.yaml"
+          project_name: "isaacus"
+          commit_message: "feat: added latest OpenAPI specification"
       - name: Push autodocumented OpenAPI specification to Mintlify
         uses: dmnemec/copy_file_to_another_repo_action@main
         env:
-            API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_FOR_DOCS_GITHUB_REPO }}
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_FOR_DOCS_GITHUB_REPO }}
         with:
-            source_file: 'artifacts/openapi.autodocumented.yaml'
-            destination_repo: 'isaacus-dev/docs'
-            destination_folder: 'api'
-            user_email: 'admin@isaacus.com'
-            user_name: 'isaacus-dev'
-            commit_message: 'docs: added latest autodocumented OpenAPI specification'
+          source_file: "artifacts/openapi.autodocumented.yaml"
+          destination_repo: "isaacus-dev/docs"
+          destination_folder: "api"
+          user_email: "admin@isaacus.com"
+          user_name: "isaacus-dev"
+          commit_message: "docs: added latest autodocumented OpenAPI specification"
