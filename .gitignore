@@ -89,3 +89,4 @@ cython_debug/
 !.vscode/*.code-snippets
 .history/
 *.vsix
+.archive/
