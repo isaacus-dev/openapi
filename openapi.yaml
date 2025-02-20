@@ -69,31 +69,6 @@ paths:
                     detail: The provided query is not valid Isaacus Query Language
                       (IQL) syntax.
                     instance: null
-        '500':
-          description: An unexpected error occurred while processing the request.
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/InternalServerError'
-              examples:
-                Internal server error:
-                  summary: Internal server error
-                  value:
-                    type: about:blank
-                    title: Internal server error
-                    status: 500
-                    detail: An unexpected error occurred while processing the request.
-                    instance: null
-                Chunking timeout error:
-                  summary: Chunking timeout error
-                  value:
-                    type: about:blank
-                    title: Chunking timeout error
-                    status: 500
-                    detail: Chunking timed out. Did you try to chunk a very large
-                      text with a very low chunk size or very little variation in
-                      levels of whitespace?
-                    instance: null
         '401':
           description: The API key you provided does not exist, is expired or revoked,
             or is not authorized to access this resource.
@@ -119,23 +94,6 @@ paths:
                     status: 401
                     detail: The API key you provided does not exist or is expired
                       or revoked.
-                    instance: null
-        '413':
-          description: The request is larger than the server is willing or able to
-            process.
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/RequestTooLargeError'
-              examples:
-                Request too large error:
-                  summary: Request too large error
-                  value:
-                    type: about:blank
-                    title: Request too large error
-                    status: 413
-                    detail: The request is larger than the server is willing or able
-                      to process.
                     instance: null
         '402':
           description: Your account is overdue, please pay any outstanding invoices
@@ -177,6 +135,48 @@ paths:
                     status: 403
                     detail: You do not have an active subscription to our zero-flat
                       fee, usage-based API plan.
+                    instance: null
+        '413':
+          description: The request is larger than the server is willing or able to
+            process.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/RequestTooLargeError'
+              examples:
+                Request too large error:
+                  summary: Request too large error
+                  value:
+                    type: about:blank
+                    title: Request too large error
+                    status: 413
+                    detail: The request is larger than the server is willing or able
+                      to process.
+                    instance: null
+        '500':
+          description: An unexpected error occurred while processing the request.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+              examples:
+                Internal server error:
+                  summary: Internal server error
+                  value:
+                    type: about:blank
+                    title: Internal server error
+                    status: 500
+                    detail: An unexpected error occurred while processing the request.
+                    instance: null
+                Chunking timeout error:
+                  summary: Chunking timeout error
+                  value:
+                    type: about:blank
+                    title: Chunking timeout error
+                    status: 500
+                    detail: Chunking timed out. Did you try to chunk a very large
+                      text with a very low chunk size or very little variation in
+                      levels of whitespace?
                     instance: null
       deprecated: false
 components:
