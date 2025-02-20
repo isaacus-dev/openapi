@@ -69,46 +69,30 @@ paths:
                     detail: The provided query is not valid Isaacus Query Language
                       (IQL) syntax.
                     instance: null
-        '403':
-          description: You are not allowed to access this resource.
+        '500':
+          description: An unexpected error occurred while processing the request.
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/AccessForbiddenError'
+                $ref: '#/components/schemas/InternalServerError'
               examples:
-                Access forbidden error:
-                  summary: Access forbidden error
+                Internal server error:
+                  summary: Internal server error
                   value:
                     type: about:blank
-                    title: Access forbidden error
-                    status: 403
-                    detail: You are not allowed to access this resource.
+                    title: Internal server error
+                    status: 500
+                    detail: An unexpected error occurred while processing the request.
                     instance: null
-                No subscription error:
-                  summary: No subscription error
+                Chunking timeout error:
+                  summary: Chunking timeout error
                   value:
                     type: about:blank
-                    title: No subscription error
-                    status: 403
-                    detail: You do not have an active subscription to our zero-flat
-                      fee, usage-based API plan.
-                    instance: null
-        '413':
-          description: The request is larger than the server is willing or able to
-            process.
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/RequestTooLargeError'
-              examples:
-                Request too large error:
-                  summary: Request too large error
-                  value:
-                    type: about:blank
-                    title: Request too large error
-                    status: 413
-                    detail: The request is larger than the server is willing or able
-                      to process.
+                    title: Chunking timeout error
+                    status: 500
+                    detail: Chunking timed out. Did you try to chunk a very large
+                      text with a very low chunk size or very little variation in
+                      levels of whitespace?
                     instance: null
         '401':
           description: The API key you provided does not exist, is expired or revoked,
@@ -136,30 +120,22 @@ paths:
                     detail: The API key you provided does not exist or is expired
                       or revoked.
                     instance: null
-        '500':
-          description: An unexpected error occurred while processing the request.
+        '413':
+          description: The request is larger than the server is willing or able to
+            process.
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/InternalServerError'
+                $ref: '#/components/schemas/RequestTooLargeError'
               examples:
-                Internal server error:
-                  summary: Internal server error
+                Request too large error:
+                  summary: Request too large error
                   value:
                     type: about:blank
-                    title: Internal server error
-                    status: 500
-                    detail: An unexpected error occurred while processing the request.
-                    instance: null
-                Chunking timeout error:
-                  summary: Chunking timeout error
-                  value:
-                    type: about:blank
-                    title: Chunking timeout error
-                    status: 500
-                    detail: Chunking timed out. Did you try to chunk a very large
-                      text with a very low chunk size or very little variation in
-                      levels of whitespace?
+                    title: Request too large error
+                    status: 413
+                    detail: The request is larger than the server is willing or able
+                      to process.
                     instance: null
         '402':
           description: Your account is overdue, please pay any outstanding invoices
@@ -177,6 +153,30 @@ paths:
                     status: 402
                     detail: Your account is overdue, please pay any outstanding invoices
                       to continue using our services.
+                    instance: null
+        '403':
+          description: You are not allowed to access this resource.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AccessForbiddenError'
+              examples:
+                Access forbidden error:
+                  summary: Access forbidden error
+                  value:
+                    type: about:blank
+                    title: Access forbidden error
+                    status: 403
+                    detail: You are not allowed to access this resource.
+                    instance: null
+                No subscription error:
+                  summary: No subscription error
+                  value:
+                    type: about:blank
+                    title: No subscription error
+                    status: 403
+                    detail: You do not have an active subscription to our zero-flat
+                      fee, usage-based API plan.
                     instance: null
       deprecated: false
 components:
@@ -578,7 +578,7 @@ components:
           description: The end index of the chunk in the original text.
           examples:
           - 46
-        confidence:
+        score:
           type: number
           maximum: 1.0
           minimum: 0.0
@@ -593,8 +593,8 @@ components:
           - 0.7481262778280844
       type: object
       required:
-      - confidence
       - end
+      - score
       - start
       - text
       title: Universal classification chunk
@@ -604,7 +604,7 @@ components:
       - text: I agree not to tell anyone about the document.
         start: 0
         end: 46
-        confidence: 0.7481262778280844
+        score: 0.7481262778280844
     UniversalClassificationRequest:
       properties:
         model:
@@ -729,7 +729,7 @@ components:
           - - text: I agree not to tell anyone about the document.
               start: 0
               end: 46
-              confidence: 0.7481262778280844
+              score: 0.7481262778280844
         usage:
           $ref: '#/components/schemas/UniversalClassificationUsage'
       type: object
@@ -746,7 +746,7 @@ components:
         - text: I agree not to tell anyone about the document.
           start: 0
           end: 46
-          confidence: 0.7481262778280844
+          score: 0.7481262778280844
         usage:
           input_tokens: 19
     UniversalClassificationUsage:
