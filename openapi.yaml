@@ -14,7 +14,7 @@ openapi: 3.1.0
 servers:
 - url: https://api.isaacus.com/v1
 paths:
-  /classifications/universal: 
+  /classifications/universal:
     post:
       tags:
       - Classifications
@@ -51,15 +51,6 @@ paths:
                     status: 400
                     detail: The request was invalid or could not be processed.
                     instance: null
-                Invalid IQL query error:
-                  summary: Invalid IQL query error
-                  value:
-                    type: about:blank
-                    title: Invalid IQL query error
-                    status: 400
-                    detail: The provided query is not valid Isaacus Query Language
-                      (IQL) syntax.
-                    instance: null
                 Query too long error:
                   summary: Query too long error
                   value:
@@ -69,22 +60,14 @@ paths:
                     detail: The provided query exceeds the model's maximum input length
                       less overhead.
                     instance: null
-        '413':
-          description: The request is larger than the server is willing or able to
-            process.
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/RequestTooLargeError'
-              examples:
-                Request too large error:
-                  summary: Request too large error
+                Invalid IQL query error:
+                  summary: Invalid IQL query error
                   value:
                     type: about:blank
-                    title: Request too large error
-                    status: 413
-                    detail: The request is larger than the server is willing or able
-                      to process.
+                    title: Invalid IQL query error
+                    status: 400
+                    detail: The provided query is not valid Isaacus Query Language
+                      (IQL) syntax.
                     instance: null
         '403':
           description: You are not allowed to access this resource.
@@ -109,6 +92,49 @@ paths:
                     status: 403
                     detail: You do not have an active subscription to our zero-flat
                       fee, usage-based API plan.
+                    instance: null
+        '413':
+          description: The request is larger than the server is willing or able to
+            process.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/RequestTooLargeError'
+              examples:
+                Request too large error:
+                  summary: Request too large error
+                  value:
+                    type: about:blank
+                    title: Request too large error
+                    status: 413
+                    detail: The request is larger than the server is willing or able
+                      to process.
+                    instance: null
+        '401':
+          description: The API key you provided does not exist, is expired or revoked,
+            or is not authorized to access this resource.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedAPIKeyError'
+              examples:
+                Unauthorized API key error:
+                  summary: Unauthorized API key error
+                  value:
+                    type: about:blank
+                    title: Unauthorized API key error
+                    status: 401
+                    detail: The API key you provided does not exist, is expired or
+                      revoked, or is not authorized to access this resource.
+                    instance: null
+                Incorrect API key error:
+                  summary: Incorrect API key error
+                  value:
+                    type: about:blank
+                    title: Incorrect API key error
+                    status: 401
+                    detail: The API key you provided does not exist or is expired
+                      or revoked.
                     instance: null
         '500':
           description: An unexpected error occurred while processing the request.
@@ -151,32 +177,6 @@ paths:
                     status: 402
                     detail: Your account is overdue, please pay any outstanding invoices
                       to continue using our services.
-                    instance: null
-        '401':
-          description: The API key you provided does not exist, is expired or revoked,
-            or is not authorized to access this resource.
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedAPIKeyError'
-              examples:
-                Unauthorized API key error:
-                  summary: Unauthorized API key error
-                  value:
-                    type: about:blank
-                    title: Unauthorized API key error
-                    status: 401
-                    detail: The API key you provided does not exist, is expired or
-                      revoked, or is not authorized to access this resource.
-                    instance: null
-                Incorrect API key error:
-                  summary: Incorrect API key error
-                  value:
-                    type: about:blank
-                    title: Incorrect API key error
-                    status: 401
-                    detail: The API key you provided does not exist or is expired
-                      or revoked.
                     instance: null
       deprecated: false
 components:
@@ -610,11 +610,11 @@ components:
         model:
           type: string
           enum:
-          - kanon-uniclassifier
-          - kanon-uniclassifier-mini
+          - kanon-universal-classifier
+          - kanon-universal-classifier-mini
           description: The ID of the model to use for universal classification.
           examples:
-          - kanon-uniclassifier
+          - kanon-universal-classifier
         query:
           type: string
           maxLength: 5000
@@ -696,7 +696,7 @@ components:
       description: A request to classify the relevance of a legal document to a query
         using an Isaacus universal legal AI classifier.
       examples:
-      - model: kanon-uniclassifier
+      - model: kanon-universal-classifier
         query: This is a confidentiality clause.
         text: I agree not to tell anyone about the document.
     UniversalClassificationResponse:
