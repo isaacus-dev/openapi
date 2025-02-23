@@ -677,7 +677,7 @@ components:
           - $ref: '#/components/schemas/ChunkingOptions'
           - type: 'null'
           description: 'Settings for how the text should be chunked into smaller segments
-            before classification.
+            before classification using [semchunk](https://github.com/isaacus-dev/semchunk).
 
 
             If `null`, the text will not be chunked and will instead be truncated
@@ -722,8 +722,8 @@ components:
               $ref: '#/components/schemas/UniversalClassificationChunk'
             type: array
           - type: 'null'
-          description: 'The text broken into chunks, each with their own confidence
-            score.
+          description: 'The text as broken into chunks by [semchunk](https://github.com/isaacus-dev/semchunk),
+            each chunk with its own confidence score.
 
 
             If no chunking occurred, this will be `null`.'
