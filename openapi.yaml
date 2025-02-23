@@ -624,7 +624,11 @@ components:
             the statement, to evaluate the text against.
 
 
-            The query must contain at least one non-whitespace character.'
+            The query must contain at least one non-whitespace character.
+
+
+            Unlike the text being classified, the query cannot be so long that it
+            exceeds the maximum input length of the universal classifier.'
           examples:
           - This is a confidentiality clause.
           - '{IS confidentiality clause} AND {IS clause obligating "Supplier"} AND
