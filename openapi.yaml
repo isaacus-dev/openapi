@@ -560,12 +560,6 @@ components:
         instance: null
     UniversalClassificationChunk:
       properties:
-        text:
-          type: string
-          minLength: 1
-          description: The text of the chunk.
-          examples:
-          - I agree not to tell anyone about the document.
         start:
           type: integer
           exclusiveMinimum: -1.0
@@ -591,6 +585,12 @@ components:
             the query.'
           examples:
           - 0.7481262778280844
+        text:
+          type: string
+          minLength: 1
+          description: The text of the chunk.
+          examples:
+          - I agree not to tell anyone about the document.
       type: object
       required:
       - end
@@ -601,10 +601,10 @@ components:
       description: A chunk of a text that has been classified by an Isaacus universal
         legal AI classifier.
       examples:
-      - text: I agree not to tell anyone about the document.
-        start: 0
+      - start: 0
         end: 46
         score: 0.7481262778280844
+        text: I agree not to tell anyone about the document.
     UniversalClassificationRequest:
       properties:
         model:
@@ -714,6 +714,8 @@ components:
             the query.'
           examples:
           - 0.7481262778280844
+        usage:
+          $ref: '#/components/schemas/UniversalClassificationUsage'
         chunks:
           oneOf:
           - items:
@@ -726,12 +728,10 @@ components:
 
             If no chunking occurred, this will be `null`.'
           examples:
-          - - text: I agree not to tell anyone about the document.
-              start: 0
+          - - start: 0
               end: 46
               score: 0.7481262778280844
-        usage:
-          $ref: '#/components/schemas/UniversalClassificationUsage'
+              text: I agree not to tell anyone about the document.
       type: object
       required:
       - chunks
@@ -742,13 +742,13 @@ components:
         produced by an Isaacus universal legal AI classifier.
       examples:
       - score: 0.7481262778280844
-        chunks:
-        - text: I agree not to tell anyone about the document.
-          start: 0
-          end: 46
-          score: 0.7481262778280844
         usage:
           input_tokens: 19
+        chunks:
+        - start: 0
+          end: 46
+          score: 0.7481262778280844
+          text: I agree not to tell anyone about the document.
     UniversalClassificationUsage:
       properties:
         input_tokens:
