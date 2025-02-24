@@ -51,15 +51,6 @@ paths:
                     status: 400
                     detail: The request was invalid or could not be processed.
                     instance: null
-                Query too long error:
-                  summary: Query too long error
-                  value:
-                    type: about:blank
-                    title: Query too long error
-                    status: 400
-                    detail: The provided query exceeds the model's maximum input length
-                      less overhead.
-                    instance: null
                 Invalid IQL query error:
                   summary: Invalid IQL query error
                   value:
@@ -68,6 +59,15 @@ paths:
                     status: 400
                     detail: The provided query is not valid Isaacus Query Language
                       (IQL) syntax.
+                    instance: null
+                Query too long error:
+                  summary: Query too long error
+                  value:
+                    type: about:blank
+                    title: Query too long error
+                    status: 400
+                    detail: The provided query exceeds the model's maximum input length
+                      less overhead.
                     instance: null
         '401':
           description: The API key you provided does not exist, is expired or revoked,
@@ -214,8 +214,8 @@ components:
             examples:
             - A string.
           - type: 'null'
-          description: A human-readable explanation specific to this occurrence of
-            the problem.
+          description: An optional human-readable explanation specific to this occurrence
+            of the problem.
           default: You are not allowed to access this resource.
           examples:
           - You are not allowed to access this resource.
@@ -227,8 +227,8 @@ components:
             examples:
             - A string.
           - type: 'null'
-          description: A URI reference that identifies the specific occurrence of
-            the problem.
+          description: An optional URI reference that identifies the specific occurrence
+            of the problem.
           examples:
           - null
       type: object
@@ -275,8 +275,8 @@ components:
             examples:
             - A string.
           - type: 'null'
-          description: A human-readable explanation specific to this occurrence of
-            the problem.
+          description: An optional human-readable explanation specific to this occurrence
+            of the problem.
           default: Your account is overdue, please pay any outstanding invoices to
             continue using our services.
           examples:
@@ -290,8 +290,8 @@ components:
             examples:
             - A string.
           - type: 'null'
-          description: A URI reference that identifies the specific occurrence of
-            the problem.
+          description: An optional URI reference that identifies the specific occurrence
+            of the problem.
           examples:
           - null
       type: object
@@ -407,8 +407,8 @@ components:
             examples:
             - A string.
           - type: 'null'
-          description: A human-readable explanation specific to this occurrence of
-            the problem.
+          description: An optional human-readable explanation specific to this occurrence
+            of the problem.
           default: An unexpected error occurred while processing the request.
           examples:
           - An unexpected error occurred while processing the request.
@@ -420,8 +420,8 @@ components:
             examples:
             - A string.
           - type: 'null'
-          description: A URI reference that identifies the specific occurrence of
-            the problem.
+          description: An optional URI reference that identifies the specific occurrence
+            of the problem.
           examples:
           - null
       type: object
@@ -467,8 +467,8 @@ components:
             examples:
             - A string.
           - type: 'null'
-          description: A human-readable explanation specific to this occurrence of
-            the problem.
+          description: An optional human-readable explanation specific to this occurrence
+            of the problem.
           default: The request is larger than the server is willing or able to process.
           examples:
           - The request is larger than the server is willing or able to process.
@@ -480,8 +480,8 @@ components:
             examples:
             - A string.
           - type: 'null'
-          description: A URI reference that identifies the specific occurrence of
-            the problem.
+          description: An optional URI reference that identifies the specific occurrence
+            of the problem.
           examples:
           - null
       type: object
@@ -528,8 +528,8 @@ components:
             examples:
             - A string.
           - type: 'null'
-          description: A human-readable explanation specific to this occurrence of
-            the problem.
+          description: An optional human-readable explanation specific to this occurrence
+            of the problem.
           default: The API key you provided does not exist, is expired or revoked,
             or is not authorized to access this resource.
           examples:
@@ -543,8 +543,8 @@ components:
             examples:
             - A string.
           - type: 'null'
-          description: A URI reference that identifies the specific occurrence of
-            the problem.
+          description: An optional URI reference that identifies the specific occurrence
+            of the problem.
           examples:
           - null
       type: object
@@ -802,8 +802,8 @@ components:
             examples:
             - A string.
           - type: 'null'
-          description: A human-readable explanation specific to this occurrence of
-            the problem.
+          description: An optional human-readable explanation specific to this occurrence
+            of the problem.
           default: The request was invalid or could not be processed.
           examples:
           - The request was invalid or could not be processed.
@@ -815,8 +815,8 @@ components:
             examples:
             - A string.
           - type: 'null'
-          description: A URI reference that identifies the specific occurrence of
-            the problem.
+          description: An optional URI reference that identifies the specific occurrence
+            of the problem.
           examples:
           - null
       type: object
