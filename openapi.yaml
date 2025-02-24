@@ -46,28 +46,28 @@ paths:
                 Validation error:
                   summary: Validation error
                   value:
-                    type: about:blank
+                    type: https://docs.isaacus.com/api/errors#400-validation-error
                     title: Validation error
                     status: 400
                     detail: The request was invalid or could not be processed.
                     instance: null
-                Invalid IQL query error:
-                  summary: Invalid IQL query error
-                  value:
-                    type: about:blank
-                    title: Invalid IQL query error
-                    status: 400
-                    detail: The provided query is not valid Isaacus Query Language
-                      (IQL) syntax.
-                    instance: null
                 Query too long error:
                   summary: Query too long error
                   value:
-                    type: about:blank
+                    type: https://docs.isaacus.com/api/errors#400-validation-error
                     title: Query too long error
                     status: 400
                     detail: The provided query exceeds the model's maximum input length
                       less overhead.
+                    instance: null
+                Invalid IQL query error:
+                  summary: Invalid IQL query error
+                  value:
+                    type: https://docs.isaacus.com/api/errors#400-validation-error
+                    title: Invalid IQL query error
+                    status: 400
+                    detail: The provided query is not valid Isaacus Query Language
+                      (IQL) syntax.
                     instance: null
         '401':
           description: The API key you provided does not exist, is expired or revoked,
@@ -80,7 +80,7 @@ paths:
                 Unauthorized API key error:
                   summary: Unauthorized API key error
                   value:
-                    type: about:blank
+                    type: https://docs.isaacus.com/api/errors#401-not-authenticated
                     title: Unauthorized API key error
                     status: 401
                     detail: The API key you provided does not exist, is expired or
@@ -89,7 +89,7 @@ paths:
                 Incorrect API key error:
                   summary: Incorrect API key error
                   value:
-                    type: about:blank
+                    type: https://docs.isaacus.com/api/errors#401-not-authenticated
                     title: Incorrect API key error
                     status: 401
                     detail: The API key you provided does not exist or is expired
@@ -106,7 +106,7 @@ paths:
                 Account overdue error:
                   summary: Account overdue error
                   value:
-                    type: about:blank
+                    type: https://docs.isaacus.com/api/errors#402-payment-required
                     title: Account overdue error
                     status: 402
                     detail: Your account is overdue, please pay any outstanding invoices
@@ -122,7 +122,7 @@ paths:
                 Access forbidden error:
                   summary: Access forbidden error
                   value:
-                    type: about:blank
+                    type: https://docs.isaacus.com/api/errors#403-access-forbidden
                     title: Access forbidden error
                     status: 403
                     detail: You are not allowed to access this resource.
@@ -130,7 +130,7 @@ paths:
                 No subscription error:
                   summary: No subscription error
                   value:
-                    type: about:blank
+                    type: https://docs.isaacus.com/api/errors#403-access-forbidden
                     title: No subscription error
                     status: 403
                     detail: You do not have an active subscription to our zero-flat
@@ -147,7 +147,7 @@ paths:
                 Request too large error:
                   summary: Request too large error
                   value:
-                    type: about:blank
+                    type: https://docs.isaacus.com/api/errors#413-request-too-large
                     title: Request too large error
                     status: 413
                     detail: The request is larger than the server is willing or able
@@ -163,7 +163,7 @@ paths:
                 Internal server error:
                   summary: Internal server error
                   value:
-                    type: about:blank
+                    type: https://docs.isaacus.com/api/errors#500-internal-server-error
                     title: Internal server error
                     status: 500
                     detail: An unexpected error occurred while processing the request.
@@ -171,7 +171,7 @@ paths:
                 Chunking timeout error:
                   summary: Chunking timeout error
                   value:
-                    type: about:blank
+                    type: https://docs.isaacus.com/api/errors#500-internal-server-error
                     title: Chunking timeout error
                     status: 500
                     detail: Chunking timed out. Did you try to chunk a very large
@@ -187,9 +187,9 @@ components:
           type: string
           minLength: 1
           description: A URI reference that identifies the problem type.
-          default: about:blank
+          default: https://docs.isaacus.com/api/errors#403-access-forbidden
           examples:
-          - about:blank
+          - https://docs.isaacus.com/api/errors#403-access-forbidden
         title:
           type: string
           minLength: 1
@@ -236,7 +236,7 @@ components:
       title: Access forbidden error
       description: An RFC 7807 problem detail object.
       examples:
-      - type: about:blank
+      - type: https://docs.isaacus.com/api/errors#403-access-forbidden
         title: Access forbidden error
         status: 403
         detail: You are not allowed to access this resource.
@@ -247,9 +247,9 @@ components:
           type: string
           minLength: 1
           description: A URI reference that identifies the problem type.
-          default: about:blank
+          default: https://docs.isaacus.com/api/errors#402-payment-required
           examples:
-          - about:blank
+          - https://docs.isaacus.com/api/errors#402-payment-required
         title:
           type: string
           minLength: 1
@@ -299,7 +299,7 @@ components:
       title: Account overdue error
       description: An RFC 7807 problem detail object.
       examples:
-      - type: about:blank
+      - type: https://docs.isaacus.com/api/errors#402-payment-required
         title: Account overdue error
         status: 402
         detail: Your account is overdue, please pay any outstanding invoices to continue
@@ -380,9 +380,9 @@ components:
           type: string
           minLength: 1
           description: A URI reference that identifies the problem type.
-          default: about:blank
+          default: https://docs.isaacus.com/api/errors#500-internal-server-error
           examples:
-          - about:blank
+          - https://docs.isaacus.com/api/errors#500-internal-server-error
         title:
           type: string
           minLength: 1
@@ -429,7 +429,7 @@ components:
       title: Internal server error
       description: An RFC 7807 problem detail object.
       examples:
-      - type: about:blank
+      - type: https://docs.isaacus.com/api/errors#500-internal-server-error
         title: Internal server error
         status: 500
         detail: An unexpected error occurred while processing the request.
@@ -440,9 +440,9 @@ components:
           type: string
           minLength: 1
           description: A URI reference that identifies the problem type.
-          default: about:blank
+          default: https://docs.isaacus.com/api/errors#413-request-too-large
           examples:
-          - about:blank
+          - https://docs.isaacus.com/api/errors#413-request-too-large
         title:
           type: string
           minLength: 1
@@ -489,7 +489,7 @@ components:
       title: Request too large error
       description: An RFC 7807 problem detail object.
       examples:
-      - type: about:blank
+      - type: https://docs.isaacus.com/api/errors#413-request-too-large
         title: Request too large error
         status: 413
         detail: The request is larger than the server is willing or able to process.
@@ -500,9 +500,9 @@ components:
           type: string
           minLength: 1
           description: A URI reference that identifies the problem type.
-          default: about:blank
+          default: https://docs.isaacus.com/api/errors#401-not-authenticated
           examples:
-          - about:blank
+          - https://docs.isaacus.com/api/errors#401-not-authenticated
         title:
           type: string
           minLength: 1
@@ -552,7 +552,7 @@ components:
       title: Unauthorized API key error
       description: An RFC 7807 problem detail object.
       examples:
-      - type: about:blank
+      - type: https://docs.isaacus.com/api/errors#401-not-authenticated
         title: Unauthorized API key error
         status: 401
         detail: The API key you provided does not exist, is expired or revoked, or
@@ -775,9 +775,9 @@ components:
           type: string
           minLength: 1
           description: A URI reference that identifies the problem type.
-          default: about:blank
+          default: https://docs.isaacus.com/api/errors#400-validation-error
           examples:
-          - about:blank
+          - https://docs.isaacus.com/api/errors#400-validation-error
         title:
           type: string
           minLength: 1
@@ -824,7 +824,7 @@ components:
       title: Validation error
       description: An RFC 7807 problem detail object.
       examples:
-      - type: about:blank
+      - type: https://docs.isaacus.com/api/errors#400-validation-error
         title: Validation error
         status: 400
         detail: The request was invalid or could not be processed.
