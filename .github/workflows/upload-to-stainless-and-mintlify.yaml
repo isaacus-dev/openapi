@@ -35,7 +35,7 @@ jobs:
         with:
           source_file: "openapi.yaml"
           destination_repo: "isaacus-dev/docs"
-          destination_folder: "api"
+          destination_folder: "api-reference"
           user_email: "8473183+umarbutler@users.noreply.github.com"
           user_name: "umarbutler"
           commit_message: "docs(api): added latest autodocumented OpenAPI specification"
