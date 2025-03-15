@@ -23,7 +23,7 @@ jobs:
           config_path: "config/stainless.yaml"
           output_path: "openapi.autodocumented.json"
           project_name: "isaacus"
-          commit_message: "feat(api): added latest OpenAPI specification"
+          commit_message: ${{ github.event.head_commit.message }}
       - name: JSON to YAML
         run: |
           pip install pyyaml && \
