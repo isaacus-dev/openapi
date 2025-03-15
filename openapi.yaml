@@ -610,7 +610,8 @@ components:
           enum:
           - kanon-universal-classifier
           - kanon-universal-classifier-mini
-          description: The ID of the model to use for universal classification.
+          description: The ID of the [model](https://docs.isaacus.com/models#universal-classification)
+            to use for universal classification.
           examples:
           - kanon-universal-classifier
         query:
@@ -618,8 +619,8 @@ components:
           maxLength: 5000
           minLength: 1
           pattern: \S
-          description: 'The Isaacus Query Language (IQL) query or, if IQL is disabled,
-            the statement, to evaluate the text against.
+          description: 'The [Isaacus Query Language (IQL)](https://docs.isaacus.com/iql)
+            query or, if IQL is disabled, the statement, to evaluate the text against.
 
 
             The query must contain at least one non-whitespace character.
@@ -644,8 +645,8 @@ components:
           - I agree not to tell anyone about the document.
         is_iql:
           type: boolean
-          description: Whether the query should be interpreted as an Isaacus Query
-            Language (IQL) query or else as a statement.
+          description: Whether the query should be interpreted as an [IQL](https://docs.isaacus.com/iql)
+            query or else as a statement.
           default: true
           examples:
           - true
