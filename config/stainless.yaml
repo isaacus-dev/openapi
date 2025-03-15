@@ -16,7 +16,7 @@ targets:
     publish:
       pypi: false
   typescript:
-    readme_title: Isaacus Typescript
+    readme_title: Isaacus TypeScript
     package_name: isaacus
     production_repo: isaacus-dev/isaacus-typescript
     publish:
