@@ -598,8 +598,6 @@ components:
       - start
       - text
       title: Universal classification chunk
-      description: A chunk of a text that has been classified by an Isaacus universal
-        legal AI classifier.
       examples:
       - start: 0
         end: 46
