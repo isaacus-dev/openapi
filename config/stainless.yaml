@@ -60,6 +60,17 @@ readme:
       type: request
       endpoint: post /classifications/universal
       params: {}
+    nested_params:
+      type: request
+      endpoint: post /classifications/universal
+      params:
+        model: "kanon-universal-classifier"
+        query: "This is a confidentiality clause."
+        text: "I agree not to tell anyone about the document."
+        chunking_options:
+          overlap_ratio: 0.1
+          overlap_tokens: null
+          size: 512
 
 openapi:
   code_samples: mintlify
