@@ -71,6 +71,7 @@ readme:
           overlap_ratio: 0.1
           overlap_tokens: null
           size: 512
+      response_property: chunking_options
 
 openapi:
   code_samples: mintlify
