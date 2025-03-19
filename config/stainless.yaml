@@ -14,13 +14,13 @@ targets:
     package_name: isaacus
     production_repo: isaacus-dev/isaacus-python
     publish:
-      pypi: false
+      pypi: true
   typescript:
     readme_title: Isaacus TypeScript
     package_name: isaacus
     production_repo: isaacus-dev/isaacus-typescript
     publish:
-      npm: false
+      npm: true
 
 environments:
   production: https://api.isaacus.com/v1
