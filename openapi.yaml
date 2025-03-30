@@ -51,15 +51,6 @@ paths:
                     status: 400
                     detail: The request was invalid or could not be processed.
                     instance: null
-                Query too long error:
-                  summary: Query too long error
-                  value:
-                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
-                    title: Query too long error
-                    status: 400
-                    detail: The provided query exceeds the model's maximum input length
-                      less overhead.
-                    instance: null
                 Invalid IQL query error:
                   summary: Invalid IQL query error
                   value:
@@ -68,6 +59,15 @@ paths:
                     status: 400
                     detail: The provided query is not valid Isaacus Query Language
                       (IQL) syntax.
+                    instance: null
+                Query too long error:
+                  summary: Query too long error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Query too long error
+                    status: 400
+                    detail: The provided query exceeds the model's maximum input length
+                      less overhead.
                     instance: null
         '401':
           description: The API key you provided does not exist, is expired or revoked,
