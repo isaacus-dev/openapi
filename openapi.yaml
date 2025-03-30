@@ -560,6 +560,12 @@ components:
         instance: null
     UniversalClassificationChunk:
       properties:
+        index:
+          type: integer
+          exclusiveMinimum: -1.0
+          description: The index of the chunk in the list of chunks.
+          examples:
+          - 0
         start:
           type: integer
           exclusiveMinimum: -1.0
@@ -594,12 +600,14 @@ components:
       type: object
       required:
       - end
+      - index
       - score
       - start
       - text
       title: Universal classification chunk
       examples:
-      - start: 0
+      - index: 0
+        start: 0
         end: 46
         score: 0.7481262778280844
         text: I agree not to tell anyone about the document.
@@ -726,12 +734,14 @@ components:
             type: array
           - type: 'null'
           description: 'The text as broken into chunks by [semchunk](https://github.com/isaacus-dev/semchunk),
-            each chunk with its own confidence score.
+            each chunk with its own confidence score, ordered from highest to lowest
+            score.
 
 
             If no chunking occurred, this will be `null`.'
           examples:
-          - - start: 0
+          - - index: 0
+              start: 0
               end: 46
               score: 0.7481262778280844
               text: I agree not to tell anyone about the document.
@@ -748,7 +758,8 @@ components:
         usage:
           input_tokens: 19
         chunks:
-        - start: 0
+        - index: 0
+          start: 0
           end: 46
           score: 0.7481262778280844
           text: I agree not to tell anyone about the document.
