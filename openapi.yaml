@@ -725,8 +725,6 @@ components:
             the query.'
           examples:
           - 0.7481262778280844
-        usage:
-          $ref: '#/components/schemas/UniversalClassificationUsage'
         chunks:
           oneOf:
           - items:
@@ -745,6 +743,8 @@ components:
               end: 46
               score: 0.7481262778280844
               text: I agree not to tell anyone about the document.
+        usage:
+          $ref: '#/components/schemas/UniversalClassificationUsage'
       type: object
       required:
       - chunks
@@ -755,14 +755,14 @@ components:
         produced by an Isaacus universal legal AI classifier.
       examples:
       - score: 0.7481262778280844
-        usage:
-          input_tokens: 19
         chunks:
         - index: 0
           start: 0
           end: 46
           score: 0.7481262778280844
           text: I agree not to tell anyone about the document.
+        usage:
+          input_tokens: 19
     UniversalClassificationUsage:
       properties:
         input_tokens:
