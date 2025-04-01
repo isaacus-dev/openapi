@@ -45,6 +45,11 @@ resources:
           universal_classification: "#/components/schemas/UniversalClassificationResponse"
         methods:
           create: post /classifications/universal
+  rerankings:
+    models:
+      reranking: "#/components/schemas/RerankingResponse"
+    methods:
+      create: post /rerankings
 
 settings:
   disable_mock_tests: true
