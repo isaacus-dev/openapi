@@ -21,6 +21,10 @@ targets:
     production_repo: isaacus-dev/isaacus-typescript
     publish:
       npm: true
+    options:
+      mcp_server:
+        package_name: isaacus-mcp
+        enable_all_resources: true
 
 environments:
   production: https://api.isaacus.com/v1
