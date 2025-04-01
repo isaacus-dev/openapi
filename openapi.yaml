@@ -851,6 +851,9 @@ security:
 tags:
 - name: Classifications
   description: Classify legal documents with Isaacus legal AI classifiers.
+- name: Rankings
+  description: Rank (or rerank) the relevance of legal documents to queries with Isaacus
+    legal AI rankers.
 externalDocs:
   url: https://docs.isaacus.com/api-reference
   description: Reference documentation for the Isaacus API.
