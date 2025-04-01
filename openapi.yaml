@@ -1,6 +1,6 @@
 info:
   title: Isaacus API
-  version: 0.2.0
+  version: 0.2.1
   description: A RESTful API for using Isaacus legal AI models, data and other solutions.
   termsOfService: https://isaacus.com/terms
   contact:
@@ -851,6 +851,9 @@ security:
 tags:
 - name: Classifications
   description: Classify legal documents with Isaacus legal AI classifiers.
+- name: Rankings
+  description: Rank (or rerank) the relevance of legal documents to queries with Isaacus
+    legal AI rankers.
 externalDocs:
   url: https://docs.isaacus.com/api-reference
   description: Reference documentation for the Isaacus API.
