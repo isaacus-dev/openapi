@@ -1,6 +1,6 @@
 info:
   title: Isaacus API
-  version: 0.2.1
+  version: 0.3.0
   description: A RESTful API for using Isaacus legal AI models, data and other solutions.
   termsOfService: https://isaacus.com/terms
   contact:
@@ -36,6 +36,171 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UniversalClassificationResponse'
+        '400':
+          description: The request was invalid or could not be processed.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+              examples:
+                Validation error:
+                  summary: Validation error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Validation error
+                    status: 400
+                    detail: The request was invalid or could not be processed.
+                    instance: null
+                Invalid IQL query error:
+                  summary: Invalid IQL query error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Invalid IQL query error
+                    status: 400
+                    detail: The provided query is not valid Isaacus Query Language
+                      (IQL) syntax.
+                    instance: null
+                Query too long error:
+                  summary: Query too long error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Query too long error
+                    status: 400
+                    detail: The provided query exceeds the model's maximum input length
+                      less overhead.
+                    instance: null
+        '401':
+          description: The API key you provided does not exist, is expired or revoked,
+            or is not authorized to access this resource.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedAPIKeyError'
+              examples:
+                Unauthorized API key error:
+                  summary: Unauthorized API key error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#401-not-authenticated
+                    title: Unauthorized API key error
+                    status: 401
+                    detail: The API key you provided does not exist, is expired or
+                      revoked, or is not authorized to access this resource.
+                    instance: null
+                Incorrect API key error:
+                  summary: Incorrect API key error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#401-not-authenticated
+                    title: Incorrect API key error
+                    status: 401
+                    detail: The API key you provided does not exist or is expired
+                      or revoked.
+                    instance: null
+        '402':
+          description: Your account is overdue, please pay any outstanding invoices
+            to continue using our services.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AccountOverdueError'
+              examples:
+                Account overdue error:
+                  summary: Account overdue error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#402-payment-required
+                    title: Account overdue error
+                    status: 402
+                    detail: Your account is overdue, please pay any outstanding invoices
+                      to continue using our services.
+                    instance: null
+        '403':
+          description: You are not allowed to access this resource.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AccessForbiddenError'
+              examples:
+                Access forbidden error:
+                  summary: Access forbidden error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#403-access-forbidden
+                    title: Access forbidden error
+                    status: 403
+                    detail: You are not allowed to access this resource.
+                    instance: null
+                No subscription error:
+                  summary: No subscription error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#403-access-forbidden
+                    title: No subscription error
+                    status: 403
+                    detail: You do not have an active subscription to our zero-flat
+                      fee, usage-based API plan.
+                    instance: null
+        '413':
+          description: The request is larger than the server is willing or able to
+            process.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/RequestTooLargeError'
+              examples:
+                Request too large error:
+                  summary: Request too large error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#413-request-too-large
+                    title: Request too large error
+                    status: 413
+                    detail: The request is larger than the server is willing or able
+                      to process.
+                    instance: null
+        '500':
+          description: An unexpected error occurred while processing the request.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+              examples:
+                Internal server error:
+                  summary: Internal server error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#500-internal-server-error
+                    title: Internal server error
+                    status: 500
+                    detail: An unexpected error occurred while processing the request.
+                    instance: null
+                Chunking timeout error:
+                  summary: Chunking timeout error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#500-internal-server-error
+                    title: Chunking timeout error
+                    status: 500
+                    detail: Chunking timed out. Did you try to chunk a very large
+                      text with a very low chunk size or very little variation in
+                      levels of whitespace?
+                    instance: null
+      deprecated: false
+  /rerankings:
+    post:
+      tags:
+      - Rerankings
+      summary: Reranking
+      description: Rerank legal documents by their relevance to a query with an Isaacus
+        legal AI reranker.
+      operationId: CreateReranking
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RerankingRequest'
+        required: true
+      responses:
+        '200':
+          description: The rankings of the texts.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RerankingResponse'
         '400':
           description: The request was invalid or could not be processed.
           content:
@@ -494,6 +659,235 @@ components:
         status: 413
         detail: The request is larger than the server is willing or able to process.
         instance: null
+    RerankingRequest:
+      properties:
+        model:
+          type: string
+          enum:
+          - kanon-universal-classifier
+          - kanon-universal-classifier-mini
+          description: The ID of the [model](https://docs.isaacus.com/models#reranking)
+            to use for reranking.
+          examples:
+          - kanon-universal-classifier
+        query:
+          type: string
+          maxLength: 5000
+          minLength: 1
+          pattern: \S
+          description: 'The query to evaluate the relevance of the texts to.
+
+
+            The query must contain at least one non-whitespace character.
+
+
+            Unlike the texts being reranked, the query cannot be so long that it exceeds
+            the maximum input length of the reranker.'
+          examples:
+          - What are the essential elements required to establish a negligence claim?
+        texts:
+          items:
+            type: string
+            title: Non-blank string
+            description: A string with at least one non-whitespace character.
+            examples:
+            - A string.
+          type: array
+          description: 'The texts to rerank.
+
+
+            There must be at least one text.
+
+
+            The texts must contain at least one non-whitespace character.'
+          examples:
+          - - To form a contract, there must be an offer, acceptance, consideration,
+              and mutual intent to be bound.
+            - Criminal cases involve a completely different standard, requiring proof
+              beyond a reasonable doubt.
+            - In a negligence claim, the plaintiff must prove duty, breach, causation,
+              and damages.
+            - Negligence in tort law requires establishing a duty of care that the
+              defendant owed to the plaintiff.
+            - The concept of negligence is central to tort law, with courts assessing
+              whether a breach of duty caused harm.
+        top_n:
+          oneOf:
+          - type: integer
+            minimum: 1.0
+            title: Positive integer
+            description: A whole number greater than or equal to 1.
+            examples:
+            - 1
+          - type: 'null'
+          description: 'The number of highest scoring results to return.
+
+
+            If `null`, which is the default, all results will be returned.'
+          examples:
+          - null
+        is_iql:
+          type: boolean
+          description: 'Whether the query should be interpreted as an [Isaacus Query
+            Language (IQL)](https://docs.isaacus.com/iql) query, which is not the
+            case by default.
+
+
+            If you allow untrusted users to construct their own queries, think carefully
+            before enabling IQL since queries can be crafted to consume an excessively
+            large amount of tokens.'
+          default: false
+          examples:
+          - false
+        scoring_method:
+          type: string
+          enum:
+          - auto
+          - chunk_max
+          - chunk_avg
+          - chunk_min
+          description: 'The method to use for producing an overall relevance score
+            for a text.
+
+
+            `auto` is the default scoring method and is recommended for most use cases.
+            Currently, it is equivalent to `chunk_max`. In the future, it will automatically
+            select the best method based on the model and inputs.
+
+
+            `chunk_max` uses the highest relevance score of all of a text''s chunks.
+
+
+            `chunk_avg` averages the relevance scores of all of a text''s chunks.
+
+
+            `chunk_min` uses the lowest relevance score of all of a text''s chunks.'
+          default: auto
+          examples:
+          - auto
+        chunking_options:
+          oneOf:
+          - $ref: '#/components/schemas/ChunkingOptions'
+          - type: 'null'
+          description: 'Settings for how texts should be chunked into smaller segments
+            by [semchunk](https://github.com/isaacus-dev/semchunk) before reranking.
+
+
+            If `null`, the texts will not be chunked and will instead be truncated
+            to the maximum input length of the reranker less overhead if found to
+            exceed that limit.'
+          examples:
+          - size: null
+            overlap_ratio: null
+            overlap_tokens: null
+      type: object
+      required:
+      - model
+      - query
+      - texts
+      title: Reranking request
+      description: A request to rerank legal documents by their relevance to a query
+        with an Isaacus legal AI reranker.
+      examples:
+      - model: kanon-universal-classifier
+        query: What are the essential elements required to establish a negligence
+          claim?
+        texts:
+        - To form a contract, there must be an offer, acceptance, consideration, and
+          mutual intent to be bound.
+        - Criminal cases involve a completely different standard, requiring proof
+          beyond a reasonable doubt.
+        - In a negligence claim, the plaintiff must prove duty, breach, causation,
+          and damages.
+        - Negligence in tort law requires establishing a duty of care that the defendant
+          owed to the plaintiff.
+        - The concept of negligence is central to tort law, with courts assessing
+          whether a breach of duty caused harm.
+    RerankingResponse:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/RerankingResult'
+          type: array
+          description: The rerankings of the texts, by relevance to the query, in
+            order from highest to lowest relevance score.
+          examples:
+          - - index: 2
+              score: 0.7727372261985272
+            - index: 3
+              score: 0.7332913519466231
+            - index: 4
+              score: 0.32399687407609323
+            - index: 1
+              score: 0.09480246485705024
+            - index: 0
+              score: 0.06929198572432578
+        usage:
+          $ref: '#/components/schemas/RerankingUsage'
+      type: object
+      required:
+      - results
+      - usage
+      title: Reranking response
+      description: The reranking of texts, by relevance to a query, out of an input
+        array of texts.
+      examples:
+      - results:
+        - index: 2
+          score: 0.7727372261985272
+        - index: 3
+          score: 0.7332913519466231
+        - index: 4
+          score: 0.32399687407609323
+        - index: 1
+          score: 0.09480246485705024
+        - index: 0
+          score: 0.06929198572432578
+        usage:
+          input_tokens: 170
+    RerankingResult:
+      properties:
+        index:
+          type: integer
+          exclusiveMinimum: -1.0
+          description: The index of the text in the input array of texts, starting
+            from `0` (and, therefore, ending at the number of texts minus `1`).
+          examples:
+          - 2
+        score:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          description: A score between `0` and `1`, inclusive, representing the relevance
+            of the text to the query.
+          examples:
+          - 0.7727372261985272
+      type: object
+      required:
+      - index
+      - score
+      title: Reranking result
+      description: The ranking of a text, by relevance to a query, out of an input
+        array of texts.
+      examples:
+      - index: 2
+        score: 0.7727372261985272
+    RerankingUsage:
+      properties:
+        input_tokens:
+          type: integer
+          minimum: 1.0
+          description: The number of tokens inputted to the model.
+          examples:
+          - 170
+      type: object
+      required:
+      - input_tokens
+      title: Reranking usage
+      description: Statistics about the usage of resources in the process of reranking
+        the texts.
+      examples:
+      - input_tokens: 170
     UnauthorizedAPIKeyError:
       properties:
         type:
@@ -851,9 +1245,9 @@ security:
 tags:
 - name: Classifications
   description: Classify legal documents with Isaacus legal AI classifiers.
-- name: Rankings
-  description: Rank (or rerank) the relevance of legal documents to queries with Isaacus
-    legal AI rankers.
+- name: Rerankings
+  description: Rerank legal documents by their relevance to queries with Isaacus legal
+    AI rerankers.
 externalDocs:
   url: https://docs.isaacus.com/api-reference
   description: Reference documentation for the Isaacus API.
