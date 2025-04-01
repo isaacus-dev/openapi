@@ -19,8 +19,8 @@ paths:
       tags:
       - Classifications
       summary: Universal classification
-      description: Classify the relevance of a legal document to a query using an
-        Isaacus universal legal AI classifier.
+      description: Classify the relevance of a legal document to a query with an Isaacus
+        universal legal AI classifier.
       operationId: CreateUniversalClassification
       requestBody:
         content:
@@ -705,7 +705,7 @@ components:
       - text
       title: Universal classification request
       description: A request to classify the relevance of a legal document to a query
-        using an Isaacus universal legal AI classifier.
+        with an Isaacus universal legal AI classifier.
       examples:
       - model: kanon-universal-classifier
         query: This is a confidentiality clause.
