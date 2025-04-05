@@ -1,0 +1,26 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow
+name: Upload the Isaacus API OpenAPI specification to Stainless
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "openapi.yaml"
+      - ".github/workflows/upload-to-stainless.yaml"
+      - "config/stainless.yaml"
+
+jobs:
+  stainless:
+    concurrency: upload-openapi-spec-action
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Push the OpenAPI specification to Stainless and output the autodocumented specification
+        uses: stainless-api/upload-openapi-spec-action@main
+        with:
+          stainless_api_key: ${{ secrets.STAINLESS_API_KEY }}
+          input_path: "openapi.yaml"
+          config_path: "config/stainless.yaml"
+          output_path: "openapi.autodocumented.json"
+          project_name: "isaacus"
+          commit_message: ${{ github.event.head_commit.message }}
