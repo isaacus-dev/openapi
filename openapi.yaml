@@ -30,7 +30,7 @@ paths:
         required: true
       responses:
         '200':
-          description: The classification of the text.
+          description: Request fulfilled, document follows
           headers: {}
           content:
             application/json:
@@ -195,7 +195,7 @@ paths:
         required: true
       responses:
         '200':
-          description: The rankings of the texts.
+          description: Request fulfilled, document follows
           headers: {}
           content:
             application/json:
