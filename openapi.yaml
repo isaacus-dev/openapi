@@ -689,7 +689,6 @@ components:
           items:
             type: string
             title: Non-blank string
-            description: A string with at least one non-whitespace character.
             examples:
             - A string.
           type: array
@@ -867,8 +866,6 @@ components:
       - index
       - score
       title: Reranking result
-      description: The ranking of a text, by relevance to a query, out of an input
-        array of texts.
       examples:
       - index: 2
         score: 0.7727372261985272
