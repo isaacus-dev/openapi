@@ -30,7 +30,7 @@ paths:
         required: true
       responses:
         '200':
-          description: Request fulfilled, document follows
+          description: The document has been successfully classified.
           headers: {}
           content:
             application/json:
@@ -195,7 +195,7 @@ paths:
         required: true
       responses:
         '200':
-          description: Request fulfilled, document follows
+          description: The documents have been successfully reranked.
           headers: {}
           content:
             application/json:
