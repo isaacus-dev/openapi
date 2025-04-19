@@ -1,6 +1,6 @@
 info:
   title: Isaacus API
-  version: 0.3.0
+  version: 0.4.0
   description: A RESTful API for using Isaacus legal AI models, data and other solutions.
   termsOfService: https://isaacus.com/terms
   contact:
@@ -19,9 +19,9 @@ paths:
       tags:
       - Classifications
       summary: Universal classification
-      description: Classify the relevance of a legal document to a query with an Isaacus
+      description: Classify the relevance of legal documents to a query with an Isaacus
         universal legal AI classifier.
-      operationId: CreateUniversalClassification
+      operationId: CreateUniversalClassifications
       requestBody:
         content:
           application/json:
@@ -30,7 +30,7 @@ paths:
         required: true
       responses:
         '200':
-          description: The document has been successfully classified.
+          description: The documents have been successfully classified.
           headers: {}
           content:
             application/json:
@@ -949,26 +949,86 @@ components:
         detail: The API key you provided does not exist, is expired or revoked, or
           is not authorized to access this resource.
         instance: null
+    UniversalClassification:
+      properties:
+        index:
+          type: integer
+          exclusiveMinimum: -1.0
+          description: The index of the text in the input array of texts, starting
+            from `0` (and, therefore, ending at the number of texts minus `1`).
+          examples:
+          - 0
+        score:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          description: 'A score of the likelihood that the query expressed about the
+            text is supported by the text.
+
+
+            A score greater than `0.5` indicates that the text supports the query,
+            while a score less than `0.5` indicates that the text does not support
+            the query.'
+          examples:
+          - 0.8825573934438159
+        chunks:
+          oneOf:
+          - items:
+              $ref: '#/components/schemas/UniversalClassificationChunk'
+            type: array
+          - type: 'null'
+          description: 'The text as broken into chunks by [semchunk](https://github.com/isaacus-dev/semchunk),
+            each chunk with its own confidence score, ordered from highest to lowest
+            score.
+
+
+            If no chunking occurred, this will be `null`.'
+          examples:
+          - - index: 0
+              start: 0
+              end: 45
+              score: 0.8825573934438159
+              text: I agree not to tell anyone about the document.
+      type: object
+      required:
+      - chunks
+      - index
+      - score
+      title: Universal classification
+      examples:
+      - index: 0
+        score: 0.8825573934438159
+        chunks:
+        - index: 0
+          start: 0
+          end: 45
+          score: 0.8825573934438159
+          text: I agree not to tell anyone about the document.
     UniversalClassificationChunk:
       properties:
         index:
           type: integer
           exclusiveMinimum: -1.0
-          description: The index of the chunk in the list of chunks.
+          description: The original position of the chunk in the outputted list of
+            chunks before sorting, starting from `0` (and, therefore, ending at the
+            number of chunks minus `1`).
           examples:
           - 0
         start:
           type: integer
           exclusiveMinimum: -1.0
-          description: The start index of the chunk in the original text.
+          description: The index of the character in the original text where the chunk
+            starts, beginning from `0`.
           examples:
           - 0
         end:
           type: integer
           minimum: 1.0
-          description: The end index of the chunk in the original text.
+          description: The index of the character in the original text where the chunk
+            ends, beginning from `0` (such that, in Python, the chunk is equivalent
+            to `text[start:end+1]`).
           examples:
-          - 46
+          - 45
         score:
           type: number
           maximum: 1.0
@@ -981,7 +1041,7 @@ components:
             while a score less than `0.5` indicates that the chunk does not support
             the query.'
           examples:
-          - 0.7481262778280844
+          - 0.8825573934438159
         text:
           type: string
           minLength: 1
@@ -999,8 +1059,8 @@ components:
       examples:
       - index: 0
         start: 0
-        end: 46
-        score: 0.7481262778280844
+        end: 45
+        score: 0.8825573934438159
         text: I agree not to tell anyone about the document.
     UniversalClassificationRequest:
       properties:
@@ -1019,29 +1079,31 @@ components:
           minLength: 1
           pattern: \S
           description: 'The [Isaacus Query Language (IQL)](https://docs.isaacus.com/iql)
-            query or, if IQL is disabled, the statement, to evaluate the text against.
+            query or, if IQL is disabled, the statement, to evaluate the texts against.
 
 
             The query must contain at least one non-whitespace character.
 
 
-            Unlike the text being classified, the query cannot be so long that it
+            Unlike the texts being classified, the query cannot be so long that it
             exceeds the maximum input length of the universal classifier.'
           examples:
           - This is a confidentiality clause.
           - '{IS confidentiality clause} AND {IS clause obligating "Supplier"} AND
             {IS unilateral clause}'
-        text:
-          type: string
-          maxLength: 10000000
-          minLength: 1
-          pattern: \S
-          description: 'The text to classify.
+        texts:
+          items:
+            type: string
+            title: Non-blank string
+            examples:
+            - A string.
+          type: array
+          description: 'The texts to classify.
 
 
-            The text must contain at least one non-whitespace character.'
+            The texts must contain at least one non-whitespace character.'
           examples:
-          - I agree not to tell anyone about the document.
+          - - I agree not to tell anyone about the document.
         is_iql:
           type: boolean
           description: Whether the query should be interpreted as an [IQL](https://docs.isaacus.com/iql)
@@ -1061,16 +1123,16 @@ components:
 
             `auto` is the default scoring method and is recommended for most use cases.
             Currently, it is equivalent to `chunk_max`. In the future, it will automatically
-            select the best method based on the model and input.
+            select the best method based on the model and inputs.
 
 
-            `chunk_max` uses the highest confidence score of all of the text''s chunks.
+            `chunk_max` uses the highest confidence score of all of the texts'' chunks.
 
 
-            `chunk_avg` averages the confidence scores of all of the text''s chunks.
+            `chunk_avg` averages the confidence scores of all of the texts'' chunks.
 
 
-            `chunk_min` uses the lowest confidence score of all of the text''s chunks.'
+            `chunk_min` uses the lowest confidence score of all of the texts'' chunks.'
           default: auto
           examples:
           - auto
@@ -1078,11 +1140,11 @@ components:
           oneOf:
           - $ref: '#/components/schemas/ChunkingOptions'
           - type: 'null'
-          description: 'Settings for how the text should be chunked into smaller segments
-            before classification using [semchunk](https://github.com/isaacus-dev/semchunk).
+          description: 'Settings for how the texts should be chunked into smaller
+            segments before classification using [semchunk](https://github.com/isaacus-dev/semchunk).
 
 
-            If `null`, the text will not be chunked and will instead be truncated
+            If `null`, the texts will not be chunked and will instead be truncated
             to the maximum input length of the model less overhead if found to exceed
             that limit.'
           examples:
@@ -1093,65 +1155,51 @@ components:
       required:
       - model
       - query
-      - text
+      - texts
       title: Universal classification request
-      description: A request to classify the relevance of a legal document to a query
+      description: A request to classify the relevance of legal documents to a query
         with an Isaacus universal legal AI classifier.
       examples:
       - model: kanon-universal-classifier
         query: This is a confidentiality clause.
-        text: I agree not to tell anyone about the document.
+        texts:
+        - I agree not to tell anyone about the document.
     UniversalClassificationResponse:
       properties:
-        score:
-          type: number
-          maximum: 1.0
-          minimum: 0.0
-          description: 'A score of the likelihood that the query expressed about the
-            text is supported by the text.
-
-
-            A score greater than `0.5` indicates that the text supports the query,
-            while a score less than `0.5` indicates that the text does not support
-            the query.'
-          examples:
-          - 0.7481262778280844
-        chunks:
-          oneOf:
-          - items:
-              $ref: '#/components/schemas/UniversalClassificationChunk'
-            type: array
-          - type: 'null'
-          description: 'The text as broken into chunks by [semchunk](https://github.com/isaacus-dev/semchunk),
-            each chunk with its own confidence score, ordered from highest to lowest
-            score.
-
-
-            If no chunking occurred, this will be `null`.'
+        classifications:
+          items:
+            $ref: '#/components/schemas/UniversalClassification'
+          type: array
+          description: The classifications of the texts, by relevance to the query,
+            in order from highest to lowest relevance score.
           examples:
           - - index: 0
-              start: 0
-              end: 46
-              score: 0.7481262778280844
-              text: I agree not to tell anyone about the document.
+              score: 0.8825573934438159
+              chunks:
+              - index: 0
+                start: 0
+                end: 45
+                score: 0.8825573934438159
+                text: I agree not to tell anyone about the document.
         usage:
           $ref: '#/components/schemas/UniversalClassificationUsage'
       type: object
       required:
-      - chunks
-      - score
+      - classifications
       - usage
       title: Universal classification response
-      description: A classification of the relevance of a legal document to a query
+      description: Classifications of the relevance of legal documents to a query
         produced by an Isaacus universal legal AI classifier.
       examples:
-      - score: 0.7481262778280844
-        chunks:
+      - classifications:
         - index: 0
-          start: 0
-          end: 46
-          score: 0.7481262778280844
-          text: I agree not to tell anyone about the document.
+          score: 0.8825573934438159
+          chunks:
+          - index: 0
+            start: 0
+            end: 45
+            score: 0.8825573934438159
+            text: I agree not to tell anyone about the document.
         usage:
           input_tokens: 19
     UniversalClassificationUsage:
