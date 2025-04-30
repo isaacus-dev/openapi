@@ -54,6 +54,13 @@ resources:
       reranking: "#/components/schemas/RerankingResponse"
     methods:
       create: post /rerankings
+  extractions:
+    subresources:
+      qa:
+        models:
+          answer_extraction: "#/components/schemas/AnswerExtractionResponse"
+        methods:
+          create: post /extractions/qa
 
 settings:
   disable_mock_tests: true

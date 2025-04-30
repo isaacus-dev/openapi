@@ -1,6 +1,6 @@
 info:
   title: Isaacus API
-  version: 0.5.0
+  version: 0.6.0
   description: A RESTful API for using Isaacus legal AI models, data and other solutions.
   termsOfService: https://isaacus.com/terms
   contact:
@@ -344,6 +344,162 @@ paths:
                       levels of whitespace?
                     instance: null
       deprecated: false
+  /extractions/qa:
+    post:
+      tags:
+      - Extractions
+      summary: Extractive question answering
+      description: Extract answers to questions from legal documents with an Isaacus
+        legal AI answer extractor.
+      operationId: CreateAnswerExtractions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnswerExtractionRequest'
+        required: true
+      responses:
+        '200':
+          description: The documents have been successfully processed.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnswerExtractionResponse'
+        '400':
+          description: The request was invalid or could not be processed.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+              examples:
+                Validation error:
+                  summary: Validation error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Validation error
+                    status: 400
+                    detail: The request was invalid or could not be processed.
+                    instance: null
+                Query too long error:
+                  summary: Query too long error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Query too long error
+                    status: 400
+                    detail: The provided query exceeds the model's maximum input length
+                      less overhead.
+                    instance: null
+        '401':
+          description: The API key you provided does not exist, is expired or revoked,
+            or is not authorized to access this resource.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedAPIKeyError'
+              examples:
+                Unauthorized API key error:
+                  summary: Unauthorized API key error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#401-not-authenticated
+                    title: Unauthorized API key error
+                    status: 401
+                    detail: The API key you provided does not exist, is expired or
+                      revoked, or is not authorized to access this resource.
+                    instance: null
+                Incorrect API key error:
+                  summary: Incorrect API key error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#401-not-authenticated
+                    title: Incorrect API key error
+                    status: 401
+                    detail: The API key you provided does not exist or is expired
+                      or revoked.
+                    instance: null
+        '402':
+          description: Your account is overdue, please pay any outstanding invoices
+            to continue using our services.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AccountOverdueError'
+              examples:
+                Account overdue error:
+                  summary: Account overdue error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#402-payment-required
+                    title: Account overdue error
+                    status: 402
+                    detail: Your account is overdue, please pay any outstanding invoices
+                      to continue using our services.
+                    instance: null
+        '403':
+          description: You are not allowed to access this resource.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AccessForbiddenError'
+              examples:
+                Access forbidden error:
+                  summary: Access forbidden error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#403-access-forbidden
+                    title: Access forbidden error
+                    status: 403
+                    detail: You are not allowed to access this resource.
+                    instance: null
+                No subscription error:
+                  summary: No subscription error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#403-access-forbidden
+                    title: No subscription error
+                    status: 403
+                    detail: You do not have an active subscription to our zero-flat
+                      fee, usage-based API plan.
+                    instance: null
+        '413':
+          description: The request is larger than the server is willing or able to
+            process.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/RequestTooLargeError'
+              examples:
+                Request too large error:
+                  summary: Request too large error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#413-request-too-large
+                    title: Request too large error
+                    status: 413
+                    detail: The request is larger than the server is willing or able
+                      to process.
+                    instance: null
+        '500':
+          description: An unexpected error occurred while processing the request.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+              examples:
+                Internal server error:
+                  summary: Internal server error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#500-internal-server-error
+                    title: Internal server error
+                    status: 500
+                    detail: An unexpected error occurred while processing the request.
+                    instance: null
+                Chunking timeout error:
+                  summary: Chunking timeout error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#500-internal-server-error
+                    title: Chunking timeout error
+                    status: 500
+                    detail: Chunking timed out. Did you try to chunk a very large
+                      text with a very low chunk size or very little variation in
+                      levels of whitespace?
+                    instance: null
+      deprecated: false
 components:
   schemas:
     AccessForbiddenError:
@@ -470,6 +626,256 @@ components:
         detail: Your account is overdue, please pay any outstanding invoices to continue
           using our services.
         instance: null
+    Answer:
+      properties:
+        text:
+          type: string
+          minLength: 1
+          description: The text of the answer.
+          examples:
+          - 30 years if the person murdered was a police officer and 25 years in any
+            other case
+        start:
+          type: integer
+          exclusiveMinimum: -1.0
+          description: The index of the first character of the answer in the text,
+            starting from `0` (and, therefore, ending at the number of characters
+            in the text minus `1`).
+          examples:
+          - 61
+        end:
+          type: integer
+          exclusiveMinimum: -1.0
+          description: The index of the character immediately after the last character
+            of the answer in the text, starting from `0` (such that, in Python, the
+            answer is equivalent to `text[start:end]`).
+          examples:
+          - 144
+        score:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          description: A score between `0` and `1`, inclusive, representing the strength
+            of the answer.
+          examples:
+          - 0.11460486645671249
+      type: object
+      required:
+      - end
+      - score
+      - start
+      - text
+      title: Answer
+      description: An answer extracted from a text.
+      examples:
+      - text: 30 years if the person murdered was a police officer and 25 years in
+          any other case
+        start: 61
+        end: 144
+        score: 0.11460486645671249
+    AnswerExtraction:
+      properties:
+        index:
+          type: integer
+          exclusiveMinimum: -1.0
+          description: The index of the text in the input array of texts that this
+            result represents, starting from `0` (and, therefore, ending at the number
+            of texts minus `1`).
+          examples:
+          - 0
+        answers:
+          items:
+            $ref: '#/components/schemas/Answer'
+          type: array
+          description: Answers extracted from the text, ordered from highest to lowest
+            score.
+          examples:
+          - - text: 30 years if the person murdered was a police officer and 25 years
+                in any other case
+              start: 61
+              end: 144
+              score: 0.11460486645671249
+        inextractability_score:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          description: 'A score between `0` and `1`, inclusive, representing the likelihood
+            that an answer can not be extracted from the text.
+
+
+            Where this score is greater than the highest score of all possible answers,
+            the text should be regarded as not having an extractable answer to the
+            query. If that is the case and `ignore_inextractability` is `false`, no
+            answers will be returned.'
+          examples:
+          - 0.0027424068182309302
+      type: object
+      required:
+      - answers
+      - index
+      - inextractability_score
+      title: Answer extraction
+      description: The result of extracting answers from a text.
+      examples:
+      - index: 0
+        inextractability_score: 0.0027424068182309302
+        answers:
+        - text: 30 years if the person murdered was a police officer and 25 years
+            in any other case
+          start: 61
+          end: 144
+          score: 0.11460486645671249
+    AnswerExtractionRequest:
+      properties:
+        model:
+          type: string
+          enum:
+          - kanon-answer-extractor
+          - kanon-answer-extractor-mini
+          description: The ID of the [model](https://docs.isaacus.com/models#extractive-qa)
+            to use for extractive question answering.
+          examples:
+          - kanon-answer-extractor
+        query:
+          type: string
+          maxLength: 5000
+          minLength: 1
+          pattern: \S
+          description: 'The query to extract the answer to.
+
+
+            The query must contain at least one non-whitespace character.
+
+
+            Unlike the texts from which the answer will be extracted, the query cannot
+            be so long that it exceeds the maximum input length of the model.'
+          examples:
+          - What is the punishment for murder in Victoria?
+        texts:
+          items:
+            type: string
+            title: Non-blank string
+            examples:
+            - A string.
+          type: array
+          description: 'The texts to search for the answer in and extract the answer
+            from.
+
+
+            There must be at least one text.
+
+
+            Each text must contain at least one non-whitespace character.'
+          examples:
+          - - The standard sentence for murder in the State of Victoria is 30 years
+              if the person murdered was a police officer and 25 years in any other
+              case.
+        ignore_inextractability:
+          type: boolean
+          description: 'Whether to, if the model''s score of the likelihood that an
+            answer can not be extracted from a text is greater than the highest score
+            of all possible answers, still return the highest scoring answers for
+            that text.
+
+
+            If you have already determined that the texts answer the query, for example,
+            by using one of our classification or reranker models, then you should
+            set this to `true`.'
+          default: false
+          examples:
+          - false
+        top_k:
+          type: integer
+          minimum: 1.0
+          description: 'The number of highest scoring answers to return.
+
+
+            If `null`, which is the default, all answers will be returned.'
+          default: 1
+          examples:
+          - 1
+        chunking_options:
+          oneOf:
+          - $ref: '#/components/schemas/ChunkingOptions'
+          - type: 'null'
+          description: 'Settings for how texts should be chunked into smaller segments
+            by [semchunk](https://github.com/isaacus-dev/semchunk) before extraction.
+
+
+            If `null`, the texts will not be chunked and will instead be truncated
+            to the maximum input length of the model less overhead if found to exceed
+            that limit.'
+          examples:
+          - size: null
+            overlap_ratio: null
+            overlap_tokens: null
+      type: object
+      required:
+      - model
+      - query
+      - texts
+      title: Answer extraction request
+      description: A request to extract answers from legal documents with an Isaacus
+        legal AI extractive question answering model.
+      examples:
+      - model: kanon-answer-extractor
+        query: What is the punishment for murder in Victoria?
+        texts:
+        - The standard sentence for murder in the State of Victoria is 30 years if
+          the person murdered was a police officer and 25 years in any other case.
+    AnswerExtractionResponse:
+      properties:
+        extractions:
+          items:
+            $ref: '#/components/schemas/AnswerExtraction'
+          type: array
+          description: The results of extracting answers from the texts, ordered from
+            highest to lowest inextractability score.
+          examples:
+          - - index: 0
+              answers:
+              - text: 30 years if the person murdered was a police officer and 25
+                  years in any other case
+                start: 61
+                end: 144
+                score: 0.11460486645671249
+              inextractability_score: 0.0027424068182309302
+        usage:
+          $ref: '#/components/schemas/AnswerExtractionUsage'
+      type: object
+      required:
+      - extractions
+      - usage
+      title: Answer extraction response
+      description: The results of extracting answers from texts.
+      examples:
+      - extractions:
+        - index: 0
+          answers:
+          - text: 30 years if the person murdered was a police officer and 25 years
+              in any other case
+            start: 61
+            end: 144
+            score: 0.11460486645671249
+          inextractability_score: 0.0027424068182309302
+        usage:
+          input_tokens: 43
+    AnswerExtractionUsage:
+      properties:
+        input_tokens:
+          type: integer
+          minimum: 1.0
+          description: The number of tokens inputted to the model.
+          examples:
+          - 43
+      type: object
+      required:
+      - input_tokens
+      title: Answer extraction usage
+      description: Statistics about the usage of resources in the process of extracting
+        answers from the texts.
+      examples:
+      - input_tokens: 43
     ChunkingOptions:
       properties:
         size:
@@ -698,7 +1104,7 @@ components:
             There must be at least one text.
 
 
-            The texts must contain at least one non-whitespace character.'
+            Each text must contain at least one non-whitespace character.'
           examples:
           - - To form a contract, there must be an offer, acceptance, consideration,
               and mutual intent to be bound.
@@ -1101,7 +1507,7 @@ components:
           description: 'The texts to classify.
 
 
-            The texts must contain at least one non-whitespace character.'
+            Each text must contain at least one non-whitespace character.'
           examples:
           - - I agree not to tell anyone about the document.
         is_iql:
@@ -1293,6 +1699,8 @@ tags:
 - name: Rerankings
   description: Rerank legal documents by their relevance to queries with Isaacus legal
     AI rerankers.
+- name: Extractions
+  description: Extract information from legal documents with Isaacus legal AI extractors.
 externalDocs:
   url: https://docs.isaacus.com/api-reference
   description: Reference documentation for the Isaacus API.
