@@ -830,7 +830,8 @@ components:
             $ref: '#/components/schemas/AnswerExtraction'
           type: array
           description: The results of extracting answers from the texts, ordered from
-            highest to lowest inextractability score.
+            highest to lowest answer confidence score (or else lowest to highest inextractability
+            score if there are no answers for a text).
           examples:
           - - index: 0
               answers:
