@@ -18,7 +18,7 @@ paths:
     post:
       tags:
       - Embeddings
-      summary: Embeddings
+      summary: Embedding
       description: Embed legal texts with an Isaacus legal AI embedder.
       operationId: CreateEmbeddings
       requestBody:
