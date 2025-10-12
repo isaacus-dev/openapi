@@ -1108,7 +1108,7 @@ components:
       - size: 512
         overlap_tokens: 10
       - size: 512
-    Embedding:
+    ContentEmbedding:
       properties:
         index:
           type: integer
@@ -1132,7 +1132,7 @@ components:
       required:
       - embedding
       - index
-      title: Embedding
+      title: Content embedding
       examples:
       - index: 0
         embedding:
@@ -1241,7 +1241,7 @@ components:
       properties:
         embeddings:
           items:
-            $ref: '#/components/schemas/Embedding'
+            $ref: '#/components/schemas/ContentEmbedding'
           type: array
           description: The embeddings of the inputs.
           examples:
