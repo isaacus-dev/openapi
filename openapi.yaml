@@ -1168,7 +1168,6 @@ components:
 
             No more than 1,000 texts can be embedded in a single request.'
           examples:
-          - Are restraints of trade enforceable under English law?
           - - Are restraints of trade enforceable under English law?
             - What is a non-compete clause?
         task:
