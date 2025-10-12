@@ -44,26 +44,26 @@ client_settings:
 resources:
   embeddings:
     models:
-      embedding: "#/components/schemas/EmbeddingResponse"
+      embedding_response: "#/components/schemas/EmbeddingResponse"
     methods:
       create: post /embeddings
   classifications:
     subresources:
       universal:
         models:
-          universal_classification: "#/components/schemas/UniversalClassificationResponse"
+          universal_classification_response: "#/components/schemas/UniversalClassificationResponse"
         methods:
           create: post /classifications/universal
   rerankings:
     models:
-      reranking: "#/components/schemas/RerankingResponse"
+      reranking_response: "#/components/schemas/RerankingResponse"
     methods:
       create: post /rerankings
   extractions:
     subresources:
       qa:
         models:
-          answer_extraction: "#/components/schemas/AnswerExtractionResponse"
+          answer_extraction_response: "#/components/schemas/AnswerExtractionResponse"
         methods:
           create: post /extractions/qa
 
