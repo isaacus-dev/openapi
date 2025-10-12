@@ -18,14 +18,14 @@ paths:
     post:
       tags:
       - Embeddings
-      summary: Embeddings
+      summary: Embedding
       description: Embed legal texts with an Isaacus legal AI embedder.
       operationId: CreateEmbeddings
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EmbeddingsRequest'
+              $ref: '#/components/schemas/EmbeddingRequest'
         required: true
       responses:
         '200':
@@ -34,7 +34,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EmbeddingsResponse'
+                $ref: '#/components/schemas/EmbeddingResponse'
         '400':
           description: The request was invalid or could not be processed.
           content:
@@ -50,29 +50,29 @@ paths:
                     status: 400
                     detail: The request was invalid or could not be processed.
                     instance: null
-                Embeddings input too large error:
-                  summary: Embeddings input too large error
+                Embedding input too large error:
+                  summary: Embedding input too large error
                   value:
                     type: https://docs.isaacus.com/api-reference/errors#400-validation-error
-                    title: Embeddings input too large error
+                    title: Embedding input too large error
                     status: 400
                     detail: The input to the embedding model exceeds the maximum allowed
                       size.
                     instance: null
-                Unsupported embeddings dimension error:
-                  summary: Unsupported embeddings dimension error
+                Unsupported embedding dimension error:
+                  summary: Unsupported embedding dimension error
                   value:
                     type: https://docs.isaacus.com/api-reference/errors#400-validation-error
-                    title: Unsupported embeddings dimension error
+                    title: Unsupported embedding dimension error
                     status: 400
                     detail: The provided embedding dimension is not supported by the
                       model.
                     instance: null
-                Unsupported embeddings task error:
-                  summary: Unsupported embeddings task error
+                Unsupported embedding task error:
+                  summary: Unsupported embedding task error
                   value:
                     type: https://docs.isaacus.com/api-reference/errors#400-validation-error
-                    title: Unsupported embeddings task error
+                    title: Unsupported embedding task error
                     status: 400
                     detail: The provided embedding task is not supported by the model.
                     instance: null
@@ -1139,12 +1139,12 @@ components:
         - -0.0258
         - 0.02062
         - -0.0114
-    EmbeddingsRequest:
+    EmbeddingRequest:
       properties:
         model:
           type: string
           const: kanon-2-embedder
-          description: The ID of the [model](https://docs.isaacus.com/models#embeddings)
+          description: The ID of the [model](https://docs.isaacus.com/models#embedding)
             to use for embedding.
           examples:
           - kanon-2-embedder
@@ -1229,7 +1229,7 @@ components:
       required:
       - model
       - texts
-      title: Embeddings request
+      title: Embedding request
       description: A request to embed legal texts with an Isaacus legal AI embedder.
       examples:
       - model: kanon-2-embedder
@@ -1237,7 +1237,7 @@ components:
         - Are restraints of trade enforceable under English law?
         - What is a non-compete clause?
         task: retrieval/query
-    EmbeddingsResponse:
+    EmbeddingResponse:
       properties:
         embeddings:
           items:
@@ -1256,12 +1256,12 @@ components:
               - -0.0128
               - 0.00251
         usage:
-          $ref: '#/components/schemas/EmbeddingsUsage'
+          $ref: '#/components/schemas/EmbeddingUsage'
       type: object
       required:
       - embeddings
       - usage
-      title: Embeddings response
+      title: Embedding response
       description: Embeddings of legal texts produced by an Isaacus legal AI embedder.
       examples:
       - embeddings:
@@ -1277,7 +1277,7 @@ components:
           - 0.00251
         usage:
           input_tokens: 42
-    EmbeddingsUsage:
+    EmbeddingUsage:
       properties:
         input_tokens:
           type: integer
@@ -1288,7 +1288,7 @@ components:
       type: object
       required:
       - input_tokens
-      title: Embeddings usage
+      title: Embedding usage
       description: Statistics about the usage of resources in the process of embedding
         the inputs.
       examples:
