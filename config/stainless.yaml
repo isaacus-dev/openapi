@@ -42,11 +42,11 @@ client_settings:
         role: value
 
 resources:
-  # embeddings:
-  #   models:
-  #     embedding: "#/components/schemas/EmbeddingResponse"
-  #   methods:
-  #     create: post /embeddings
+  embeddings:
+    models:
+      embedding: "#/components/schemas/EmbeddingResponse"
+    methods:
+      create: post /embeddings
   classifications:
     subresources:
       universal:
