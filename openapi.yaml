@@ -176,171 +176,6 @@ paths:
                     detail: An unexpected error occurred while processing the request.
                     instance: null
       deprecated: false
-  /classifications/universal:
-    post:
-      tags:
-      - Classifications
-      summary: Universal classification
-      description: Classify the relevance of legal documents to a query with an Isaacus
-        universal legal AI classifier.
-      operationId: CreateUniversalClassifications
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UniversalClassificationRequest'
-        required: true
-      responses:
-        '200':
-          description: The documents have been successfully classified.
-          headers: {}
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UniversalClassificationResponse'
-        '400':
-          description: The request was invalid or could not be processed.
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ValidationError'
-              examples:
-                Validation error:
-                  summary: Validation error
-                  value:
-                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
-                    title: Validation error
-                    status: 400
-                    detail: The request was invalid or could not be processed.
-                    instance: null
-                Invalid IQL query error:
-                  summary: Invalid IQL query error
-                  value:
-                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
-                    title: Invalid IQL query error
-                    status: 400
-                    detail: The provided query is not valid Isaacus Query Language
-                      (IQL) syntax.
-                    instance: null
-                Query too long error:
-                  summary: Query too long error
-                  value:
-                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
-                    title: Query too long error
-                    status: 400
-                    detail: The provided query exceeds the model's maximum input length
-                      less overhead.
-                    instance: null
-        '401':
-          description: The API key you provided does not exist, is expired or revoked,
-            or is not authorized to access this resource.
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedAPIKeyError'
-              examples:
-                Unauthorized API key error:
-                  summary: Unauthorized API key error
-                  value:
-                    type: https://docs.isaacus.com/api-reference/errors#401-not-authenticated
-                    title: Unauthorized API key error
-                    status: 401
-                    detail: The API key you provided does not exist, is expired or
-                      revoked, or is not authorized to access this resource.
-                    instance: null
-                Incorrect API key error:
-                  summary: Incorrect API key error
-                  value:
-                    type: https://docs.isaacus.com/api-reference/errors#401-not-authenticated
-                    title: Incorrect API key error
-                    status: 401
-                    detail: The API key you provided does not exist or is expired
-                      or revoked.
-                    instance: null
-        '402':
-          description: Your account is overdue, please pay any outstanding invoices
-            to continue using our services.
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/AccountOverdueError'
-              examples:
-                Account overdue error:
-                  summary: Account overdue error
-                  value:
-                    type: https://docs.isaacus.com/api-reference/errors#402-payment-required
-                    title: Account overdue error
-                    status: 402
-                    detail: Your account is overdue, please pay any outstanding invoices
-                      to continue using our services.
-                    instance: null
-        '403':
-          description: You are not allowed to access this resource.
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/AccessForbiddenError'
-              examples:
-                Access forbidden error:
-                  summary: Access forbidden error
-                  value:
-                    type: https://docs.isaacus.com/api-reference/errors#403-access-forbidden
-                    title: Access forbidden error
-                    status: 403
-                    detail: You are not allowed to access this resource.
-                    instance: null
-                No subscription error:
-                  summary: No subscription error
-                  value:
-                    type: https://docs.isaacus.com/api-reference/errors#403-access-forbidden
-                    title: No subscription error
-                    status: 403
-                    detail: You do not have an active subscription to our zero-flat
-                      fee, usage-based API plan.
-                    instance: null
-        '413':
-          description: The request is larger than the server is willing or able to
-            process.
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/RequestTooLargeError'
-              examples:
-                Request too large error:
-                  summary: Request too large error
-                  value:
-                    type: https://docs.isaacus.com/api-reference/errors#413-request-too-large
-                    title: Request too large error
-                    status: 413
-                    detail: The request is larger than the server is willing or able
-                      to process.
-                    instance: null
-        '500':
-          description: An unexpected error occurred while processing the request.
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/InternalServerError'
-              examples:
-                Internal server error:
-                  summary: Internal server error
-                  value:
-                    type: https://docs.isaacus.com/api-reference/errors#500-internal-server-error
-                    title: Internal server error
-                    status: 500
-                    detail: An unexpected error occurred while processing the request.
-                    instance: null
-                Chunking timeout error:
-                  summary: Chunking timeout error
-                  value:
-                    type: https://docs.isaacus.com/api-reference/errors#500-internal-server-error
-                    title: Chunking timeout error
-                    status: 500
-                    detail: Chunking timed out. Did you try to chunk a very large
-                      text with a very low chunk size or very little variation in
-                      levels of whitespace?
-                    instance: null
-      deprecated: false
   /rerankings:
     post:
       tags:
@@ -542,6 +377,171 @@ paths:
                     title: Validation error
                     status: 400
                     detail: The request was invalid or could not be processed.
+                    instance: null
+                Query too long error:
+                  summary: Query too long error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Query too long error
+                    status: 400
+                    detail: The provided query exceeds the model's maximum input length
+                      less overhead.
+                    instance: null
+        '401':
+          description: The API key you provided does not exist, is expired or revoked,
+            or is not authorized to access this resource.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedAPIKeyError'
+              examples:
+                Unauthorized API key error:
+                  summary: Unauthorized API key error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#401-not-authenticated
+                    title: Unauthorized API key error
+                    status: 401
+                    detail: The API key you provided does not exist, is expired or
+                      revoked, or is not authorized to access this resource.
+                    instance: null
+                Incorrect API key error:
+                  summary: Incorrect API key error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#401-not-authenticated
+                    title: Incorrect API key error
+                    status: 401
+                    detail: The API key you provided does not exist or is expired
+                      or revoked.
+                    instance: null
+        '402':
+          description: Your account is overdue, please pay any outstanding invoices
+            to continue using our services.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AccountOverdueError'
+              examples:
+                Account overdue error:
+                  summary: Account overdue error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#402-payment-required
+                    title: Account overdue error
+                    status: 402
+                    detail: Your account is overdue, please pay any outstanding invoices
+                      to continue using our services.
+                    instance: null
+        '403':
+          description: You are not allowed to access this resource.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AccessForbiddenError'
+              examples:
+                Access forbidden error:
+                  summary: Access forbidden error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#403-access-forbidden
+                    title: Access forbidden error
+                    status: 403
+                    detail: You are not allowed to access this resource.
+                    instance: null
+                No subscription error:
+                  summary: No subscription error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#403-access-forbidden
+                    title: No subscription error
+                    status: 403
+                    detail: You do not have an active subscription to our zero-flat
+                      fee, usage-based API plan.
+                    instance: null
+        '413':
+          description: The request is larger than the server is willing or able to
+            process.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/RequestTooLargeError'
+              examples:
+                Request too large error:
+                  summary: Request too large error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#413-request-too-large
+                    title: Request too large error
+                    status: 413
+                    detail: The request is larger than the server is willing or able
+                      to process.
+                    instance: null
+        '500':
+          description: An unexpected error occurred while processing the request.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+              examples:
+                Internal server error:
+                  summary: Internal server error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#500-internal-server-error
+                    title: Internal server error
+                    status: 500
+                    detail: An unexpected error occurred while processing the request.
+                    instance: null
+                Chunking timeout error:
+                  summary: Chunking timeout error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#500-internal-server-error
+                    title: Chunking timeout error
+                    status: 500
+                    detail: Chunking timed out. Did you try to chunk a very large
+                      text with a very low chunk size or very little variation in
+                      levels of whitespace?
+                    instance: null
+      deprecated: false
+  /classifications/universal:
+    post:
+      tags:
+      - Classifications
+      summary: Universal classification
+      description: Classify the relevance of legal documents to a query with an Isaacus
+        universal legal AI classifier.
+      operationId: CreateUniversalClassifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UniversalClassificationRequest'
+        required: true
+      responses:
+        '200':
+          description: The documents have been successfully classified.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UniversalClassificationResponse'
+        '400':
+          description: The request was invalid or could not be processed.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+              examples:
+                Validation error:
+                  summary: Validation error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Validation error
+                    status: 400
+                    detail: The request was invalid or could not be processed.
+                    instance: null
+                Invalid IQL query error:
+                  summary: Invalid IQL query error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Invalid IQL query error
+                    status: 400
+                    detail: The provided query is not valid Isaacus Query Language
+                      (IQL) syntax.
                     instance: null
                 Query too long error:
                   summary: Query too long error
@@ -2044,13 +2044,13 @@ security:
 tags:
 - name: Embeddings
   description: Embed legal texts with Isaacus legal AI embedders.
-- name: Classifications
-  description: Classify legal documents with Isaacus legal AI classifiers.
 - name: Rerankings
   description: Rerank legal documents by their relevance to queries with Isaacus legal
     AI rerankers.
 - name: Extractions
   description: Extract information from legal documents with Isaacus legal AI extractors.
+- name: Classifications
+  description: Classify legal documents with Isaacus legal AI classifiers.
 externalDocs:
   url: https://docs.isaacus.com/api-reference
   description: Reference documentation for the Isaacus API.
