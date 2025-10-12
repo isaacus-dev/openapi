@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow
-name: Upload the Isaacus API OpenAPI specification to Stainless
+name: Upload the Isaacus API OpenAPI specification to Stainless (one commit at a time)
 
 on:
   push:
@@ -10,11 +10,60 @@ on:
       - "config/stainless.yaml"
 
 jobs:
-  stainless:
-    concurrency: upload-openapi-spec-action
+  collect-commits:
+    name: Collect SHAs in push range
     runs-on: ubuntu-latest
+    outputs:
+      commits: ${{ steps.collect.outputs.commits }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # need full history to walk the range
+      - id: collect
+        name: Build ordered list of SHAs that touched relevant files
+        shell: bash
+        run: |
+          BEFORE="${{ github.event.before }}"
+          AFTER="${{ github.event.after }}"
+          # Get commits along the ancestry path, oldest->newest, ignoring merge commits,
+          # and only those that touched our OpenAPI/Stainless files.
+          mapfile -t SHAS < <(git rev-list --reverse --ancestry-path --no-merges \
+            "${BEFORE}..${AFTER}" -- openapi.yaml config/stainless.yaml)
+
+          # Convert to JSON array for the matrix
+          printf 'commits=%s\n' "$(printf '%s\n' "${SHAS[@]}" | jq -Rsc 'split("\n") | map(select(length>0))')" >> "$GITHUB_OUTPUT"
+
+  stainless:
+    name: Upload each commit to Stainless (in order)
+    needs: collect-commits
+    if: ${{ needs.collect-commits.outputs.commits != '[]' }}
+    runs-on: ubuntu-latest
+    concurrency: upload-openapi-spec-action
+    strategy:
+      # Ensures strict sequential execution
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        sha: ${{ fromJson(needs.collect-commits.outputs.commits) }}
+    steps:
+      - name: Checkout specific commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ matrix.sha }}
+
+      - id: msg
+        name: Read commit message
+        run: |
+          TITLE="$(git log -1 --pretty=%s)"
+          BODY="$(git log -1 --pretty=%b)"
+          # Prefer the full message if present; Stainless action accepts a single string
+          MSG="$TITLE"
+          if [ -n "$BODY" ]; then MSG="$TITLE"$'\n\n'"$BODY"; fi
+          echo "message<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$MSG" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
       - name: Push the OpenAPI specification to Stainless and output the autodocumented specification
         uses: stainless-api/upload-openapi-spec-action@main
         with:
@@ -23,4 +72,4 @@ jobs:
           config_path: "config/stainless.yaml"
           output_path: "openapi.autodocumented.json"
           project_name: "isaacus"
-          commit_message: ${{ github.event.head_commit.message }}
+          commit_message: ${{ steps.msg.outputs.message }}
