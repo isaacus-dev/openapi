@@ -90,7 +90,7 @@ readme:
         texts:
           - "I agree not to tell anyone about the document."
         chunking_options:
-          overlap_ratio: 0.2
+          overlap_ratio: 0.1
           overlap_tokens: null
           size: 512
       response_property: chunking_options
