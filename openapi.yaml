@@ -1113,9 +1113,9 @@ components:
         index:
           type: integer
           exclusiveMinimum: -1.0
-          description: The original position of the content in the input array of
-            contents, starting from `0` (and, therefore, ending at the number of contents
-            minus `1`).
+          description: The position of the content in the input array of contents,
+            starting from `0` (and, therefore, ending at the number of contents minus
+            `1`).
           examples:
           - 0
         embedding:
