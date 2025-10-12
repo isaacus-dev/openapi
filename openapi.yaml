@@ -1,6 +1,6 @@
 info:
   title: Isaacus API
-  version: 0.6.0
+  version: 0.7.0
   description: A RESTful API for using Isaacus legal AI models, data and other solutions.
   termsOfService: https://isaacus.com/terms
   contact:
@@ -14,6 +14,168 @@ openapi: 3.1.0
 servers:
 - url: https://api.isaacus.com/v1
 paths:
+  /embeddings:
+    post:
+      tags:
+      - Embeddings
+      summary: Embeddings
+      description: Embed legal texts with an Isaacus legal AI embedder.
+      operationId: CreateEmbeddings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmbeddingRequest'
+        required: true
+      responses:
+        '200':
+          description: The content has been successfully embedded.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmbeddingResponse'
+        '400':
+          description: The request was invalid or could not be processed.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+              examples:
+                Validation error:
+                  summary: Validation error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Validation error
+                    status: 400
+                    detail: The request was invalid or could not be processed.
+                    instance: null
+                Embedding input too large error:
+                  summary: Embedding input too large error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Embedding input too large error
+                    status: 400
+                    detail: The input to the embedding model exceeds the maximum allowed
+                      size.
+                    instance: null
+                Unsupported embedding dimension error:
+                  summary: Unsupported embedding dimension error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Unsupported embedding dimension error
+                    status: 400
+                    detail: The provided embedding dimension is not supported by the
+                      model.
+                    instance: null
+                Unsupported embedding task error:
+                  summary: Unsupported embedding task error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Unsupported embedding task error
+                    status: 400
+                    detail: The provided embedding task is not supported by the model.
+                    instance: null
+        '401':
+          description: The API key you provided does not exist, is expired or revoked,
+            or is not authorized to access this resource.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedAPIKeyError'
+              examples:
+                Unauthorized API key error:
+                  summary: Unauthorized API key error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#401-not-authenticated
+                    title: Unauthorized API key error
+                    status: 401
+                    detail: The API key you provided does not exist, is expired or
+                      revoked, or is not authorized to access this resource.
+                    instance: null
+                Incorrect API key error:
+                  summary: Incorrect API key error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#401-not-authenticated
+                    title: Incorrect API key error
+                    status: 401
+                    detail: The API key you provided does not exist or is expired
+                      or revoked.
+                    instance: null
+        '402':
+          description: Your account is overdue, please pay any outstanding invoices
+            to continue using our services.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AccountOverdueError'
+              examples:
+                Account overdue error:
+                  summary: Account overdue error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#402-payment-required
+                    title: Account overdue error
+                    status: 402
+                    detail: Your account is overdue, please pay any outstanding invoices
+                      to continue using our services.
+                    instance: null
+        '403':
+          description: You are not allowed to access this resource.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AccessForbiddenError'
+              examples:
+                Access forbidden error:
+                  summary: Access forbidden error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#403-access-forbidden
+                    title: Access forbidden error
+                    status: 403
+                    detail: You are not allowed to access this resource.
+                    instance: null
+                No subscription error:
+                  summary: No subscription error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#403-access-forbidden
+                    title: No subscription error
+                    status: 403
+                    detail: You do not have an active subscription to our zero-flat
+                      fee, usage-based API plan.
+                    instance: null
+        '413':
+          description: The request is larger than the server is willing or able to
+            process.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/RequestTooLargeError'
+              examples:
+                Request too large error:
+                  summary: Request too large error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#413-request-too-large
+                    title: Request too large error
+                    status: 413
+                    detail: The request is larger than the server is willing or able
+                      to process.
+                    instance: null
+        '500':
+          description: An unexpected error occurred while processing the request.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+              examples:
+                Internal server error:
+                  summary: Internal server error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#500-internal-server-error
+                    title: Internal server error
+                    status: 500
+                    detail: An unexpected error occurred while processing the request.
+                    instance: null
+      deprecated: false
   /classifications/universal:
     post:
       tags:
@@ -946,6 +1108,192 @@ components:
       - size: 512
         overlap_tokens: 10
       - size: 512
+    Embedding:
+      properties:
+        index:
+          type: integer
+          exclusiveMinimum: -1.0
+          description: The original position of the content in the input array of
+            contents, starting from `0` (and, therefore, ending at the number of contents
+            minus `1`).
+          examples:
+          - 0
+        embedding:
+          items:
+            type: number
+          type: array
+          description: The embedding of the content represented as an array of floating
+            point numbers.
+          examples:
+          - - -0.0258
+            - 0.02062
+            - -0.0114
+      type: object
+      required:
+      - embedding
+      - index
+      title: Embedding
+      examples:
+      - index: 0
+        embedding:
+        - -0.0258
+        - 0.02062
+        - -0.0114
+    EmbeddingRequest:
+      properties:
+        model:
+          type: string
+          const: kanon-2-embedder
+          description: The ID of the [model](https://docs.isaacus.com/models#embedding)
+            to use for embedding.
+          examples:
+          - kanon-2-embedder
+        texts:
+          oneOf:
+          - items:
+              type: string
+              title: Non-blank string
+              examples:
+              - A string.
+            type: array
+          - type: string
+            title: Non-blank string
+            examples:
+            - A string.
+          description: 'The text or array of texts to embed.
+
+
+            Each text must contain at least one non-whitespace character.
+
+
+            No more than 1,000 texts can be embedded in a single request.'
+          examples:
+          - Are restraints of trade enforceable under English law?
+          - - Are restraints of trade enforceable under English law?
+            - What is a non-compete clause?
+        task:
+          type:
+          - 'null'
+          - string
+          enum:
+          - retrieval/query
+          - retrieval/document
+          - null
+          description: 'The task the embeddings will be used for.
+
+
+            `retrieval/query` is meant for queries and statements, and `retrieval/document`
+            is meant for anything to be retrieved using query embeddings.
+
+
+            If `null`, which is the default setting, embeddings will not be optimized
+            for any particular task.'
+          examples:
+          - retrieval/query
+        overflow_strategy:
+          type:
+          - 'null'
+          - string
+          enum:
+          - drop_end
+          - null
+          description: 'The strategy to employ when content exceeds the model''s maximum
+            input length.
+
+
+            `drop_end`, which is the default setting, drops tokens from the end of
+            the content exceeding the limit.
+
+
+            If `null`, an error will be raised if any content exceeds the model''s
+            maximum input length.'
+          default: drop_end
+          examples:
+          - drop_end
+        dimensions:
+          oneOf:
+          - type: integer
+            minimum: 1.0
+            title: Positive integer
+            description: A whole number greater than or equal to 1.
+            examples:
+            - 1
+          - type: 'null'
+          description: 'The number of dimensions the embeddings should have, not exceeding
+            the maximum dimensions of the model.
+
+
+            If `null`, the model''s default dimensions will be used.'
+          examples:
+          - 1792
+      type: object
+      required:
+      - model
+      - texts
+      title: Embedding request
+      description: A request to embed legal texts with an Isaacus legal AI embedder.
+      examples:
+      - model: kanon-2-embedder
+        texts:
+        - Are restraints of trade enforceable under English law?
+        - What is a non-compete clause?
+        task: retrieval/query
+    EmbeddingResponse:
+      properties:
+        embeddings:
+          items:
+            $ref: '#/components/schemas/Embedding'
+          type: array
+          description: The embeddings of the inputs.
+          examples:
+          - - index: 0
+              embedding:
+              - -0.0258
+              - 0.02062
+              - -0.0114
+            - index: 1
+              embedding:
+              - -0.0358
+              - -0.0128
+              - 0.00251
+        usage:
+          $ref: '#/components/schemas/EmbeddingUsage'
+      type: object
+      required:
+      - embeddings
+      - usage
+      title: Embedding response
+      description: Embeddings of legal texts produced by an Isaacus legal AI embedder.
+      examples:
+      - embeddings:
+        - index: 0
+          embedding:
+          - -0.0258
+          - 0.02062
+          - -0.0114
+        - index: 1
+          embedding:
+          - -0.0358
+          - -0.0128
+          - 0.00251
+        usage:
+          input_tokens: 42
+    EmbeddingUsage:
+      properties:
+        input_tokens:
+          type: integer
+          minimum: 1.0
+          description: The number of tokens inputted to the model.
+          examples:
+          - 42
+      type: object
+      required:
+      - input_tokens
+      title: Embedding usage
+      description: Statistics about the usage of resources in the process of embedding
+        the inputs.
+      examples:
+      - input_tokens: 42
     InternalServerError:
       properties:
         type:
@@ -1695,6 +2043,8 @@ components:
 security:
 - APIKeyBearerTokenAuth: []
 tags:
+- name: Embeddings
+  description: Embed legal texts with Isaacus legal AI embedders.
 - name: Classifications
   description: Classify legal documents with Isaacus legal AI classifiers.
 - name: Rerankings
