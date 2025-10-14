@@ -75,11 +75,11 @@ readme:
   example_requests:
     default:
       type: request
-      endpoint: post /classifications/universal
+      endpoint: post /embeddings
       params: {}
     headline:
       type: request
-      endpoint: post /classifications/universal
+      endpoint: post /embeddings
       params: {}
     nested_params:
       type: request
