@@ -894,7 +894,7 @@ components:
           enum:
           - kanon-answer-extractor
           - kanon-answer-extractor-mini
-          description: The ID of the [model](https://docs.isaacus.com/models#extractive-qa)
+          description: The ID of the [model](https://docs.isaacus.com/models#extractive-question-answering)
             to use for extractive question answering.
           examples:
           - kanon-answer-extractor
