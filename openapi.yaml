@@ -966,7 +966,10 @@ components:
 
             If `null`, the texts will not be chunked and will instead be truncated
             to the maximum input length of the model less overhead if found to exceed
-            that limit.'
+            that limit.
+
+
+            Chunking is enabled by default.'
           examples:
           - size: null
             overlap_ratio: null
@@ -1528,7 +1531,10 @@ components:
 
             If `null`, the texts will not be chunked and will instead be truncated
             to the maximum input length of the reranker less overhead if found to
-            exceed that limit.'
+            exceed that limit.
+
+
+            Chunking is enabled by default.'
           examples:
           - size: null
             overlap_ratio: null
@@ -1900,7 +1906,10 @@ components:
 
             If `null`, the texts will not be chunked and will instead be truncated
             to the maximum input length of the model less overhead if found to exceed
-            that limit.'
+            that limit.
+
+
+            Chunking is enabled by default.'
           examples:
           - size: 512
             overlap_ratio: null
