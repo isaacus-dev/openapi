@@ -76,11 +76,21 @@ readme:
     default:
       type: request
       endpoint: post /embeddings
-      params: {}
+      params:
+        model: "kanon-2-embedder"
+        texts:
+          - "Are restraints of trade enforceable under English law?"
+          - "What is a non-compete clause?"
+        task: "retrieval/query"
     headline:
       type: request
       endpoint: post /embeddings
-      params: {}
+      params:
+        model: "kanon-2-embedder"
+        texts:
+          - "Are restraints of trade enforceable under English law?"
+          - "What is a non-compete clause?"
+        task: "retrieval/query"
     nested_params:
       type: request
       endpoint: post /classifications/universal
