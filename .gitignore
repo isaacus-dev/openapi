@@ -90,3 +90,4 @@ cython_debug/
 .history/
 *.vsix
 .archive/
+open.vbs
