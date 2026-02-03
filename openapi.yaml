@@ -2064,20 +2064,23 @@ components:
           - per:12
         mentions:
           items:
-            prefixItems:
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The start index of the span of Unicode code points in the
-                input text.
-              examples:
-              - 5805
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The index immediately after the end of the span of Unicode
-                code points in the input text.
-              examples:
-              - 6036
+            items:
+              oneOf:
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The start index of the span of Unicode code points in
+                  the input text.
+                examples:
+                - 5805
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The index immediately after the end of the span of Unicode
+                  code points in the input text.
+                examples:
+                - 6036
             type: array
+            maxItems: 2
+            minItems: 2
             title: ILGSv1 Span
             description: 'The start index and the index immediately after the end
               of a span of Unicode code points in input text.
@@ -2149,20 +2152,23 @@ components:
           - per:3
         mentions:
           items:
-            prefixItems:
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The start index of the span of Unicode code points in the
-                input text.
-              examples:
-              - 5805
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The index immediately after the end of the span of Unicode
-                code points in the input text.
-              examples:
-              - 6036
+            items:
+              oneOf:
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The start index of the span of Unicode code points in
+                  the input text.
+                examples:
+                - 5805
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The index immediately after the end of the span of Unicode
+                  code points in the input text.
+                examples:
+                - 6036
             type: array
+            maxItems: 2
+            minItems: 2
             title: ILGSv1 Span
             description: 'The start index and the index immediately after the end
               of a span of Unicode code points in input text.
@@ -2342,20 +2348,23 @@ components:
           - positive
         mentions:
           items:
-            prefixItems:
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The start index of the span of Unicode code points in the
-                input text.
-              examples:
-              - 5805
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The index immediately after the end of the span of Unicode
-                code points in the input text.
-              examples:
-              - 6036
+            items:
+              oneOf:
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The start index of the span of Unicode code points in
+                  the input text.
+                examples:
+                - 5805
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The index immediately after the end of the span of Unicode
+                  code points in the input text.
+                examples:
+                - 6036
             type: array
+            maxItems: 2
+            minItems: 2
             title: ILGSv1 Span
             description: 'The start index and the index immediately after the end
               of a span of Unicode code points in input text.
@@ -2390,20 +2399,23 @@ components:
               - 3734
         pinpoints:
           items:
-            prefixItems:
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The start index of the span of Unicode code points in the
-                input text.
-              examples:
-              - 5805
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The index immediately after the end of the span of Unicode
-                code points in the input text.
-              examples:
-              - 6036
+            items:
+              oneOf:
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The start index of the span of Unicode code points in
+                  the input text.
+                examples:
+                - 5805
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The index immediately after the end of the span of Unicode
+                  code points in the input text.
+                examples:
+                - 6036
             type: array
+            maxItems: 2
+            minItems: 2
             title: ILGSv1 Span
             description: 'The start index and the index immediately after the end
               of a span of Unicode code points in input text.
@@ -2480,20 +2492,23 @@ components:
           - per:7
         mentions:
           items:
-            prefixItems:
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The start index of the span of Unicode code points in the
-                input text.
-              examples:
-              - 5805
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The index immediately after the end of the span of Unicode
-                code points in the input text.
-              examples:
-              - 6036
+            items:
+              oneOf:
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The start index of the span of Unicode code points in
+                  the input text.
+                examples:
+                - 5805
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The index immediately after the end of the span of Unicode
+                  code points in the input text.
+                examples:
+                - 6036
             type: array
+            maxItems: 2
+            minItems: 2
             title: ILGSv1 Span
             description: 'The start index and the index immediately after the end
               of a span of Unicode code points in input text.
@@ -2624,20 +2639,23 @@ components:
           - loc:1
         mentions:
           items:
-            prefixItems:
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The start index of the span of Unicode code points in the
-                input text.
-              examples:
-              - 5805
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The index immediately after the end of the span of Unicode
-                code points in the input text.
-              examples:
-              - 6036
+            items:
+              oneOf:
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The start index of the span of Unicode code points in
+                  the input text.
+                examples:
+                - 5805
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The index immediately after the end of the span of Unicode
+                  code points in the input text.
+                examples:
+                - 6036
             type: array
+            maxItems: 2
+            minItems: 2
             title: ILGSv1 Span
             description: 'The start index and the index immediately after the end
               of a span of Unicode code points in input text.
@@ -2996,20 +3014,23 @@ components:
           - loc:5
         mentions:
           items:
-            prefixItems:
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The start index of the span of Unicode code points in the
-                input text.
-              examples:
-              - 5805
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The index immediately after the end of the span of Unicode
-                code points in the input text.
-              examples:
-              - 6036
+            items:
+              oneOf:
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The start index of the span of Unicode code points in
+                  the input text.
+                examples:
+                - 5805
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The index immediately after the end of the span of Unicode
+                  code points in the input text.
+                examples:
+                - 6036
             type: array
+            maxItems: 2
+            minItems: 2
             title: ILGSv1 Span
             description: 'The start index and the index immediately after the end
               of a span of Unicode code points in input text.
@@ -3081,20 +3102,23 @@ components:
           - per:5
         mentions:
           items:
-            prefixItems:
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The start index of the span of Unicode code points in the
-                input text.
-              examples:
-              - 5805
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The index immediately after the end of the span of Unicode
-                code points in the input text.
-              examples:
-              - 6036
+            items:
+              oneOf:
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The start index of the span of Unicode code points in
+                  the input text.
+                examples:
+                - 5805
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The index immediately after the end of the span of Unicode
+                  code points in the input text.
+                examples:
+                - 6036
             type: array
+            maxItems: 2
+            minItems: 2
             title: ILGSv1 Span
             description: 'The start index and the index immediately after the end
               of a span of Unicode code points in input text.
@@ -3396,20 +3420,23 @@ components:
           - main
         type_name:
           oneOf:
-          - prefixItems:
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The start index of the span of Unicode code points in the
-                input text.
-              examples:
-              - 5805
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The index immediately after the end of the span of Unicode
-                code points in the input text.
-              examples:
-              - 6036
+          - items:
+              oneOf:
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The start index of the span of Unicode code points in
+                  the input text.
+                examples:
+                - 5805
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The index immediately after the end of the span of Unicode
+                  code points in the input text.
+                examples:
+                - 6036
             type: array
+            maxItems: 2
+            minItems: 2
             title: ILGSv1 Span
             description: 'The start index and the index immediately after the end
               of a span of Unicode code points in input text.
@@ -3439,20 +3466,23 @@ components:
             - 3460
         code:
           oneOf:
-          - prefixItems:
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The start index of the span of Unicode code points in the
-                input text.
-              examples:
-              - 5805
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The index immediately after the end of the span of Unicode
-                code points in the input text.
-              examples:
-              - 6036
+          - items:
+              oneOf:
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The start index of the span of Unicode code points in
+                  the input text.
+                examples:
+                - 5805
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The index immediately after the end of the span of Unicode
+                  code points in the input text.
+                examples:
+                - 6036
             type: array
+            maxItems: 2
+            minItems: 2
             title: ILGSv1 Span
             description: 'The start index and the index immediately after the end
               of a span of Unicode code points in input text.
@@ -3482,20 +3512,23 @@ components:
             - 3462
         title:
           oneOf:
-          - prefixItems:
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The start index of the span of Unicode code points in the
-                input text.
-              examples:
-              - 5805
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The index immediately after the end of the span of Unicode
-                code points in the input text.
-              examples:
-              - 6036
+          - items:
+              oneOf:
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The start index of the span of Unicode code points in
+                  the input text.
+                examples:
+                - 5805
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The index immediately after the end of the span of Unicode
+                  code points in the input text.
+                examples:
+                - 6036
             type: array
+            maxItems: 2
+            minItems: 2
             title: ILGSv1 Span
             description: 'The start index and the index immediately after the end
               of a span of Unicode code points in input text.
@@ -3649,20 +3682,23 @@ components:
             - 1603
         mentions:
           items:
-            prefixItems:
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The start index of the span of Unicode code points in the
-                input text.
-              examples:
-              - 5805
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The index immediately after the end of the span of Unicode
-                code points in the input text.
-              examples:
-              - 6036
+            items:
+              oneOf:
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The start index of the span of Unicode code points in
+                  the input text.
+                examples:
+                - 5805
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The index immediately after the end of the span of Unicode
+                  code points in the input text.
+                examples:
+                - 6036
             type: array
+            maxItems: 2
+            minItems: 2
             title: ILGSv1 Span
             description: 'The start index and the index immediately after the end
               of a span of Unicode code points in input text.
@@ -3732,20 +3768,23 @@ components:
           - per:4
         mentions:
           items:
-            prefixItems:
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The start index of the span of Unicode code points in the
-                input text.
-              examples:
-              - 5805
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The index immediately after the end of the span of Unicode
-                code points in the input text.
-              examples:
-              - 6036
+            items:
+              oneOf:
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The start index of the span of Unicode code points in
+                  the input text.
+                examples:
+                - 5805
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The index immediately after the end of the span of Unicode
+                  code points in the input text.
+                examples:
+                - 6036
             type: array
+            maxItems: 2
+            minItems: 2
             title: ILGSv1 Span
             description: 'The start index and the index immediately after the end
               of a span of Unicode code points in input text.
@@ -3795,20 +3834,23 @@ components:
       properties:
         title:
           oneOf:
-          - prefixItems:
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The start index of the span of Unicode code points in the
-                input text.
-              examples:
-              - 5805
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The index immediately after the end of the span of Unicode
-                code points in the input text.
-              examples:
-              - 6036
+          - items:
+              oneOf:
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The start index of the span of Unicode code points in
+                  the input text.
+                examples:
+                - 5805
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The index immediately after the end of the span of Unicode
+                  code points in the input text.
+                examples:
+                - 6036
             type: array
+            maxItems: 2
+            minItems: 2
             title: ILGSv1 Span
             description: 'The start index and the index immediately after the end
               of a span of Unicode code points in input text.
@@ -3838,20 +3880,23 @@ components:
             - 30
         subtitle:
           oneOf:
-          - prefixItems:
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The start index of the span of Unicode code points in the
-                input text.
-              examples:
-              - 5805
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The index immediately after the end of the span of Unicode
-                code points in the input text.
-              examples:
-              - 6036
+          - items:
+              oneOf:
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The start index of the span of Unicode code points in
+                  the input text.
+                examples:
+                - 5805
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The index immediately after the end of the span of Unicode
+                  code points in the input text.
+                examples:
+                - 6036
             type: array
+            maxItems: 2
+            minItems: 2
             title: ILGSv1 Span
             description: 'The start index and the index immediately after the end
               of a span of Unicode code points in input text.
@@ -4155,20 +4200,23 @@ components:
                 - 8799
         headings:
           items:
-            prefixItems:
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The start index of the span of Unicode code points in the
-                input text.
-              examples:
-              - 5805
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The index immediately after the end of the span of Unicode
-                code points in the input text.
-              examples:
-              - 6036
+            items:
+              oneOf:
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The start index of the span of Unicode code points in
+                  the input text.
+                examples:
+                - 5805
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The index immediately after the end of the span of Unicode
+                  code points in the input text.
+                examples:
+                - 6036
             type: array
+            maxItems: 2
+            minItems: 2
             title: ILGSv1 Span
             description: 'The start index and the index immediately after the end
               of a span of Unicode code points in input text.
@@ -4199,20 +4247,23 @@ components:
               - 133
         junk:
           items:
-            prefixItems:
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The start index of the span of Unicode code points in the
-                input text.
-              examples:
-              - 5805
-            - type: integer
-              exclusiveMinimum: -1.0
-              description: The index immediately after the end of the span of Unicode
-                code points in the input text.
-              examples:
-              - 6036
+            items:
+              oneOf:
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The start index of the span of Unicode code points in
+                  the input text.
+                examples:
+                - 5805
+              - type: integer
+                exclusiveMinimum: -1.0
+                description: The index immediately after the end of the span of Unicode
+                  code points in the input text.
+                examples:
+                - 6036
             type: array
+            maxItems: 2
+            minItems: 2
             title: ILGSv1 Span
             description: 'The start index and the index immediately after the end
               of a span of Unicode code points in input text.
