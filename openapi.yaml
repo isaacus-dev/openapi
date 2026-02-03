@@ -1,6 +1,6 @@
 info:
   title: Isaacus API
-  version: 0.8.0
+  version: 0.8.1
   description: A RESTful API for using Isaacus legal AI models, data and other solutions.
   termsOfService: https://isaacus.com/terms
   contact:
