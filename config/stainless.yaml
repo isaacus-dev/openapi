@@ -87,6 +87,8 @@ resources:
       create: post /enrichments
 
 custom_casings:
+  qa:
+    initialism: true
   ilgs:
     initialism: true
   v1:
