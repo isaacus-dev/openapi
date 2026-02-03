@@ -1608,11 +1608,11 @@ components:
       properties:
         model:
           type: string
-          const: kanon-2-enricher-preview
+          const: kanon-2-enricher
           description: The ID of the [model](https://docs.isaacus.com/models#enrichment)
             to use for enrichment.
           examples:
-          - kanon-2-enricher-preview
+          - kanon-2-enricher
         texts:
           oneOf:
           - items:
@@ -1663,7 +1663,7 @@ components:
         or be removed without notice until its official release. To get access, apply
         to the [Isaacus Beta Program](https://isaacus.com/beta).'
       examples:
-      - model: kanon-2-enricher-preview
+      - model: kanon-2-enricher
         texts:
         - '[42] The U.S. Attorney General, Mr. McGill, argued at ¶ 21 of the Filing
           that "§ 206 of Title 29 of the U.S. Code (the "Labor Title") does not apply
