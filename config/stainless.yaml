@@ -66,6 +66,11 @@ resources:
           answer_extraction_response: "#/components/schemas/AnswerExtractionResponse"
         methods:
           create: post /extractions/qa
+  enrichments:
+    models:
+      enrichment_response: "#/components/schemas/EnrichmentResponse"
+    methods:
+      create: post /enrichments
 
 settings:
   disable_mock_tests: true
