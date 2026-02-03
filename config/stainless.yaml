@@ -99,6 +99,7 @@ custom_casings:
 
 settings:
   disable_mock_tests: true
+  sort_schema_properties: false
   license: Apache-2.0
 
 readme:
