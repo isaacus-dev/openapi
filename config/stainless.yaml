@@ -69,20 +69,24 @@ resources:
   enrichments:
     models:
       enrichment_response: "#/components/schemas/EnrichmentResponse"
-      ilgs_v1_crossreference: "#/components/schemas/ILGSv1 Crossreference"
-      ilgs_v1_date: "#/components/schemas/ILGSv1 Date"
-      ilgs_v1_email: "#/components/schemas/ILGSv1 Email"
-      ilgs_v1_external_document: "#/components/schemas/ILGSv1 External Document"
-      ilgs_v1_id_number: "#/components/schemas/ILGSv1 ID Number"
-      ilgs_v1_location: "#/components/schemas/ILGSv1 Location"
-      ilgs_v1_person: "#/components/schemas/ILGSv1 Person"
-      ilgs_v1_phone_number: "#/components/schemas/ILGSv1 Phone Number"
-      ilgs_v1_quote: "#/components/schemas/ILGSv1 Quote"
-      ilgs_v1_segment: "#/components/schemas/ILGSv1 Segment"
-      ilgs_v1_span: "#/components/schemas/ILGSv1 Span"
-      ilgs_v1_term: "#/components/schemas/ILGSv1 Term"
-      ilgs_v1_website: "#/components/schemas/ILGSv1 Website"
-      ilgs_v1_document: "#/components/schemas/ILGSv1Document"
+
+    subresources:
+      ilgsv1:
+        models:
+          crossreference: "#/components/schemas/ILGSv1 Crossreference"
+          date: "#/components/schemas/ILGSv1 Date"
+          email: "#/components/schemas/ILGSv1 Email"
+          external_document: "#/components/schemas/ILGSv1 External Document"
+          id_number: "#/components/schemas/ILGSv1 ID Number"
+          location: "#/components/schemas/ILGSv1 Location"
+          person: "#/components/schemas/ILGSv1 Person"
+          phone_number: "#/components/schemas/ILGSv1 Phone Number"
+          quote: "#/components/schemas/ILGSv1 Quote"
+          segment: "#/components/schemas/ILGSv1 Segment"
+          span: "#/components/schemas/ILGSv1 Span"
+          term: "#/components/schemas/ILGSv1 Term"
+          website: "#/components/schemas/ILGSv1 Website"
+          document: "#/components/schemas/ILGSv1Document"
     methods:
       create: post /enrichments
 
