@@ -1136,10 +1136,10 @@ components:
           - 0.11460486645671249
       type: object
       required:
+      - text
+      - start
       - end
       - score
-      - start
-      - text
       title: Answer
       description: An answer extracted from a text.
       examples:
@@ -1188,8 +1188,8 @@ components:
           - 0.0027424068182309302
       type: object
       required:
-      - answers
       - index
+      - answers
       - inextractability_score
       title: Answer extraction
       description: The result of extracting answers from a text.
@@ -1447,8 +1447,8 @@ components:
             - -0.0114
       type: object
       required:
-      - embedding
       - index
+      - embedding
       title: Embedding
       examples:
       - index: 0
@@ -1950,8 +1950,8 @@ components:
           $ref: '#/components/schemas/ILGSv1Document'
       type: object
       required:
-      - document
       - index
+      - document
       title: Enrichment result
       description: An enriched document alongside its index in the input array of
         texts.
@@ -2106,12 +2106,12 @@ components:
           examples:
           - seg:51
         span:
-          $ref: '#/components/schemas/Span'
+          $ref: '#/components/schemas/ILGSv1 Span'
       type: object
       required:
+      - start
       - end
       - span
-      - start
       title: ILGSv1 Crossreference
       description: A cross-reference within the document pointing to one or more segments.
       examples:
@@ -2219,10 +2219,10 @@ components:
               end: 8799
       type: object
       required:
-      - mentions
-      - person
-      - type
       - value
+      - type
+      - person
+      - mentions
       title: ILGSv1 Date
       description: 'A date identified in a document belonging to one of the following
         types: `creation`, `signature`, `effective`, `expiry`, `delivery`, `renewal`,
@@ -2269,8 +2269,8 @@ components:
       type: object
       required:
       - address
-      - mentions
       - person
+      - mentions
       title: ILGSv1 Email
       description: 'An email address identified in a document belonging to a legal
         person.
@@ -2296,7 +2296,7 @@ components:
           examples:
           - exd:2
         name:
-          $ref: '#/components/schemas/Span'
+          $ref: '#/components/schemas/ILGSv1 Span'
         type:
           type: string
           enum:
@@ -2417,12 +2417,12 @@ components:
       type: object
       required:
       - id
-      - jurisdiction
-      - mentions
       - name
-      - pinpoints
-      - reception
       - type
+      - jurisdiction
+      - reception
+      - mentions
+      - pinpoints
       title: ILGSv1 External Document
       description: A document identified within another document.
       examples:
@@ -2471,9 +2471,9 @@ components:
               end: 7194
       type: object
       required:
-      - mentions
       - number
       - person
+      - mentions
       title: ILGSv1 ID Number
       description: 'An identification number mentioned in a document belonging to
         a legal person.
@@ -2498,7 +2498,7 @@ components:
           examples:
           - loc:6
         name:
-          $ref: '#/components/schemas/Span'
+          $ref: '#/components/schemas/ILGSv1 Span'
         type:
           type: string
           enum:
@@ -2561,10 +2561,10 @@ components:
       type: object
       required:
       - id
-      - mentions
       - name
-      - parent
       - type
+      - parent
+      - mentions
       title: ILGSv1 Location
       description: A location identified within a document.
       examples:
@@ -2592,7 +2592,7 @@ components:
           examples:
           - per:8
         name:
-          $ref: '#/components/schemas/Span'
+          $ref: '#/components/schemas/ILGSv1 Span'
         type:
           type: string
           enum:
@@ -2870,12 +2870,12 @@ components:
       type: object
       required:
       - id
-      - mentions
       - name
+      - type
+      - role
       - parent
       - residence
-      - role
-      - type
+      - mentions
       title: ILGSv1 Person
       description: A legal person identified in a document.
       examples:
@@ -2922,9 +2922,9 @@ components:
               end: 5382
       type: object
       required:
-      - mentions
       - number
       - person
+      - mentions
       title: ILGSv1 Phone Number
       description: 'A valid phone number identified in a document belonging to a legal
         person.
@@ -3002,13 +3002,13 @@ components:
           examples:
           - false
         span:
-          $ref: '#/components/schemas/Span'
+          $ref: '#/components/schemas/ILGSv1 Span'
       type: object
       required:
-      - amending
+      - source_segment
       - source_document
       - source_person
-      - source_segment
+      - amending
       - span
       title: ILGSv1 Quote
       description: A quotation within a document.
@@ -3217,18 +3217,18 @@ components:
           examples:
           - seg:40
         span:
-          $ref: '#/components/schemas/Span'
+          $ref: '#/components/schemas/ILGSv1 Span'
       type: object
       required:
-      - category
-      - code
       - id
       - kind
+      - type
+      - category
+      - type_name
+      - code
+      - title
       - parent
       - span
-      - title
-      - type
-      - type_name
       title: ILGSv1 Segment
       description: A segment within the document representing a structurally distinct
         portion of the document's content.
@@ -3268,8 +3268,8 @@ components:
           - 6036
       type: object
       required:
-      - end
       - start
+      - end
       title: ILGSv1 Span
       description: 'A zero-based, half-open span into the Unicode code point space
         of input text.
@@ -3302,9 +3302,9 @@ components:
           examples:
           - term:3
         name:
-          $ref: '#/components/schemas/Span'
+          $ref: '#/components/schemas/ILGSv1 Span'
         meaning:
-          $ref: '#/components/schemas/Span'
+          $ref: '#/components/schemas/ILGSv1 Span'
         mentions:
           items:
             $ref: '#/components/schemas/ILGSv1 Span'
@@ -3321,9 +3321,9 @@ components:
       type: object
       required:
       - id
+      - name
       - meaning
       - mentions
-      - name
       title: ILGSv1 Term
       description: A term assigned a definite meaning within a document.
       examples:
@@ -3366,9 +3366,9 @@ components:
               end: 5223
       type: object
       required:
-      - mentions
-      - person
       - url
+      - person
+      - mentions
       title: ILGSv1 Website
       description: 'A website identified in a document belonging to a legal person.
 
@@ -3700,25 +3700,25 @@ components:
           const: ilgs@1
       type: object
       required:
-      - crossreferences
-      - dates
-      - emails
-      - external_documents
-      - headings
-      - id_numbers
-      - junk
+      - title
+      - subtitle
+      - type
       - jurisdiction
+      - segments
+      - crossreferences
       - locations
       - persons
-      - phone_numbers
-      - quotes
-      - segments
-      - subtitle
-      - terms
-      - title
-      - type
-      - version
+      - emails
       - websites
+      - phone_numbers
+      - id_numbers
+      - terms
+      - external_documents
+      - quotes
+      - dates
+      - headings
+      - junk
+      - version
       title: ILGSv1 Document
       description: The enriched document.
       examples:
@@ -4185,31 +4185,6 @@ components:
         the texts.
       examples:
       - input_tokens: 170
-    Span:
-      properties:
-        start:
-          type: integer
-          exclusiveMinimum: -1.0
-          description: The zero-based start index of the half-open span of Unicode
-            code points in the input text.
-          examples:
-          - 5805
-        end:
-          type: integer
-          exclusiveMinimum: -1.0
-          description: The zero-based end index of the half-open span (i.e., the end
-            is exclusive) of Unicode code points in the input text.
-          examples:
-          - 6036
-      type: object
-      required:
-      - end
-      - start
-      title: ILGSv1 Span
-      description: The span of the segment within the document's text.
-      examples:
-      - start: 3453
-        end: 4074
     UnauthorizedAPIKeyError:
       properties:
         type:
@@ -4322,9 +4297,9 @@ components:
               text: I agree not to tell anyone about the document.
       type: object
       required:
-      - chunks
       - index
       - score
+      - chunks
       title: Universal classification
       examples:
       - index: 0
@@ -4386,10 +4361,10 @@ components:
           - I agree not to tell anyone about the document.
       type: object
       required:
-      - end
       - index
-      - score
       - start
+      - end
+      - score
       - text
       title: Universal classification chunk
       examples:
