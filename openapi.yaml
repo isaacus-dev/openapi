@@ -30,11 +30,26 @@ paths:
       responses:
         '200':
           description: Embeddings of legal texts produced by an Isaacus legal AI embedder.
-          headers: {}
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/EmbeddingResponse'
+              examples:
+                example:
+                  value:
+                    embeddings:
+                    - index: 0
+                      embedding:
+                      - -0.0258
+                      - 0.02062
+                      - -0.0114
+                    - index: 1
+                      embedding:
+                      - -0.0358
+                      - -0.0128
+                      - 0.00251
+                    usage:
+                      input_tokens: 42
         '400':
           description: The request was invalid or could not be processed.
           content:
@@ -192,7 +207,7 @@ paths:
         required: true
       responses:
         '200':
-          description: The rankings of texts by relevance to a query.
+          description: Request fulfilled, document follows
           headers: {}
           content:
             application/json:
@@ -358,11 +373,24 @@ paths:
       responses:
         '200':
           description: The results of extracting answers from texts.
-          headers: {}
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AnswerExtractionResponse'
+              examples:
+                example:
+                  value:
+                    extractions:
+                    - index: 0
+                      answers:
+                      - text: 30 years if the person murdered was a police officer
+                          and 25 years in any other case
+                        start: 61
+                        end: 144
+                        score: 0.11460486645671249
+                      inextractability_score: 0.0027424068182309302
+                    usage:
+                      input_tokens: 43
         '400':
           description: The request was invalid or could not be processed.
           content:
@@ -515,11 +543,24 @@ paths:
         '200':
           description: Classifications of the relevance of legal documents to a query
             produced by an Isaacus universal legal AI classifier.
-          headers: {}
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UniversalClassificationResponse'
+              examples:
+                example:
+                  value:
+                    classifications:
+                    - index: 0
+                      score: 0.8825573934438159
+                      chunks:
+                      - index: 0
+                        start: 0
+                        end: 46
+                        score: 0.8825573934438159
+                        text: I agree not to tell anyone about the document.
+                    usage:
+                      input_tokens: 19
         '400':
           description: The request was invalid or could not be processed.
           content:
@@ -679,11 +720,126 @@ paths:
       responses:
         '200':
           description: The enriched documents alongside usage statistics.
-          headers: {}
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/EnrichmentResponse'
+              examples:
+                example:
+                  value:
+                    results:
+                    - index: 0
+                      document:
+                        version: ilgs@1
+                        title: null
+                        subtitle: null
+                        type: other
+                        jurisdiction: US-FED
+                        segments:
+                        - id: seg:0
+                          kind: unit
+                          type: paragraph
+                          category: annotation
+                          type_name: null
+                          code:
+                            start: 0
+                            end: 4
+                          title: null
+                          parent: null
+                          span:
+                            start: 0
+                            end: 317
+                        crossreferences: []
+                        locations:
+                        - id: loc:0
+                          name:
+                            start: 308
+                            end: 315
+                          type: country
+                          parent: null
+                          mentions:
+                          - start: 308
+                            end: 315
+                        persons:
+                        - id: per:0
+                          name:
+                            start: 32
+                            end: 42
+                          type: natural
+                          role: defense_counsel
+                          parent: null
+                          residence: null
+                          mentions:
+                          - start: 32
+                            end: 42
+                        - id: per:1
+                          name:
+                            start: 167
+                            end: 176
+                          type: natural
+                          role: plaintiff
+                          parent: null
+                          residence: loc:0
+                          mentions:
+                          - start: 167
+                            end: 176
+                        emails: []
+                        websites: []
+                        phone_numbers: []
+                        id_numbers: []
+                        terms:
+                        - id: term:0
+                          name:
+                            start: 120
+                            end: 131
+                          meaning:
+                            start: 88
+                            end: 113
+                          mentions:
+                          - start: 237
+                            end: 248
+                        external_documents:
+                        - id: exd:0
+                          name:
+                            start: 66
+                            end: 72
+                          type: other
+                          jurisdiction: US-FED
+                          reception: neutral
+                          mentions:
+                          - start: 66
+                            end: 72
+                          pinpoints:
+                          - start: 54
+                            end: 58
+                        - id: exd:1
+                          name:
+                            start: 80
+                            end: 113
+                          type: statute
+                          jurisdiction: US-FED
+                          reception: neutral
+                          mentions:
+                          - start: 80
+                            end: 113
+                          pinpoints:
+                          - start: 79
+                            end: 84
+                          - start: 219
+                            end: 229
+                        quotes:
+                        - source_segment: null
+                          source_document: exd:0
+                          source_person: per:0
+                          amending: false
+                          span:
+                            start: 79
+                            end: 317
+                        dates: []
+                        headings: []
+                        junk: []
+                    usage:
+                      input_tokens: 91
         '400':
           description: The request was invalid or could not be processed.
           content:
@@ -3099,9 +3255,17 @@ components:
         start:
           type: integer
           exclusiveMinimum: -1.0
+          description: The zero-based start index of the half-open span of Unicode
+            code points in the input text.
+          examples:
+          - 5805
         end:
           type: integer
           exclusiveMinimum: -1.0
+          description: The zero-based end index of the half-open span (i.e., the end
+            is exclusive) of Unicode code points in the input text.
+          examples:
+          - 6036
       type: object
       required:
       - end
@@ -4026,9 +4190,17 @@ components:
         start:
           type: integer
           exclusiveMinimum: -1.0
+          description: The zero-based start index of the half-open span of Unicode
+            code points in the input text.
+          examples:
+          - 5805
         end:
           type: integer
           exclusiveMinimum: -1.0
+          description: The zero-based end index of the half-open span (i.e., the end
+            is exclusive) of Unicode code points in the input text.
+          examples:
+          - 6036
       type: object
       required:
       - end
