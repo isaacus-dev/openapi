@@ -86,6 +86,15 @@ resources:
     methods:
       create: post /enrichments
 
+custom_casings:
+  ilgs:
+    initialism: true
+  v1:
+    pascal: v1
+    camel: v1
+    capital: v1
+    snake: v1
+
 settings:
   disable_mock_tests: true
   license: Apache-2.0
