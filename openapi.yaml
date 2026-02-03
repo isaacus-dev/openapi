@@ -1,6 +1,6 @@
 info:
   title: Isaacus API
-  version: 0.8.1
+  version: 0.8.2
   description: A RESTful API for using Isaacus legal AI models, data and other solutions.
   termsOfService: https://isaacus.com/terms
   contact:
@@ -1500,7 +1500,12 @@ components:
       - model
       - texts
       title: Enrichment request
-      description: A request to enrich texts with an Isaacus enrichment model.
+      description: 'A request to enrich texts with an Isaacus enrichment model.
+
+
+        Note that this endpoint is currently in closed beta and is subject to change
+        or be removed without notice until its official release. To get access, apply
+        to the [Isaacus Beta Program](https://isaacus.com/beta).'
       examples:
       - model: kanon-2-enricher-preview
         texts:
@@ -1521,12 +1526,13 @@ components:
 
 
             All spans in an enriched document graph are indexed into the Unicode code
-            point space of the source document. Access to source documents is thus
-            required to resolve spans into text.
+            point space of a source document. Access to source documents is thus required
+            to resolve spans into text.
 
 
-            The first and second elements of a span correspond to the start index
-            and the index immediately after the end of a span of Unicode code points.
+            The start and end indices of spans are zero-based (i.e., the first Unicode
+            code point in the document is at index 0) and half-open (i.e., the end
+            index is exclusive).
 
 
             All spans are globally laminar and well-nested similar to XML—it is impossible
@@ -1557,47 +1563,47 @@ components:
               category: annotation
               type_name: null
               code:
-              - 0
-              - 4
+                start: 0
+                end: 4
               title: null
               parent: null
               span:
-              - 0
-              - 317
+                start: 0
+                end: 317
             crossreferences: []
             locations:
             - id: loc:0
               name:
-              - 308
-              - 315
+                start: 308
+                end: 315
               type: country
               parent: null
               mentions:
-              - - 308
-                - 315
+              - start: 308
+                end: 315
             persons:
             - id: per:0
               name:
-              - 32
-              - 42
+                start: 32
+                end: 42
               type: natural
               role: defense_counsel
               parent: null
               residence: null
               mentions:
-              - - 32
-                - 42
+              - start: 32
+                end: 42
             - id: per:1
               name:
-              - 167
-              - 176
+                start: 167
+                end: 176
               type: natural
               role: plaintiff
               parent: null
               residence: loc:0
               mentions:
-              - - 167
-                - 176
+              - start: 167
+                end: 176
             emails: []
             websites: []
             phone_numbers: []
@@ -1605,51 +1611,51 @@ components:
             terms:
             - id: term:0
               name:
-              - 120
-              - 131
+                start: 120
+                end: 131
               meaning:
-              - 88
-              - 113
+                start: 88
+                end: 113
               mentions:
-              - - 237
-                - 248
+              - start: 237
+                end: 248
             external_documents:
             - id: exd:0
               name:
-              - 66
-              - 72
+                start: 66
+                end: 72
               type: other
               jurisdiction: US-FED
               reception: neutral
               mentions:
-              - - 66
-                - 72
+              - start: 66
+                end: 72
               pinpoints:
-              - - 54
-                - 58
+              - start: 54
+                end: 58
             - id: exd:1
               name:
-              - 80
-              - 113
+                start: 80
+                end: 113
               type: statute
               jurisdiction: US-FED
               reception: neutral
               mentions:
-              - - 80
-                - 113
+              - start: 80
+                end: 113
               pinpoints:
-              - - 79
-                - 84
-              - - 219
-                - 229
+              - start: 79
+                end: 84
+              - start: 219
+                end: 229
             quotes:
             - source_segment: null
               source_document: exd:0
               source_person: per:0
               amending: false
               span:
-              - 79
-              - 317
+                start: 79
+                end: 317
             dates: []
             headings: []
             junk: []
@@ -1676,47 +1682,47 @@ components:
               category: annotation
               type_name: null
               code:
-              - 0
-              - 4
+                start: 0
+                end: 4
               title: null
               parent: null
               span:
-              - 0
-              - 317
+                start: 0
+                end: 317
             crossreferences: []
             locations:
             - id: loc:0
               name:
-              - 308
-              - 315
+                start: 308
+                end: 315
               type: country
               parent: null
               mentions:
-              - - 308
-                - 315
+              - start: 308
+                end: 315
             persons:
             - id: per:0
               name:
-              - 32
-              - 42
+                start: 32
+                end: 42
               type: natural
               role: defense_counsel
               parent: null
               residence: null
               mentions:
-              - - 32
-                - 42
+              - start: 32
+                end: 42
             - id: per:1
               name:
-              - 167
-              - 176
+                start: 167
+                end: 176
               type: natural
               role: plaintiff
               parent: null
               residence: loc:0
               mentions:
-              - - 167
-                - 176
+              - start: 167
+                end: 176
             emails: []
             websites: []
             phone_numbers: []
@@ -1724,51 +1730,51 @@ components:
             terms:
             - id: term:0
               name:
-              - 120
-              - 131
+                start: 120
+                end: 131
               meaning:
-              - 88
-              - 113
+                start: 88
+                end: 113
               mentions:
-              - - 237
-                - 248
+              - start: 237
+                end: 248
             external_documents:
             - id: exd:0
               name:
-              - 66
-              - 72
+                start: 66
+                end: 72
               type: other
               jurisdiction: US-FED
               reception: neutral
               mentions:
-              - - 66
-                - 72
+              - start: 66
+                end: 72
               pinpoints:
-              - - 54
-                - 58
+              - start: 54
+                end: 58
             - id: exd:1
               name:
-              - 80
-              - 113
+                start: 80
+                end: 113
               type: statute
               jurisdiction: US-FED
               reception: neutral
               mentions:
-              - - 80
-                - 113
+              - start: 80
+                end: 113
               pinpoints:
-              - - 79
-                - 84
-              - - 219
-                - 229
+              - start: 79
+                end: 84
+              - start: 219
+                end: 229
             quotes:
             - source_segment: null
               source_document: exd:0
               source_person: per:0
               amending: false
               span:
-              - 79
-              - 317
+                start: 79
+                end: 317
             dates: []
             headings: []
             junk: []
@@ -1808,47 +1814,47 @@ components:
             category: annotation
             type_name: null
             code:
-            - 0
-            - 4
+              start: 0
+              end: 4
             title: null
             parent: null
             span:
-            - 0
-            - 317
+              start: 0
+              end: 317
           crossreferences: []
           locations:
           - id: loc:0
             name:
-            - 308
-            - 315
+              start: 308
+              end: 315
             type: country
             parent: null
             mentions:
-            - - 308
-              - 315
+            - start: 308
+              end: 315
           persons:
           - id: per:0
             name:
-            - 32
-            - 42
+              start: 32
+              end: 42
             type: natural
             role: defense_counsel
             parent: null
             residence: null
             mentions:
-            - - 32
-              - 42
+            - start: 32
+              end: 42
           - id: per:1
             name:
-            - 167
-            - 176
+              start: 167
+              end: 176
             type: natural
             role: plaintiff
             parent: null
             residence: loc:0
             mentions:
-            - - 167
-              - 176
+            - start: 167
+              end: 176
           emails: []
           websites: []
           phone_numbers: []
@@ -1856,51 +1862,51 @@ components:
           terms:
           - id: term:0
             name:
-            - 120
-            - 131
+              start: 120
+              end: 131
             meaning:
-            - 88
-            - 113
+              start: 88
+              end: 113
             mentions:
-            - - 237
-              - 248
+            - start: 237
+              end: 248
           external_documents:
           - id: exd:0
             name:
-            - 66
-            - 72
+              start: 66
+              end: 72
             type: other
             jurisdiction: US-FED
             reception: neutral
             mentions:
-            - - 66
-              - 72
+            - start: 66
+              end: 72
             pinpoints:
-            - - 54
-              - 58
+            - start: 54
+              end: 58
           - id: exd:1
             name:
-            - 80
-            - 113
+              start: 80
+              end: 113
             type: statute
             jurisdiction: US-FED
             reception: neutral
             mentions:
-            - - 80
-              - 113
+            - start: 80
+              end: 113
             pinpoints:
-            - - 79
-              - 84
-            - - 219
-              - 229
+            - start: 79
+              end: 84
+            - start: 219
+              end: 229
           quotes:
           - source_segment: null
             source_document: exd:0
             source_person: per:0
             amending: false
             span:
-            - 79
-            - 317
+              start: 79
+              end: 317
           dates: []
           headings: []
           junk: []
@@ -1944,25 +1950,7 @@ components:
           examples:
           - seg:51
         span:
-          prefixItems:
-          - type: integer
-            exclusiveMinimum: -1.0
-            description: The start index of the span of Unicode code points in the
-              input text.
-            examples:
-            - 5805
-          - type: integer
-            exclusiveMinimum: -1.0
-            description: The index immediately after the end of the span of Unicode
-              code points in the input text.
-            examples:
-            - 6036
-          type: array
-          description: The span within the document's text where the cross-reference
-            occurs.
-          examples:
-          - - 2213
-            - 2229
+          $ref: '#/components/schemas/Span'
       type: object
       required:
       - end
@@ -1974,8 +1962,8 @@ components:
       - start: seg:49
         end: seg:51
         span:
-        - 2213
-        - 2229
+          start: 2213
+          end: 2229
     ILGSv1 Date:
       properties:
         value:
@@ -2064,52 +2052,15 @@ components:
           - per:12
         mentions:
           items:
-            items:
-              oneOf:
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The start index of the span of Unicode code points in
-                  the input text.
-                examples:
-                - 5805
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The index immediately after the end of the span of Unicode
-                  code points in the input text.
-                examples:
-                - 6036
-            type: array
-            maxItems: 2
-            minItems: 2
-            title: ILGSv1 Span
-            description: 'The start index and the index immediately after the end
-              of a span of Unicode code points in input text.
-
-
-              All spans are globally laminar and well-nested similar to XML—it is
-              impossible for any two spans to partially overlap; they can only be
-              disjoint, adjacent, or wholly nested. Spans of the exact same type (e.g.,
-              segments) will never be duplicated.
-
-
-              A span cannot be empty and will never start or end at whitespace.
-
-
-              Note that, when using programming languages other than Python (which
-              uses zero-based, half-open, Unicode code point-spaced string indexing),
-              indices may need to be translated accordingly (for example, JavaScript
-              slices into UTF-16 code units instead of Unicode code points).'
-            examples:
-            - - 5805
-              - 6036
+            $ref: '#/components/schemas/ILGSv1 Span'
           type: array
           description: An array of one or more spans within the document's text where
             the date is mentioned.
           examples:
-          - - - 1179
-              - 1194
-            - - 8784
-              - 8799
+          - - start: 1179
+              end: 1194
+            - start: 8784
+              end: 8799
       type: object
       required:
       - mentions
@@ -2129,10 +2080,10 @@ components:
         type: signature
         person: null
         mentions:
-        - - 1179
-          - 1194
-        - - 8784
-          - 8799
+        - start: 1179
+          end: 1194
+        - start: 8784
+          end: 8799
     ILGSv1 Email:
       properties:
         address:
@@ -2152,50 +2103,13 @@ components:
           - per:3
         mentions:
           items:
-            items:
-              oneOf:
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The start index of the span of Unicode code points in
-                  the input text.
-                examples:
-                - 5805
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The index immediately after the end of the span of Unicode
-                  code points in the input text.
-                examples:
-                - 6036
-            type: array
-            maxItems: 2
-            minItems: 2
-            title: ILGSv1 Span
-            description: 'The start index and the index immediately after the end
-              of a span of Unicode code points in input text.
-
-
-              All spans are globally laminar and well-nested similar to XML—it is
-              impossible for any two spans to partially overlap; they can only be
-              disjoint, adjacent, or wholly nested. Spans of the exact same type (e.g.,
-              segments) will never be duplicated.
-
-
-              A span cannot be empty and will never start or end at whitespace.
-
-
-              Note that, when using programming languages other than Python (which
-              uses zero-based, half-open, Unicode code point-spaced string indexing),
-              indices may need to be translated accordingly (for example, JavaScript
-              slices into UTF-16 code units instead of Unicode code points).'
-            examples:
-            - - 5805
-              - 6036
+            $ref: '#/components/schemas/ILGSv1 Span'
           type: array
           description: An array of one or more spans within the document's text where
             the email address is mentioned.
           examples:
-          - - - 5142
-              - 5164
+          - - start: 5142
+              end: 5164
       type: object
       required:
       - address
@@ -2212,8 +2126,8 @@ components:
       - address: hello@example.com
         person: per:3
         mentions:
-        - - 5142
-          - 5164
+        - start: 5142
+          end: 5164
     ILGSv1 External Document:
       properties:
         id:
@@ -2226,33 +2140,7 @@ components:
           examples:
           - exd:2
         name:
-          prefixItems:
-          - type: integer
-            exclusiveMinimum: -1.0
-            description: The start index of the span of Unicode code points in the
-              input text.
-            examples:
-            - 5805
-          - type: integer
-            exclusiveMinimum: -1.0
-            description: The index immediately after the end of the span of Unicode
-              code points in the input text.
-            examples:
-            - 6036
-          type: array
-          description: 'A span within the document''s text representing the ''most
-            proper'' name of the external document.
-
-
-            As an example, a document referred to as the ''Constitution of the United
-            States of America'' in two places in a document, the ''U.S. Constitution''
-            in three places, and the ''Constitution'' in one place would have its
-            `name` set to whichever span the model was most confident represented
-            the proper name of the document, likely being one of the ''Constitution
-            of the United States of America'' spans.'
-          examples:
-          - - 1972
-            - 2005
+          $ref: '#/components/schemas/Span'
         type:
           type: string
           enum:
@@ -2348,102 +2236,28 @@ components:
           - positive
         mentions:
           items:
-            items:
-              oneOf:
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The start index of the span of Unicode code points in
-                  the input text.
-                examples:
-                - 5805
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The index immediately after the end of the span of Unicode
-                  code points in the input text.
-                examples:
-                - 6036
-            type: array
-            maxItems: 2
-            minItems: 2
-            title: ILGSv1 Span
-            description: 'The start index and the index immediately after the end
-              of a span of Unicode code points in input text.
-
-
-              All spans are globally laminar and well-nested similar to XML—it is
-              impossible for any two spans to partially overlap; they can only be
-              disjoint, adjacent, or wholly nested. Spans of the exact same type (e.g.,
-              segments) will never be duplicated.
-
-
-              A span cannot be empty and will never start or end at whitespace.
-
-
-              Note that, when using programming languages other than Python (which
-              uses zero-based, half-open, Unicode code point-spaced string indexing),
-              indices may need to be translated accordingly (for example, JavaScript
-              slices into UTF-16 code units instead of Unicode code points).'
-            examples:
-            - - 5805
-              - 6036
+            $ref: '#/components/schemas/ILGSv1 Span'
           type: array
           description: An array of one or more spans within the document's text where
             the external document is mentioned by name, for example, 'the US Constitution'
             in 'the Second Amendment to the US Constitution protects freedom of speech'.
           examples:
-          - - - 937
-              - 941
-            - - 1972
-              - 2005
-            - - 3713
-              - 3734
+          - - start: 937
+              end: 941
+            - start: 1972
+              end: 2005
+            - start: 3713
+              end: 3734
         pinpoints:
           items:
-            items:
-              oneOf:
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The start index of the span of Unicode code points in
-                  the input text.
-                examples:
-                - 5805
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The index immediately after the end of the span of Unicode
-                  code points in the input text.
-                examples:
-                - 6036
-            type: array
-            maxItems: 2
-            minItems: 2
-            title: ILGSv1 Span
-            description: 'The start index and the index immediately after the end
-              of a span of Unicode code points in input text.
-
-
-              All spans are globally laminar and well-nested similar to XML—it is
-              impossible for any two spans to partially overlap; they can only be
-              disjoint, adjacent, or wholly nested. Spans of the exact same type (e.g.,
-              segments) will never be duplicated.
-
-
-              A span cannot be empty and will never start or end at whitespace.
-
-
-              Note that, when using programming languages other than Python (which
-              uses zero-based, half-open, Unicode code point-spaced string indexing),
-              indices may need to be translated accordingly (for example, JavaScript
-              slices into UTF-16 code units instead of Unicode code points).'
-            examples:
-            - - 5805
-              - 6036
+            $ref: '#/components/schemas/ILGSv1 Span'
           type: array
           description: An array of spans within the document's text where specific
             parts of the external document are referenced, for example, 'Section 2'
             in 'as defined in Section 2 of the US Constitution'.
           examples:
-          - - - 7696
-              - 7712
+          - - start: 7696
+              end: 7712
       type: object
       required:
       - id
@@ -2458,21 +2272,21 @@ components:
       examples:
       - id: exd:2
         name:
-        - 1972
-        - 2005
+          start: 1972
+          end: 2005
         type: statute
         jurisdiction: US
         reception: positive
         mentions:
-        - - 937
-          - 941
-        - - 1972
-          - 2005
-        - - 3713
-          - 3734
+        - start: 937
+          end: 941
+        - start: 1972
+          end: 2005
+        - start: 3713
+          end: 3734
         pinpoints:
-        - - 7696
-          - 7712
+        - start: 7696
+          end: 7712
     ILGSv1 ID Number:
       properties:
         number:
@@ -2492,50 +2306,13 @@ components:
           - per:7
         mentions:
           items:
-            items:
-              oneOf:
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The start index of the span of Unicode code points in
-                  the input text.
-                examples:
-                - 5805
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The index immediately after the end of the span of Unicode
-                  code points in the input text.
-                examples:
-                - 6036
-            type: array
-            maxItems: 2
-            minItems: 2
-            title: ILGSv1 Span
-            description: 'The start index and the index immediately after the end
-              of a span of Unicode code points in input text.
-
-
-              All spans are globally laminar and well-nested similar to XML—it is
-              impossible for any two spans to partially overlap; they can only be
-              disjoint, adjacent, or wholly nested. Spans of the exact same type (e.g.,
-              segments) will never be duplicated.
-
-
-              A span cannot be empty and will never start or end at whitespace.
-
-
-              Note that, when using programming languages other than Python (which
-              uses zero-based, half-open, Unicode code point-spaced string indexing),
-              indices may need to be translated accordingly (for example, JavaScript
-              slices into UTF-16 code units instead of Unicode code points).'
-            examples:
-            - - 5805
-              - 6036
+            $ref: '#/components/schemas/ILGSv1 Span'
           type: array
           description: An array of one or more spans within the document's text where
             the identification number is mentioned.
           examples:
-          - - - 7180
-              - 7194
+          - - start: 7180
+              end: 7194
       type: object
       required:
       - mentions
@@ -2552,8 +2329,8 @@ components:
       - number: 999-99-9999
         person: per:7
         mentions:
-        - - 7180
-          - 7194
+        - start: 7180
+          end: 7194
     ILGSv1 Location:
       properties:
         id:
@@ -2565,32 +2342,7 @@ components:
           examples:
           - loc:6
         name:
-          prefixItems:
-          - type: integer
-            exclusiveMinimum: -1.0
-            description: The start index of the span of Unicode code points in the
-              input text.
-            examples:
-            - 5805
-          - type: integer
-            exclusiveMinimum: -1.0
-            description: The index immediately after the end of the span of Unicode
-              code points in the input text.
-            examples:
-            - 6036
-          type: array
-          description: 'A span within the document''s text representing the ''most
-            proper'' name of the location.
-
-
-            As an example, a location referred to as ''New York City'' in two places
-            in a document, ''NYC'' in three places, and ''the Big Apple'' in one place
-            would have its `name` set to whichever span the model was most confident
-            represented the proper name of the location, likely being one of the ''New
-            York City'' spans.'
-          examples:
-          - - 6523
-            - 6582
+          $ref: '#/components/schemas/Span'
         type:
           type: string
           enum:
@@ -2639,54 +2391,17 @@ components:
           - loc:1
         mentions:
           items:
-            items:
-              oneOf:
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The start index of the span of Unicode code points in
-                  the input text.
-                examples:
-                - 5805
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The index immediately after the end of the span of Unicode
-                  code points in the input text.
-                examples:
-                - 6036
-            type: array
-            maxItems: 2
-            minItems: 2
-            title: ILGSv1 Span
-            description: 'The start index and the index immediately after the end
-              of a span of Unicode code points in input text.
-
-
-              All spans are globally laminar and well-nested similar to XML—it is
-              impossible for any two spans to partially overlap; they can only be
-              disjoint, adjacent, or wholly nested. Spans of the exact same type (e.g.,
-              segments) will never be duplicated.
-
-
-              A span cannot be empty and will never start or end at whitespace.
-
-
-              Note that, when using programming languages other than Python (which
-              uses zero-based, half-open, Unicode code point-spaced string indexing),
-              indices may need to be translated accordingly (for example, JavaScript
-              slices into UTF-16 code units instead of Unicode code points).'
-            examples:
-            - - 5805
-              - 6036
+            $ref: '#/components/schemas/ILGSv1 Span'
           type: array
           description: An array of one or more spans within the document's text where
             the location is mentioned.
           examples:
-          - - - 5074
-              - 5133
-            - - 6523
-              - 6582
-            - - 8094
-              - 8153
+          - - start: 5074
+              end: 5133
+            - start: 6523
+              end: 6582
+            - start: 8094
+              end: 8153
       type: object
       required:
       - id
@@ -2699,17 +2414,17 @@ components:
       examples:
       - id: loc:6
         name:
-        - 6523
-        - 6582
+          start: 6523
+          end: 6582
         type: address
         parent: loc:1
         mentions:
-        - - 5074
-          - 5133
-        - - 6523
-          - 6582
-        - - 8094
-          - 8153
+        - start: 5074
+          end: 5133
+        - start: 6523
+          end: 6582
+        - start: 8094
+          end: 8153
     ILGSv1 Person:
       properties:
         id:
@@ -2721,32 +2436,7 @@ components:
           examples:
           - per:8
         name:
-          prefixItems:
-          - type: integer
-            exclusiveMinimum: -1.0
-            description: The start index of the span of Unicode code points in the
-              input text.
-            examples:
-            - 5805
-          - type: integer
-            exclusiveMinimum: -1.0
-            description: The index immediately after the end of the span of Unicode
-              code points in the input text.
-            examples:
-            - 6036
-          type: array
-          description: 'A span within the document''s text representing the ''most
-            proper'' name of the person.
-
-
-            As an example, a person referred to as ''Jonathan A. Doe'' in two places
-            in a document, ''John Doe'' in three places, and ''Mr. Doe'' in one place
-            would have their `name` set to whichever span the model was most confident
-            represented the proper name of the person, likely being one of the ''Jonathan
-            A. Doe'' spans.'
-          examples:
-          - - 6943
-            - 6968
+          $ref: '#/components/schemas/Span'
         type:
           type: string
           enum:
@@ -3014,50 +2704,13 @@ components:
           - loc:5
         mentions:
           items:
-            items:
-              oneOf:
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The start index of the span of Unicode code points in
-                  the input text.
-                examples:
-                - 5805
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The index immediately after the end of the span of Unicode
-                  code points in the input text.
-                examples:
-                - 6036
-            type: array
-            maxItems: 2
-            minItems: 2
-            title: ILGSv1 Span
-            description: 'The start index and the index immediately after the end
-              of a span of Unicode code points in input text.
-
-
-              All spans are globally laminar and well-nested similar to XML—it is
-              impossible for any two spans to partially overlap; they can only be
-              disjoint, adjacent, or wholly nested. Spans of the exact same type (e.g.,
-              segments) will never be duplicated.
-
-
-              A span cannot be empty and will never start or end at whitespace.
-
-
-              Note that, when using programming languages other than Python (which
-              uses zero-based, half-open, Unicode code point-spaced string indexing),
-              indices may need to be translated accordingly (for example, JavaScript
-              slices into UTF-16 code units instead of Unicode code points).'
-            examples:
-            - - 5805
-              - 6036
+            $ref: '#/components/schemas/ILGSv1 Span'
           type: array
           description: An array of one or more spans within the document's text where
             the person is mentioned.
           examples:
-          - - - 6943
-              - 6968
+          - - start: 6943
+              end: 6968
       type: object
       required:
       - id
@@ -3072,15 +2725,15 @@ components:
       examples:
       - id: per:8
         name:
-        - 6943
-        - 6968
+          start: 6943
+          end: 6968
         type: natural
         role: defense_counsel
         parent: per:1
         residence: loc:5
         mentions:
-        - - 6943
-          - 6968
+        - start: 6943
+          end: 6968
     ILGSv1 Phone Number:
       properties:
         number:
@@ -3102,52 +2755,15 @@ components:
           - per:5
         mentions:
           items:
-            items:
-              oneOf:
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The start index of the span of Unicode code points in
-                  the input text.
-                examples:
-                - 5805
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The index immediately after the end of the span of Unicode
-                  code points in the input text.
-                examples:
-                - 6036
-            type: array
-            maxItems: 2
-            minItems: 2
-            title: ILGSv1 Span
-            description: 'The start index and the index immediately after the end
-              of a span of Unicode code points in input text.
-
-
-              All spans are globally laminar and well-nested similar to XML—it is
-              impossible for any two spans to partially overlap; they can only be
-              disjoint, adjacent, or wholly nested. Spans of the exact same type (e.g.,
-              segments) will never be duplicated.
-
-
-              A span cannot be empty and will never start or end at whitespace.
-
-
-              Note that, when using programming languages other than Python (which
-              uses zero-based, half-open, Unicode code point-spaced string indexing),
-              indices may need to be translated accordingly (for example, JavaScript
-              slices into UTF-16 code units instead of Unicode code points).'
-            examples:
-            - - 5805
-              - 6036
+            $ref: '#/components/schemas/ILGSv1 Span'
           type: array
           description: An array of one or more spans within the document's text where
             the phone number is mentioned.
           examples:
-          - - - 5173
-              - 5188
-            - - 5367
-              - 5382
+          - - start: 5173
+              end: 5188
+            - start: 5367
+              end: 5382
       type: object
       required:
       - mentions
@@ -3164,10 +2780,10 @@ components:
       - number: +1 202-555-0143
         person: per:5
         mentions:
-        - - 5173
-          - 5188
-        - - 5367
-          - 5382
+        - start: 5173
+          end: 5188
+        - start: 5367
+          end: 5382
     ILGSv1 Quote:
       properties:
         source_segment:
@@ -3230,24 +2846,7 @@ components:
           examples:
           - false
         span:
-          prefixItems:
-          - type: integer
-            exclusiveMinimum: -1.0
-            description: The start index of the span of Unicode code points in the
-              input text.
-            examples:
-            - 5805
-          - type: integer
-            exclusiveMinimum: -1.0
-            description: The index immediately after the end of the span of Unicode
-              code points in the input text.
-            examples:
-            - 6036
-          type: array
-          description: The span within the document's text where the quote occurs.
-          examples:
-          - - 949
-            - 985
+          $ref: '#/components/schemas/Span'
       type: object
       required:
       - amending
@@ -3263,8 +2862,8 @@ components:
         source_person: per:10
         amending: false
         span:
-        - 949
-        - 985
+          start: 949
+          end: 985
     ILGSv1 Segment:
       properties:
         id:
@@ -3420,143 +3019,32 @@ components:
           - main
         type_name:
           oneOf:
-          - items:
-              oneOf:
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The start index of the span of Unicode code points in
-                  the input text.
-                examples:
-                - 5805
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The index immediately after the end of the span of Unicode
-                  code points in the input text.
-                examples:
-                - 6036
-            type: array
-            maxItems: 2
-            minItems: 2
-            title: ILGSv1 Span
-            description: 'The start index and the index immediately after the end
-              of a span of Unicode code points in input text.
-
-
-              All spans are globally laminar and well-nested similar to XML—it is
-              impossible for any two spans to partially overlap; they can only be
-              disjoint, adjacent, or wholly nested. Spans of the exact same type (e.g.,
-              segments) will never be duplicated.
-
-
-              A span cannot be empty and will never start or end at whitespace.
-
-
-              Note that, when using programming languages other than Python (which
-              uses zero-based, half-open, Unicode code point-spaced string indexing),
-              indices may need to be translated accordingly (for example, JavaScript
-              slices into UTF-16 code units instead of Unicode code points).'
-            examples:
-            - - 5805
-              - 6036
+          - $ref: '#/components/schemas/ILGSv1 Span'
           - type: 'null'
           description: The span within the segment defining its type (for example,
             'Section' in 'Section 2 - Definitions') or `null` if no such span exists.
           examples:
-          - - 3453
-            - 3460
+          - start: 3453
+            end: 3460
         code:
           oneOf:
-          - items:
-              oneOf:
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The start index of the span of Unicode code points in
-                  the input text.
-                examples:
-                - 5805
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The index immediately after the end of the span of Unicode
-                  code points in the input text.
-                examples:
-                - 6036
-            type: array
-            maxItems: 2
-            minItems: 2
-            title: ILGSv1 Span
-            description: 'The start index and the index immediately after the end
-              of a span of Unicode code points in input text.
-
-
-              All spans are globally laminar and well-nested similar to XML—it is
-              impossible for any two spans to partially overlap; they can only be
-              disjoint, adjacent, or wholly nested. Spans of the exact same type (e.g.,
-              segments) will never be duplicated.
-
-
-              A span cannot be empty and will never start or end at whitespace.
-
-
-              Note that, when using programming languages other than Python (which
-              uses zero-based, half-open, Unicode code point-spaced string indexing),
-              indices may need to be translated accordingly (for example, JavaScript
-              slices into UTF-16 code units instead of Unicode code points).'
-            examples:
-            - - 5805
-              - 6036
+          - $ref: '#/components/schemas/ILGSv1 Span'
           - type: 'null'
           description: The span within the segment defining its code (for example,
             '2' in 'Section 2 - Definitions') or `null` if no such span exists.
           examples:
-          - - 3461
-            - 3462
+          - start: 3461
+            end: 3462
         title:
           oneOf:
-          - items:
-              oneOf:
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The start index of the span of Unicode code points in
-                  the input text.
-                examples:
-                - 5805
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The index immediately after the end of the span of Unicode
-                  code points in the input text.
-                examples:
-                - 6036
-            type: array
-            maxItems: 2
-            minItems: 2
-            title: ILGSv1 Span
-            description: 'The start index and the index immediately after the end
-              of a span of Unicode code points in input text.
-
-
-              All spans are globally laminar and well-nested similar to XML—it is
-              impossible for any two spans to partially overlap; they can only be
-              disjoint, adjacent, or wholly nested. Spans of the exact same type (e.g.,
-              segments) will never be duplicated.
-
-
-              A span cannot be empty and will never start or end at whitespace.
-
-
-              Note that, when using programming languages other than Python (which
-              uses zero-based, half-open, Unicode code point-spaced string indexing),
-              indices may need to be translated accordingly (for example, JavaScript
-              slices into UTF-16 code units instead of Unicode code points).'
-            examples:
-            - - 5805
-              - 6036
+          - $ref: '#/components/schemas/ILGSv1 Span'
           - type: 'null'
           description: The span within the segment defining its title (for example,
             'Definitions' in 'Section 2 - Definitions') or `null` if no such span
             exists.
           examples:
-          - - 3465
-            - 3480
+          - start: 3465
+            end: 3480
         parent:
           oneOf:
           - type: string
@@ -3573,24 +3061,7 @@ components:
           examples:
           - seg:40
         span:
-          prefixItems:
-          - type: integer
-            exclusiveMinimum: -1.0
-            description: The start index of the span of Unicode code points in the
-              input text.
-            examples:
-            - 5805
-          - type: integer
-            exclusiveMinimum: -1.0
-            description: The index immediately after the end of the span of Unicode
-              code points in the input text.
-            examples:
-            - 6036
-          type: array
-          description: The span of the segment within the document's text.
-          examples:
-          - - 3453
-            - 4074
+          $ref: '#/components/schemas/Span'
       type: object
       required:
       - category
@@ -3611,18 +3082,51 @@ components:
         type: section
         category: main
         type_name:
-        - 3453
-        - 3460
+          start: 3453
+          end: 3460
         code:
-        - 3461
-        - 3462
+          start: 3461
+          end: 3462
         title:
-        - 3465
-        - 3480
+          start: 3465
+          end: 3480
         parent: seg:0
         span:
-        - 3453
-        - 4074
+          start: 3453
+          end: 4074
+    ILGSv1 Span:
+      properties:
+        start:
+          type: integer
+          exclusiveMinimum: -1.0
+        end:
+          type: integer
+          exclusiveMinimum: -1.0
+      type: object
+      required:
+      - end
+      - start
+      title: ILGSv1 Span
+      description: 'A zero-based, half-open span into the Unicode code point space
+        of input text.
+
+
+        All spans are globally laminar and well-nested similar to XML—it is impossible
+        for any two spans to partially overlap; they can only be disjoint, adjacent,
+        or wholly nested. Spans of the exact same type (e.g., segments) will never
+        be duplicated.
+
+
+        A span cannot be empty and will never start or end at whitespace.
+
+
+        Note that, when using programming languages other than Python (which uses
+        zero-based, half-open, Unicode code point-spaced string indexing), indices
+        may need to be translated accordingly (for example, JavaScript slices into
+        UTF-16 code units instead of Unicode code points).'
+      examples:
+      - start: 5805
+        end: 6036
     ILGSv1 Term:
       properties:
         id:
@@ -3634,92 +3138,12 @@ components:
           examples:
           - term:3
         name:
-          prefixItems:
-          - type: integer
-            exclusiveMinimum: -1.0
-            description: The start index of the span of Unicode code points in the
-              input text.
-            examples:
-            - 5805
-          - type: integer
-            exclusiveMinimum: -1.0
-            description: The index immediately after the end of the span of Unicode
-              code points in the input text.
-            examples:
-            - 6036
-          type: array
-          description: 'The span within the document''s text defining the term''s
-            name. For example, in the phrase ''"Agreement" means this contract between
-            the parties'', the term''s name would be the span covering ''Agreement''.
-
-
-            The term''s name is different from and will never overlap with mentions
-            of the term elsewhere in the document.'
-          examples:
-          - - 1564
-            - 1578
+          $ref: '#/components/schemas/Span'
         meaning:
-          prefixItems:
-          - type: integer
-            exclusiveMinimum: -1.0
-            description: The start index of the span of Unicode code points in the
-              input text.
-            examples:
-            - 5805
-          - type: integer
-            exclusiveMinimum: -1.0
-            description: The index immediately after the end of the span of Unicode
-              code points in the input text.
-            examples:
-            - 6036
-          type: array
-          description: The span within the document's text providing the term's meaning
-            or definition. For example, in the phrase '"Agreement" means this contract
-            between the parties', the term's meaning would be the span covering 'this
-            contract between the parties'.
-          examples:
-          - - 1586
-            - 1603
+          $ref: '#/components/schemas/Span'
         mentions:
           items:
-            items:
-              oneOf:
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The start index of the span of Unicode code points in
-                  the input text.
-                examples:
-                - 5805
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The index immediately after the end of the span of Unicode
-                  code points in the input text.
-                examples:
-                - 6036
-            type: array
-            maxItems: 2
-            minItems: 2
-            title: ILGSv1 Span
-            description: 'The start index and the index immediately after the end
-              of a span of Unicode code points in input text.
-
-
-              All spans are globally laminar and well-nested similar to XML—it is
-              impossible for any two spans to partially overlap; they can only be
-              disjoint, adjacent, or wholly nested. Spans of the exact same type (e.g.,
-              segments) will never be duplicated.
-
-
-              A span cannot be empty and will never start or end at whitespace.
-
-
-              Note that, when using programming languages other than Python (which
-              uses zero-based, half-open, Unicode code point-spaced string indexing),
-              indices may need to be translated accordingly (for example, JavaScript
-              slices into UTF-16 code units instead of Unicode code points).'
-            examples:
-            - - 5805
-              - 6036
+            $ref: '#/components/schemas/ILGSv1 Span'
           type: array
           description: 'An array of spans within the document''s text where the term
             is mentioned outside of its definition.
@@ -3728,8 +3152,8 @@ components:
             It is possible for the term to have no mentions if, outside of its definition,
             it is never referred to in the document.'
           examples:
-          - - - 3347
-              - 3357
+          - - start: 3347
+              end: 3357
       type: object
       required:
       - id
@@ -3741,14 +3165,14 @@ components:
       examples:
       - id: term:3
         name:
-        - 1564
-        - 1578
+          start: 1564
+          end: 1578
         meaning:
-        - 1586
-        - 1603
+          start: 1586
+          end: 1603
         mentions:
-        - - 3347
-          - 3357
+        - start: 3347
+          end: 3357
     ILGSv1 Website:
       properties:
         url:
@@ -3768,51 +3192,14 @@ components:
           - per:4
         mentions:
           items:
-            items:
-              oneOf:
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The start index of the span of Unicode code points in
-                  the input text.
-                examples:
-                - 5805
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The index immediately after the end of the span of Unicode
-                  code points in the input text.
-                examples:
-                - 6036
-            type: array
-            maxItems: 2
-            minItems: 2
-            title: ILGSv1 Span
-            description: 'The start index and the index immediately after the end
-              of a span of Unicode code points in input text.
-
-
-              All spans are globally laminar and well-nested similar to XML—it is
-              impossible for any two spans to partially overlap; they can only be
-              disjoint, adjacent, or wholly nested. Spans of the exact same type (e.g.,
-              segments) will never be duplicated.
-
-
-              A span cannot be empty and will never start or end at whitespace.
-
-
-              Note that, when using programming languages other than Python (which
-              uses zero-based, half-open, Unicode code point-spaced string indexing),
-              indices may need to be translated accordingly (for example, JavaScript
-              slices into UTF-16 code units instead of Unicode code points).'
-            examples:
-            - - 5805
-              - 6036
+            $ref: '#/components/schemas/ILGSv1 Span'
           type: array
           description: An array of one or more spans within the document's text where
             the website is mentioned (including paths and slugs which are not part
             of the website's normalized URL).
           examples:
-          - - - 5199
-              - 5223
+          - - start: 5199
+              end: 5223
       type: object
       required:
       - mentions
@@ -3828,102 +3215,28 @@ components:
       - url: https://www.example.com/
         person: per:4
         mentions:
-        - - 5199
-          - 5223
+        - start: 5199
+          end: 5223
     ILGSv1Document:
       properties:
         title:
           oneOf:
-          - items:
-              oneOf:
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The start index of the span of Unicode code points in
-                  the input text.
-                examples:
-                - 5805
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The index immediately after the end of the span of Unicode
-                  code points in the input text.
-                examples:
-                - 6036
-            type: array
-            maxItems: 2
-            minItems: 2
-            title: ILGSv1 Span
-            description: 'The start index and the index immediately after the end
-              of a span of Unicode code points in input text.
-
-
-              All spans are globally laminar and well-nested similar to XML—it is
-              impossible for any two spans to partially overlap; they can only be
-              disjoint, adjacent, or wholly nested. Spans of the exact same type (e.g.,
-              segments) will never be duplicated.
-
-
-              A span cannot be empty and will never start or end at whitespace.
-
-
-              Note that, when using programming languages other than Python (which
-              uses zero-based, half-open, Unicode code point-spaced string indexing),
-              indices may need to be translated accordingly (for example, JavaScript
-              slices into UTF-16 code units instead of Unicode code points).'
-            examples:
-            - - 5805
-              - 6036
+          - $ref: '#/components/schemas/ILGSv1 Span'
           - type: 'null'
           description: The span defining the title of the document or `null` if the
             document has no title.
           examples:
-          - - 0
-            - 30
+          - start: 0
+            end: 30
         subtitle:
           oneOf:
-          - items:
-              oneOf:
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The start index of the span of Unicode code points in
-                  the input text.
-                examples:
-                - 5805
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The index immediately after the end of the span of Unicode
-                  code points in the input text.
-                examples:
-                - 6036
-            type: array
-            maxItems: 2
-            minItems: 2
-            title: ILGSv1 Span
-            description: 'The start index and the index immediately after the end
-              of a span of Unicode code points in input text.
-
-
-              All spans are globally laminar and well-nested similar to XML—it is
-              impossible for any two spans to partially overlap; they can only be
-              disjoint, adjacent, or wholly nested. Spans of the exact same type (e.g.,
-              segments) will never be duplicated.
-
-
-              A span cannot be empty and will never start or end at whitespace.
-
-
-              Note that, when using programming languages other than Python (which
-              uses zero-based, half-open, Unicode code point-spaced string indexing),
-              indices may need to be translated accordingly (for example, JavaScript
-              slices into UTF-16 code units instead of Unicode code points).'
-            examples:
-            - - 5805
-              - 6036
+          - $ref: '#/components/schemas/ILGSv1 Span'
           - type: 'null'
           description: The span defining the subtitle of the document or `null` if
             the document has no subtitle.
           examples:
-          - - 116
-            - 133
+          - start: 116
+            end: 133
         type:
           type: string
           enum:
@@ -4000,18 +3313,18 @@ components:
               type: section
               category: main
               type_name:
-              - 3453
-              - 3460
+                start: 3453
+                end: 3460
               code:
-              - 3461
-              - 3462
+                start: 3461
+                end: 3462
               title:
-              - 3465
-              - 3480
+                start: 3465
+                end: 3480
               parent: seg:0
               span:
-              - 3453
-              - 4074
+                start: 3453
+                end: 4074
         crossreferences:
           items:
             $ref: '#/components/schemas/ILGSv1 Crossreference'
@@ -4022,8 +3335,8 @@ components:
           - - start: seg:49
               end: seg:51
               span:
-              - 2213
-              - 2229
+                start: 2213
+                end: 2229
         locations:
           items:
             $ref: '#/components/schemas/ILGSv1 Location'
@@ -4032,17 +3345,17 @@ components:
           examples:
           - - id: loc:6
               name:
-              - 6523
-              - 6582
+                start: 6523
+                end: 6582
               type: address
               parent: loc:1
               mentions:
-              - - 5074
-                - 5133
-              - - 6523
-                - 6582
-              - - 8094
-                - 8153
+              - start: 5074
+                end: 5133
+              - start: 6523
+                end: 6582
+              - start: 8094
+                end: 8153
         persons:
           items:
             $ref: '#/components/schemas/ILGSv1 Person'
@@ -4051,15 +3364,15 @@ components:
           examples:
           - - id: per:8
               name:
-              - 6943
-              - 6968
+                start: 6943
+                end: 6968
               type: natural
               role: defense_counsel
               parent: per:1
               residence: loc:5
               mentions:
-              - - 6943
-                - 6968
+              - start: 6943
+                end: 6968
         emails:
           items:
             $ref: '#/components/schemas/ILGSv1 Email'
@@ -4074,8 +3387,8 @@ components:
           - - address: hello@example.com
               person: per:3
               mentions:
-              - - 5142
-                - 5164
+              - start: 5142
+                end: 5164
         websites:
           items:
             $ref: '#/components/schemas/ILGSv1 Website'
@@ -4090,8 +3403,8 @@ components:
           - - url: https://www.example.com/
               person: per:4
               mentions:
-              - - 5199
-                - 5223
+              - start: 5199
+                end: 5223
         phone_numbers:
           items:
             $ref: '#/components/schemas/ILGSv1 Phone Number'
@@ -4106,10 +3419,10 @@ components:
           - - number: +1 202-555-0143
               person: per:5
               mentions:
-              - - 5173
-                - 5188
-              - - 5367
-                - 5382
+              - start: 5173
+                end: 5188
+              - start: 5367
+                end: 5382
         id_numbers:
           items:
             $ref: '#/components/schemas/ILGSv1 ID Number'
@@ -4124,8 +3437,8 @@ components:
           - - number: 999-99-9999
               person: per:7
               mentions:
-              - - 7180
-                - 7194
+              - start: 7180
+                end: 7194
         terms:
           items:
             $ref: '#/components/schemas/ILGSv1 Term'
@@ -4134,14 +3447,14 @@ components:
           examples:
           - - id: term:3
               name:
-              - 1564
-              - 1578
+                start: 1564
+                end: 1578
               meaning:
-              - 1586
-              - 1603
+                start: 1586
+                end: 1603
               mentions:
-              - - 3347
-                - 3357
+              - start: 3347
+                end: 3357
         external_documents:
           items:
             $ref: '#/components/schemas/ILGSv1 External Document'
@@ -4150,21 +3463,21 @@ components:
           examples:
           - - id: exd:2
               name:
-              - 1972
-              - 2005
+                start: 1972
+                end: 2005
               type: statute
               jurisdiction: US
               reception: positive
               mentions:
-              - - 937
-                - 941
-              - - 1972
-                - 2005
-              - - 3713
-                - 3734
+              - start: 937
+                end: 941
+              - start: 1972
+                end: 2005
+              - start: 3713
+                end: 3734
               pinpoints:
-              - - 7696
-                - 7712
+              - start: 7696
+                end: 7712
         quotes:
           items:
             $ref: '#/components/schemas/ILGSv1 Quote'
@@ -4176,8 +3489,8 @@ components:
               source_person: per:10
               amending: false
               span:
-              - 949
-              - 985
+                start: 949
+                end: 985
         dates:
           items:
             $ref: '#/components/schemas/ILGSv1 Date'
@@ -4194,104 +3507,30 @@ components:
               type: signature
               person: null
               mentions:
-              - - 1179
-                - 1194
-              - - 8784
-                - 8799
+              - start: 1179
+                end: 1194
+              - start: 8784
+                end: 8799
         headings:
           items:
-            items:
-              oneOf:
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The start index of the span of Unicode code points in
-                  the input text.
-                examples:
-                - 5805
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The index immediately after the end of the span of Unicode
-                  code points in the input text.
-                examples:
-                - 6036
-            type: array
-            maxItems: 2
-            minItems: 2
-            title: ILGSv1 Span
-            description: 'The start index and the index immediately after the end
-              of a span of Unicode code points in input text.
-
-
-              All spans are globally laminar and well-nested similar to XML—it is
-              impossible for any two spans to partially overlap; they can only be
-              disjoint, adjacent, or wholly nested. Spans of the exact same type (e.g.,
-              segments) will never be duplicated.
-
-
-              A span cannot be empty and will never start or end at whitespace.
-
-
-              Note that, when using programming languages other than Python (which
-              uses zero-based, half-open, Unicode code point-spaced string indexing),
-              indices may need to be translated accordingly (for example, JavaScript
-              slices into UTF-16 code units instead of Unicode code points).'
-            examples:
-            - - 5805
-              - 6036
+            $ref: '#/components/schemas/ILGSv1 Span'
           type: array
           description: An array of spans within the document's text constituting headings.
           examples:
-          - - - 0
-              - 30
-            - - 116
-              - 133
+          - - start: 0
+              end: 30
+            - start: 116
+              end: 133
         junk:
           items:
-            items:
-              oneOf:
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The start index of the span of Unicode code points in
-                  the input text.
-                examples:
-                - 5805
-              - type: integer
-                exclusiveMinimum: -1.0
-                description: The index immediately after the end of the span of Unicode
-                  code points in the input text.
-                examples:
-                - 6036
-            type: array
-            maxItems: 2
-            minItems: 2
-            title: ILGSv1 Span
-            description: 'The start index and the index immediately after the end
-              of a span of Unicode code points in input text.
-
-
-              All spans are globally laminar and well-nested similar to XML—it is
-              impossible for any two spans to partially overlap; they can only be
-              disjoint, adjacent, or wholly nested. Spans of the exact same type (e.g.,
-              segments) will never be duplicated.
-
-
-              A span cannot be empty and will never start or end at whitespace.
-
-
-              Note that, when using programming languages other than Python (which
-              uses zero-based, half-open, Unicode code point-spaced string indexing),
-              indices may need to be translated accordingly (for example, JavaScript
-              slices into UTF-16 code units instead of Unicode code points).'
-            examples:
-            - - 5805
-              - 6036
+            $ref: '#/components/schemas/ILGSv1 Span'
           type: array
           description: An array of spans within the document's text constituting non-operative,
             non-substantive 'junk' content such as headers, footers, page numbers,
             and OCR artifacts.
           examples:
-          - - - 83
-              - 114
+          - - start: 83
+              end: 114
         version:
           type: string
           const: ilgs@1
@@ -4331,47 +3570,47 @@ components:
           category: annotation
           type_name: null
           code:
-          - 0
-          - 4
+            start: 0
+            end: 4
           title: null
           parent: null
           span:
-          - 0
-          - 317
+            start: 0
+            end: 317
         crossreferences: []
         locations:
         - id: loc:0
           name:
-          - 308
-          - 315
+            start: 308
+            end: 315
           type: country
           parent: null
           mentions:
-          - - 308
-            - 315
+          - start: 308
+            end: 315
         persons:
         - id: per:0
           name:
-          - 32
-          - 42
+            start: 32
+            end: 42
           type: natural
           role: defense_counsel
           parent: null
           residence: null
           mentions:
-          - - 32
-            - 42
+          - start: 32
+            end: 42
         - id: per:1
           name:
-          - 167
-          - 176
+            start: 167
+            end: 176
           type: natural
           role: plaintiff
           parent: null
           residence: loc:0
           mentions:
-          - - 167
-            - 176
+          - start: 167
+            end: 176
         emails: []
         websites: []
         phone_numbers: []
@@ -4379,51 +3618,51 @@ components:
         terms:
         - id: term:0
           name:
-          - 120
-          - 131
+            start: 120
+            end: 131
           meaning:
-          - 88
-          - 113
+            start: 88
+            end: 113
           mentions:
-          - - 237
-            - 248
+          - start: 237
+            end: 248
         external_documents:
         - id: exd:0
           name:
-          - 66
-          - 72
+            start: 66
+            end: 72
           type: other
           jurisdiction: US-FED
           reception: neutral
           mentions:
-          - - 66
-            - 72
+          - start: 66
+            end: 72
           pinpoints:
-          - - 54
-            - 58
+          - start: 54
+            end: 58
         - id: exd:1
           name:
-          - 80
-          - 113
+            start: 80
+            end: 113
           type: statute
           jurisdiction: US-FED
           reception: neutral
           mentions:
-          - - 80
-            - 113
+          - start: 80
+            end: 113
           pinpoints:
-          - - 79
-            - 84
-          - - 219
-            - 229
+          - start: 79
+            end: 84
+          - start: 219
+            end: 229
         quotes:
         - source_segment: null
           source_document: exd:0
           source_person: per:0
           amending: false
           span:
-          - 79
-          - 317
+            start: 79
+            end: 317
         dates: []
         headings: []
         junk: []
@@ -4782,6 +4021,23 @@ components:
         the texts.
       examples:
       - input_tokens: 170
+    Span:
+      properties:
+        start:
+          type: integer
+          exclusiveMinimum: -1.0
+        end:
+          type: integer
+          exclusiveMinimum: -1.0
+      type: object
+      required:
+      - end
+      - start
+      title: ILGSv1 Span
+      description: The span of the segment within the document's text.
+      examples:
+      - start: 3453
+        end: 4074
     UnauthorizedAPIKeyError:
       properties:
         type:
