@@ -75,6 +75,7 @@ resources:
       v1:
         models:
           ilgs_v1_document: ILGSv1Document
+          ilgs_v1_span: ILGSv1 Span
 
 custom_casings:
   qa:
