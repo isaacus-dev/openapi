@@ -91,10 +91,6 @@ resources:
           website: "#/components/schemas/ILGSv1 Website"
           document: "#/components/schemas/ILGSv1Document"
 
-  $shared:
-    models:
-      chunking_options: "#/components/schemas/ChunkingOptions"
-
 custom_casings:
   qa:
     initialism: true
