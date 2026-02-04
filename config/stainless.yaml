@@ -97,9 +97,9 @@ custom_casings:
   ilgs:
     initialism: true
   v1:
-    pascal: V1
-    capital: V1
+    pascal: v1
     camel: v1
+    capital: v1
     snake: v1
 
 settings:
