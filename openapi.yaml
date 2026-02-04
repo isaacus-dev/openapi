@@ -746,6 +746,7 @@ paths:
                             end: 4
                           title: null
                           parent: null
+                          level: 0
                           span:
                             start: 0
                             end: 317
@@ -1109,7 +1110,7 @@ components:
             other case
         start:
           type: integer
-          exclusiveMinimum: -1.0
+          minimum: 0.0
           title: Non-negative integer
           description: The index of the first character of the answer in the text,
             starting from `0` (and, therefore, ending at the number of characters
@@ -1118,7 +1119,7 @@ components:
           - 61
         end:
           type: integer
-          exclusiveMinimum: -1.0
+          minimum: 0.0
           title: Non-negative integer
           description: The index of the character immediately after the last character
             of the answer in the text, starting from `0` (such that, in Python, the
@@ -1152,7 +1153,7 @@ components:
       properties:
         index:
           type: integer
-          exclusiveMinimum: -1.0
+          minimum: 0.0
           title: Non-negative integer
           description: The index of the text in the input array of texts that this
             result represents, starting from `0` (and, therefore, ending at the number
@@ -1398,7 +1399,7 @@ components:
         overlap_tokens:
           oneOf:
           - type: integer
-            exclusiveMinimum: -1.0
+            minimum: 0.0
             title: Non-negative integer
             description: A whole number greater than or equal to 0.
             examples:
@@ -1428,7 +1429,7 @@ components:
       properties:
         index:
           type: integer
-          exclusiveMinimum: -1.0
+          minimum: 0.0
           title: Non-negative integer
           description: The position of the content in the input array of contents,
             starting from `0` (and, therefore, ending at the number of contents minus
@@ -1723,6 +1724,7 @@ components:
                 end: 4
               title: null
               parent: null
+              level: 0
               span:
                 start: 0
                 end: 317
@@ -1842,6 +1844,7 @@ components:
                 end: 4
               title: null
               parent: null
+              level: 0
               span:
                 start: 0
                 end: 317
@@ -1940,7 +1943,7 @@ components:
       properties:
         index:
           type: integer
-          exclusiveMinimum: -1.0
+          minimum: 0.0
           title: Non-negative integer
           description: The index of this document in the input array of texts, starting
             at `0` (and, therefore, ending at the number of inputs minus `1`).
@@ -1974,6 +1977,7 @@ components:
               end: 4
             title: null
             parent: null
+            level: 0
             span:
               start: 0
               end: 317
@@ -3216,6 +3220,13 @@ components:
             segment).
           examples:
           - seg:40
+        level:
+          type: integer
+          minimum: 0.0
+          description: The level of the segment within the document's segment hierarchy
+            starting from `0` for root-level segments.
+          examples:
+          - 2
         span:
           $ref: '#/components/schemas/ILGSv1 Span'
       type: object
@@ -3228,6 +3239,7 @@ components:
       - code
       - title
       - parent
+      - level
       - span
       title: ILGSv1 Segment
       description: A segment within the document representing a structurally distinct
@@ -3247,6 +3259,7 @@ components:
           start: 3465
           end: 3480
         parent: seg:0
+        level: 1
         span:
           start: 3453
           end: 4074
@@ -3254,14 +3267,14 @@ components:
       properties:
         start:
           type: integer
-          exclusiveMinimum: -1.0
+          minimum: 0.0
           description: The zero-based start index of the half-open span of Unicode
             code points in the input text.
           examples:
           - 5805
         end:
           type: integer
-          exclusiveMinimum: -1.0
+          minimum: 0.0
           description: The zero-based end index of the half-open span (i.e., the end
             is exclusive) of Unicode code points in the input text.
           examples:
@@ -3486,6 +3499,7 @@ components:
                 start: 3465
                 end: 3480
               parent: seg:0
+              level: 1
               span:
                 start: 3453
                 end: 4074
@@ -3738,6 +3752,7 @@ components:
             end: 4
           title: null
           parent: null
+          level: 0
           span:
             start: 0
             end: 317
@@ -4145,7 +4160,7 @@ components:
       properties:
         index:
           type: integer
-          exclusiveMinimum: -1.0
+          minimum: 0.0
           title: Non-negative integer
           description: The index of the text in the input array of texts, starting
             from `0` (and, therefore, ending at the number of texts minus `1`).
@@ -4257,7 +4272,7 @@ components:
       properties:
         index:
           type: integer
-          exclusiveMinimum: -1.0
+          minimum: 0.0
           title: Non-negative integer
           description: The index of the text in the input array of texts, starting
             from `0` (and, therefore, ending at the number of texts minus `1`).
@@ -4314,7 +4329,7 @@ components:
       properties:
         index:
           type: integer
-          exclusiveMinimum: -1.0
+          minimum: 0.0
           title: Non-negative integer
           description: The original position of the chunk in the outputted list of
             chunks before sorting, starting from `0` (and, therefore, ending at the
@@ -4323,7 +4338,7 @@ components:
           - 0
         start:
           type: integer
-          exclusiveMinimum: -1.0
+          minimum: 0.0
           title: Non-negative integer
           description: The index of the character in the original text where the chunk
             starts, beginning from `0`.
