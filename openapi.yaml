@@ -752,6 +752,7 @@ paths:
                             end: 4
                           title: null
                           parent: null
+                          children: []
                           level: 0
                           span:
                             start: 0
@@ -764,6 +765,7 @@ paths:
                             end: 315
                           type: country
                           parent: null
+                          children: []
                           mentions:
                           - start: 308
                             end: 315
@@ -775,6 +777,7 @@ paths:
                           type: natural
                           role: defense_counsel
                           parent: null
+                          children: []
                           residence: null
                           mentions:
                           - start: 32
@@ -786,6 +789,7 @@ paths:
                           type: natural
                           role: plaintiff
                           parent: null
+                          children: []
                           residence: loc:0
                           mentions:
                           - start: 167
@@ -1735,6 +1739,7 @@ components:
                 end: 4
               title: null
               parent: null
+              children: []
               level: 0
               span:
                 start: 0
@@ -1747,6 +1752,7 @@ components:
                 end: 315
               type: country
               parent: null
+              children: []
               mentions:
               - start: 308
                 end: 315
@@ -1758,6 +1764,7 @@ components:
               type: natural
               role: defense_counsel
               parent: null
+              children: []
               residence: null
               mentions:
               - start: 32
@@ -1769,6 +1776,7 @@ components:
               type: natural
               role: plaintiff
               parent: null
+              children: []
               residence: loc:0
               mentions:
               - start: 167
@@ -1860,6 +1868,7 @@ components:
                 end: 4
               title: null
               parent: null
+              children: []
               level: 0
               span:
                 start: 0
@@ -1872,6 +1881,7 @@ components:
                 end: 315
               type: country
               parent: null
+              children: []
               mentions:
               - start: 308
                 end: 315
@@ -1883,6 +1893,7 @@ components:
               type: natural
               role: defense_counsel
               parent: null
+              children: []
               residence: null
               mentions:
               - start: 32
@@ -1894,6 +1905,7 @@ components:
               type: natural
               role: plaintiff
               parent: null
+              children: []
               residence: loc:0
               mentions:
               - start: 167
@@ -1998,6 +2010,7 @@ components:
               end: 4
             title: null
             parent: null
+            children: []
             level: 0
             span:
               start: 0
@@ -2010,6 +2023,7 @@ components:
               end: 315
             type: country
             parent: null
+            children: []
             mentions:
             - start: 308
               end: 315
@@ -2021,6 +2035,7 @@ components:
             type: natural
             role: defense_counsel
             parent: null
+            children: []
             residence: null
             mentions:
             - start: 32
@@ -2032,6 +2047,7 @@ components:
             type: natural
             role: plaintiff
             parent: null
+            children: []
             residence: loc:0
             mentions:
             - start: 167
@@ -2546,7 +2562,7 @@ components:
             examples:
             - loc:6
           - type: 'null'
-          description: 'The unique identifier of the ''parent'' location most immediately
+          description: 'The unique identifier of the ''parent'' location immediately
             containing this location or `null` if the location has no ancestors identified
             in the document.
 
@@ -2570,6 +2586,21 @@ components:
             It is impossible for a location to be its own ancestor.'
           examples:
           - loc:1
+        children:
+          items:
+            type: string
+            title: ILGSv1 Location ID
+            description: A unique identifier for a location in the format `loc:{index}`
+              where `{index}` is a non-negative incrementing integer starting from
+              zero.
+            examples:
+            - loc:6
+          type: array
+          description: The unique identifiers of any 'child' locations having this
+            location as their immediate parent.
+          examples:
+          - loc:3
+          - loc:4
         mentions:
           items:
             $ref: '#/components/schemas/ILGSv1 Span'
@@ -2589,6 +2620,7 @@ components:
       - name
       - type
       - parent
+      - children
       - mentions
       title: ILGSv1 Location
       description: A location identified within a document.
@@ -2599,6 +2631,9 @@ components:
           end: 6582
         type: address
         parent: loc:1
+        children:
+        - loc:3
+        - loc:4
         mentions:
         - start: 5074
           end: 5133
@@ -2858,9 +2893,9 @@ components:
             examples:
             - per:8
           - type: 'null'
-          description: 'The unique identifier of the most immediate legal entity that
-            owns or controls this person (e.g., a parent company) or that this person
-            represents if this person is identified only in their capacity as a representative
+          description: 'The unique identifier of the immediate legal entity that owns
+            or controls this person (e.g., a parent company) or that this person represents
+            if this person is identified only in their capacity as a representative
             (e.g., a director) of that entity or `null` if the person has no parent
             entity mentioned in the document or their parentage is unknown.
 
@@ -2868,6 +2903,21 @@ components:
             It is impossible for a person to be their own parent.'
           examples:
           - per:1
+        children:
+          items:
+            type: string
+            title: ILGSv1 Person ID
+            description: A unique identifier for a legal person in the format `per:{index}`
+              where `{index}` is a non-negative incrementing integer starting from
+              zero.
+            examples:
+            - per:8
+          type: array
+          description: The unique identifiers of any persons having this person as
+            their immediate parent.
+          examples:
+          - per:9
+          - per:10
         residence:
           oneOf:
           - type: string
@@ -2899,6 +2949,7 @@ components:
       - type
       - role
       - parent
+      - children
       - residence
       - mentions
       title: ILGSv1 Person
@@ -2911,6 +2962,9 @@ components:
         type: natural
         role: defense_counsel
         parent: per:1
+        children:
+        - per:9
+        - per:10
         residence: loc:5
         mentions:
         - start: 6943
@@ -3240,14 +3294,29 @@ components:
             this segment or `null` if the segment has no parent (i.e., it is a root-level
             segment).
           examples:
-          - seg:40
+          - seg:0
+        children:
+          items:
+            type: string
+            title: ILGSv1 Segment ID
+            description: A unique identifier for a segment in the format `seg:{index}`
+              where `{index}` is a non-negative incrementing integer starting from
+              zero.
+            examples:
+            - seg:42
+          type: array
+          description: The unique identifiers of any segments having this segment
+            as their immediate parent.
+          examples:
+          - seg:47
+          - seg:48
         level:
           type: integer
           minimum: 0.0
           description: The level of the segment within the document's segment hierarchy
             starting from `0` for root-level segments.
           examples:
-          - 2
+          - 1
         span:
           $ref: '#/components/schemas/ILGSv1 Span'
       type: object
@@ -3260,6 +3329,7 @@ components:
       - code
       - title
       - parent
+      - children
       - level
       - span
       title: ILGSv1 Segment
@@ -3280,6 +3350,9 @@ components:
           start: 3465
           end: 3480
         parent: seg:0
+        children:
+        - seg:47
+        - seg:48
         level: 1
         span:
           start: 3453
@@ -3529,6 +3602,9 @@ components:
                 start: 3465
                 end: 3480
               parent: seg:0
+              children:
+              - seg:47
+              - seg:48
               level: 1
               span:
                 start: 3453
@@ -3557,6 +3633,9 @@ components:
                 end: 6582
               type: address
               parent: loc:1
+              children:
+              - loc:3
+              - loc:4
               mentions:
               - start: 5074
                 end: 5133
@@ -3577,6 +3656,9 @@ components:
               type: natural
               role: defense_counsel
               parent: per:1
+              children:
+              - per:9
+              - per:10
               residence: loc:5
               mentions:
               - start: 6943
@@ -3788,6 +3870,7 @@ components:
             end: 4
           title: null
           parent: null
+          children: []
           level: 0
           span:
             start: 0
@@ -3800,6 +3883,7 @@ components:
             end: 315
           type: country
           parent: null
+          children: []
           mentions:
           - start: 308
             end: 315
@@ -3811,6 +3895,7 @@ components:
           type: natural
           role: defense_counsel
           parent: null
+          children: []
           residence: null
           mentions:
           - start: 32
@@ -3822,6 +3907,7 @@ components:
           type: natural
           role: plaintiff
           parent: null
+          children: []
           residence: loc:0
           mentions:
           - start: 167
