@@ -731,6 +731,12 @@ paths:
                     - index: 0
                       document:
                         version: ilgs@1
+                        text: '[42] The U.S. Attorney General, Mr. McGill, argued
+                          at ¶ 21 of the Filing that "§ 206 of Title 29 of the U.S.
+                          Code (the "Labor Title") does not apply to the plaintiff,
+                          Ms. Moody, given the definition of an "employee" at §203(e)(4)
+                          of the Labor Title does not include volunteers, and, regardless,
+                          she lives in Austria."'
                         title: null
                         subtitle: null
                         type: other
@@ -1709,6 +1715,11 @@ components:
             code units instead of Unicode code points).'
           examples:
           - version: ilgs@1
+            text: '[42] The U.S. Attorney General, Mr. McGill, argued at ¶ 21 of the
+              Filing that "§ 206 of Title 29 of the U.S. Code (the "Labor Title")
+              does not apply to the plaintiff, Ms. Moody, given the definition of
+              an "employee" at §203(e)(4) of the Labor Title does not include volunteers,
+              and, regardless, she lives in Austria."'
             title: null
             subtitle: null
             type: other
@@ -1829,6 +1840,11 @@ components:
         - index: 0
           document:
             version: ilgs@1
+            text: '[42] The U.S. Attorney General, Mr. McGill, argued at ¶ 21 of the
+              Filing that "§ 206 of Title 29 of the U.S. Code (the "Labor Title")
+              does not apply to the plaintiff, Ms. Moody, given the definition of
+              an "employee" at §203(e)(4) of the Labor Title does not include volunteers,
+              and, regardless, she lives in Austria."'
             title: null
             subtitle: null
             type: other
@@ -1962,6 +1978,11 @@ components:
       - index: 0
         document:
           version: ilgs@1
+          text: '[42] The U.S. Attorney General, Mr. McGill, argued at ¶ 21 of the
+            Filing that "§ 206 of Title 29 of the U.S. Code (the "Labor Title") does
+            not apply to the plaintiff, Ms. Moody, given the definition of an "employee"
+            at §203(e)(4) of the Labor Title does not include volunteers, and, regardless,
+            she lives in Austria."'
           title: null
           subtitle: null
           type: other
@@ -3396,6 +3417,15 @@ components:
           end: 5223
     ILGSv1Document:
       properties:
+        text:
+          type: string
+          description: The text of the document.
+          examples:
+          - '[42] The U.S. Attorney General, Mr. McGill, argued at ¶ 21 of the Filing
+            that "§ 206 of Title 29 of the U.S. Code (the "Labor Title") does not
+            apply to the plaintiff, Ms. Moody, given the definition of an "employee"
+            at §203(e)(4) of the Labor Title does not include volunteers, and, regardless,
+            she lives in Austria."'
         title:
           oneOf:
           - $ref: '#/components/schemas/ILGSv1 Span'
@@ -3714,6 +3744,7 @@ components:
           const: ilgs@1
       type: object
       required:
+      - text
       - title
       - subtitle
       - type
@@ -3737,6 +3768,11 @@ components:
       description: The enriched document.
       examples:
       - version: ilgs@1
+        text: '[42] The U.S. Attorney General, Mr. McGill, argued at ¶ 21 of the Filing
+          that "§ 206 of Title 29 of the U.S. Code (the "Labor Title") does not apply
+          to the plaintiff, Ms. Moody, given the definition of an "employee" at §203(e)(4)
+          of the Labor Title does not include volunteers, and, regardless, she lives
+          in Austria."'
         title: null
         subtitle: null
         type: other
