@@ -33,8 +33,7 @@ client_settings:
   opts:
     api_key:
       type: string
-      description: An Isaacus-issued API key passed as a bearer token via the
-        `Authorization` header.
+      description: An Isaacus-issued API key passed as a bearer token via the `Authorization` header.
       nullable: false
       read_env: ISAACUS_API_KEY
       auth:
@@ -70,8 +69,12 @@ resources:
     models:
       enrichment_response: "#/components/schemas/EnrichmentResponse"
 
+    methods:
+      create: post /enrichments
+  
+  ilgs:
     subresources:
-      ilgsv1:
+      v1:
         models:
           crossreference: "#/components/schemas/ILGSv1 Crossreference"
           date: "#/components/schemas/ILGSv1 Date"
@@ -87,8 +90,10 @@ resources:
           term: "#/components/schemas/ILGSv1 Term"
           website: "#/components/schemas/ILGSv1 Website"
           document: "#/components/schemas/ILGSv1Document"
-    methods:
-      create: post /enrichments
+
+  $shared:
+    models:
+      chunking_options: "#/components/schemas/ChunkingOptions"
 
 custom_casings:
   qa:
