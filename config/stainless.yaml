@@ -71,7 +71,7 @@ resources:
     methods:
       create: post /enrichments
 
-  ilgs_v1:
+  ilgsv1:
     models:
       crossreference: ILGSv1 Crossreference
       date: ILGSv1 Date
@@ -89,6 +89,11 @@ resources:
       document: ILGSv1Document
 
 custom_casings:
+  ilgsv1:
+    pascal: ILGSv1
+    camel: ilgsv1
+    capital: ILGS_V1
+    snake: ilgs_v1
   qa:
     initialism: true
   ilgs:
