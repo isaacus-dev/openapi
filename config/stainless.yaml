@@ -49,6 +49,7 @@ resources:
   classifications:
     subresources:
       universal:
+        standalone_api: true
         models:
           universal_classification_response: UniversalClassificationResponse
         methods:
@@ -61,6 +62,7 @@ resources:
   extractions:
     subresources:
       qa:
+        standalone_api: true
         models:
           answer_extraction_response: AnswerExtractionResponse
         methods:
@@ -73,23 +75,22 @@ resources:
   ilgs:
     subresources:
       v1:
-        subresources:
-          v1:
-            models:
-              crossreference: ILGSv1 Crossreference
-              date: ILGSv1 Date
-              email: ILGSv1 Email
-              external_document: ILGSv1 External Document
-              id_number: ILGSv1 ID Number
-              location: ILGSv1 Location
-              person: ILGSv1 Person
-              phone_number: ILGSv1 Phone Number
-              quote: ILGSv1 Quote
-              segment: ILGSv1 Segment
-              span: ILGSv1 Span
-              term: ILGSv1 Term
-              website: ILGSv1 Website
-              document: ILGSv1Document
+        standalone_api: true
+        models:
+          crossreference: ILGSv1 Crossreference
+          date: ILGSv1 Date
+          email: ILGSv1 Email
+          external_document: ILGSv1 External Document
+          id_number: ILGSv1 ID Number
+          location: ILGSv1 Location
+          person: ILGSv1 Person
+          phone_number: ILGSv1 Phone Number
+          quote: ILGSv1 Quote
+          segment: ILGSv1 Segment
+          span: ILGSv1 Span
+          term: ILGSv1 Term
+          website: ILGSv1 Website
+          document: ILGSv1Document
 
 custom_casings:
   qa:
