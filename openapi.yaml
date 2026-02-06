@@ -3847,7 +3847,8 @@ components:
       - junk
       - version
       title: ILGSv1 Document
-      description: The enriched document.
+      description: The document enriched into version 1.0.0 of the Isaacus Legal Graph
+        Schema (ILGS).
       examples:
       - version: ilgs@1
         text: '[42] The U.S. Attorney General, Mr. McGill, argued at ¶ 21 of the Filing
