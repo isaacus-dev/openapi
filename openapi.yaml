@@ -3477,7 +3477,7 @@ components:
           - $ref: '#/components/schemas/ILGSv1 Span'
           - type: 'null'
           description: The span defining the title of the document or `null` if the
-            document has no title.
+            document has no title or its title cannot be resolved.
           examples:
           - start: 0
             end: 30
@@ -3486,7 +3486,7 @@ components:
           - $ref: '#/components/schemas/ILGSv1 Span'
           - type: 'null'
           description: The span defining the subtitle of the document or `null` if
-            the document has no subtitle.
+            the document has no subtitle or its subtitle cannot be resolved.
           examples:
           - start: 116
             end: 133
@@ -3512,6 +3512,9 @@ components:
 
             `decision` denotes judicial or quasi-judicial decisions such as court
             judgments, judicial opinions, and tribunal rulings.
+
+
+            `contract` denotes contracts, covenants, and agreements.
 
 
             `other` is used for all other types of legal documents that do not fit
