@@ -3263,9 +3263,22 @@ components:
             examples:
             - seg:42
           - type: 'null'
-          description: The unique identifier of the 'parent' segment immediately containing
-            this segment or `null` if the segment has no parent (i.e., it is a root-level
-            segment).
+          description: 'The unique identifier of the ''parent'' segment immediately
+            containing this segment or `null` if the segment has no parent (i.e.,
+            it is a root-level segment).
+
+
+            A segment with the `container` kind can be the parent of segments of any
+            kind, including other `container`s.
+
+
+            A segment with the `unit` kind can only be the parent of `item`s and `figure`s.
+
+
+            A segment with the `item` kind can only be the parent of other `item`s.
+
+
+            A segment with the `figure` kind cannot be the parent of any segments.'
           examples:
           - seg:0
         children:
