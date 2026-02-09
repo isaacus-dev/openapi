@@ -872,8 +872,12 @@ paths:
                     type: https://docs.isaacus.com/api-reference/errors#400-validation-error
                     title: Enrichment input too large error
                     status: 400
-                    detail: The input to the enrichment model exceeds the maximum
-                      allowed size.
+                    detail: The input to the enrichment model exceeds its maximum
+                      local context window. We will soon be adding a `chunk` option
+                      to the `overflow_strategy` parameter allowing a near-infinite
+                      global context window through intelligent chunking and stitching.
+                      In the meantime, you can use the `drop_end` overflow strategy
+                      to drop excess tokens from the end of the input.
                     instance: null
         '401':
           description: The API key you provided does not exist, is expired or revoked,
