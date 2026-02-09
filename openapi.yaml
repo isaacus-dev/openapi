@@ -2951,7 +2951,7 @@ components:
         number:
           type: string
           minLength: 3
-          pattern: '^\+(?:\d+(?: |\-)?)+\d+$'
+          pattern: '^\+(?:\d+(?: |\-)?)+\d+(?:\s*[Ee][Xx][Tt]\.\s*\d+)?$'
           description: The normalized phone number in E.123 international notation
             conforming with local conventions on the use of spaces and hyphens as
             separators.
