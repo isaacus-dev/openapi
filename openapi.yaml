@@ -1685,7 +1685,7 @@ components:
             `null`, which is the default setting, raises an error if the input exceeds
             the model''s maximum input length.'
           examples:
-          - null
+          - auto
       type: object
       required:
       - model
@@ -1705,7 +1705,7 @@ components:
           to the plaintiff, Ms. Moody, given the definition of an "employee" at §203(e)(4)
           of the Labor Title does not include volunteers, and, regardless, she lives
           in Austria."'
-        overflow_strategy: null
+        overflow_strategy: auto
     EnrichmentResponse:
       properties:
         results:
