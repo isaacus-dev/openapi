@@ -873,11 +873,12 @@ paths:
                     title: Enrichment input too large error
                     status: 400
                     detail: The input to the enrichment model exceeds its maximum
-                      local context window. We will soon be adding a `chunk` option
-                      to the `overflow_strategy` parameter allowing a near-infinite
-                      global context window through intelligent chunking and stitching.
-                      In the meantime, you can use the `drop_end` overflow strategy
-                      to drop excess tokens from the end of the input.
+                      context window yet no overflow strategy was set. We recommend
+                      setting `overflow_strategy` to `auto` or `chunk`, both of which
+                      will break documents up into smaller chunks that fit within
+                      the model's context window and then intelligently merge the
+                      results into a single prediction at the cost of a minor accuracy
+                      drop.
                     instance: null
         '401':
           description: The API key you provided does not exist, is expired or revoked,
@@ -977,6 +978,16 @@ paths:
                     title: Internal server error
                     status: 500
                     detail: An unexpected error occurred while processing the request.
+                    instance: null
+                Chunking timeout error:
+                  summary: Chunking timeout error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#500-internal-server-error
+                    title: Chunking timeout error
+                    status: 500
+                    detail: Chunking timed out. Did you try to chunk a very large
+                      text with a very low chunk size or very little variation in
+                      levels of whitespace?
                     instance: null
       deprecated: false
 components:
@@ -1648,14 +1659,23 @@ components:
           enum:
           - auto
           - drop_end
+          - chunk
           - null
           description: 'The strategy for handling content exceeding the model''s maximum
             input length.
 
 
-            `auto` currently behaves the same as `drop_end`, dropping excess tokens
-            from the end of input. In the future, `auto` may implement more sophisticated
-            strategies such as chunking and context-aware stitching.
+            `auto`, which is the default and recommended setting, currently behaves
+            the same as `chunk`, which intelligently breaks the input up into smaller
+            chunks and then stitches the results back together into a single prediction.
+            In the future `auto` may implement even more sophisticated strategies
+            for handling long contexts such as leveraging chunk overlap and/or a specialized
+            stitching model.
+
+
+            `chunk` breaks the input up into smaller chunks that fit within the model''s
+            context window and then intelligently merges the results into a single
+            prediction at the cost of a minor accuracy drop.
 
 
             `drop_end` drops tokens from the end of input exceeding the model''s maximum
