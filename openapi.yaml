@@ -2126,7 +2126,7 @@ components:
         start:
           type: string
           minLength: 5
-          pattern: ^seg:(?:0|[1-9]\d*)$
+          pattern: ^seg:.+$
           description: The unique identifier of the earliest segment in the span of
             segments being cross-referenced with ties broken in favor of the least-nested
             (i.e., largest) segment. If the cross-reference points to a single segment,
@@ -2136,7 +2136,7 @@ components:
         end:
           type: string
           minLength: 5
-          pattern: ^seg:(?:0|[1-9]\d*)$
+          pattern: ^seg:.+$
           description: The unique identifier of the latest segment in the span of
             segments being cross-referenced with ties broken in favor of the least-nested
             (i.e., largest) segment. If the cross-reference points to a single segment,
@@ -2230,9 +2230,7 @@ components:
           oneOf:
           - type: string
             title: ILGSv1 Person ID
-            description: A unique identifier for a legal person in the format `per:{index}`
-              where `{index}` is a non-negative incrementing integer starting from
-              zero.
+            description: A unique identifier for a legal person in the format `per:{identifier}`.
             examples:
             - per:8
           - type: 'null'
@@ -2290,7 +2288,7 @@ components:
         person:
           type: string
           minLength: 5
-          pattern: ^per:(?:0|[1-9]\d*)$
+          pattern: ^per:.+$
           description: The unique identifier of the person that this email address
             belongs to.
           examples:
@@ -2327,10 +2325,9 @@ components:
         id:
           type: string
           minLength: 5
-          pattern: ^exd:(?:0|[1-9]\d*)$
+          pattern: ^exd:.+$
           description: The unique identifier of the external document in the format
-            `exd:{index}` where `{index}` is a non-negative incrementing integer starting
-            from zero.
+            `exd:{identifier}`.
           examples:
           - exd:2
         name:
@@ -2493,7 +2490,7 @@ components:
         person:
           type: string
           minLength: 5
-          pattern: ^per:(?:0|[1-9]\d*)$
+          pattern: ^per:.+$
           description: The unique identifier of the person that this identification
             number belongs to.
           examples:
@@ -2530,9 +2527,8 @@ components:
         id:
           type: string
           minLength: 5
-          pattern: ^loc:(?:0|[1-9]\d*)$
-          description: The unique identifier of the location in the format `loc:{index}`
-            where `{index}` is a non-negative incrementing integer starting from zero.
+          pattern: ^loc:.+$
+          description: The unique identifier of the location in the format `loc:{identifier}`.
           examples:
           - loc:6
         name:
@@ -2553,9 +2549,7 @@ components:
           oneOf:
           - type: string
             title: ILGSv1 Location ID
-            description: A unique identifier for a location in the format `loc:{index}`
-              where `{index}` is a non-negative incrementing integer starting from
-              zero.
+            description: A unique identifier for a location in the format `loc:{identifier}`.
             examples:
             - loc:6
           - type: 'null'
@@ -2587,9 +2581,7 @@ components:
           items:
             type: string
             title: ILGSv1 Location ID
-            description: A unique identifier for a location in the format `loc:{index}`
-              where `{index}` is a non-negative incrementing integer starting from
-              zero.
+            description: A unique identifier for a location in the format `loc:{identifier}`.
             examples:
             - loc:6
           type: array
@@ -2643,9 +2635,8 @@ components:
         id:
           type: string
           minLength: 5
-          pattern: ^per:(?:0|[1-9]\d*)$
-          description: The unique identifier of the person in the format `per:{index}`
-            where `{index}` is a non-negative incrementing integer starting from zero.
+          pattern: ^per:.+$
+          description: The unique identifier of the person in the format `per:{identifier}`.
           examples:
           - per:8
         name:
@@ -2884,9 +2875,7 @@ components:
           oneOf:
           - type: string
             title: ILGSv1 Person ID
-            description: A unique identifier for a legal person in the format `per:{index}`
-              where `{index}` is a non-negative incrementing integer starting from
-              zero.
+            description: A unique identifier for a legal person in the format `per:{identifier}`.
             examples:
             - per:8
           - type: 'null'
@@ -2904,9 +2893,7 @@ components:
           items:
             type: string
             title: ILGSv1 Person ID
-            description: A unique identifier for a legal person in the format `per:{index}`
-              where `{index}` is a non-negative incrementing integer starting from
-              zero.
+            description: A unique identifier for a legal person in the format `per:{identifier}`.
             examples:
             - per:8
           type: array
@@ -2919,9 +2906,7 @@ components:
           oneOf:
           - type: string
             title: ILGSv1 Location ID
-            description: A unique identifier for a location in the format `loc:{index}`
-              where `{index}` is a non-negative incrementing integer starting from
-              zero.
+            description: A unique identifier for a location in the format `loc:{identifier}`.
             examples:
             - loc:6
           - type: 'null'
@@ -2980,7 +2965,7 @@ components:
         person:
           type: string
           minLength: 5
-          pattern: ^per:(?:0|[1-9]\d*)$
+          pattern: ^per:.+$
           description: The unique identifier of the person that this phone number
             belongs to.
           examples:
@@ -3022,9 +3007,7 @@ components:
           oneOf:
           - type: string
             title: ILGSv1 Segment ID
-            description: A unique identifier for a segment in the format `seg:{index}`
-              where `{index}` is a non-negative incrementing integer starting from
-              zero.
+            description: A unique identifier for a segment in the format `seg:{identifier}`.
             examples:
             - seg:42
           - type: 'null'
@@ -3042,8 +3025,7 @@ components:
           - type: string
             title: ILGSv1 External Document ID
             description: A unique identifier for an external document in the format
-              `exd:{index}` where `{index}` is a non-negative incrementing integer
-              starting from zero.
+              `exd:{identifier}`.
             examples:
             - exd:2
           - type: 'null'
@@ -3060,9 +3042,7 @@ components:
           oneOf:
           - type: string
             title: ILGSv1 Person ID
-            description: A unique identifier for a legal person in the format `per:{index}`
-              where `{index}` is a non-negative incrementing integer starting from
-              zero.
+            description: A unique identifier for a legal person in the format `per:{identifier}`.
             examples:
             - per:8
           - type: 'null'
@@ -3101,9 +3081,8 @@ components:
         id:
           type: string
           minLength: 5
-          pattern: ^seg:(?:0|[1-9]\d*)$
-          description: The unique identifier of the segment in the format `seg:{index}`
-            where `{index}` is a non-negative incrementing integer starting from zero.
+          pattern: ^seg:.+$
+          description: The unique identifier of the segment in the format `seg:{identifier}`.
           examples:
           - seg:46
         kind:
@@ -3281,9 +3260,7 @@ components:
           oneOf:
           - type: string
             title: ILGSv1 Segment ID
-            description: A unique identifier for a segment in the format `seg:{index}`
-              where `{index}` is a non-negative incrementing integer starting from
-              zero.
+            description: A unique identifier for a segment in the format `seg:{identifier}`.
             examples:
             - seg:42
           - type: 'null'
@@ -3309,9 +3286,7 @@ components:
           items:
             type: string
             title: ILGSv1 Segment ID
-            description: A unique identifier for a segment in the format `seg:{index}`
-              where `{index}` is a non-negative incrementing integer starting from
-              zero.
+            description: A unique identifier for a segment in the format `seg:{identifier}`.
             examples:
             - seg:42
           type: array
@@ -3413,9 +3388,8 @@ components:
         id:
           type: string
           minLength: 6
-          pattern: ^term:(?:0|[1-9]\d*)$
-          description: The unique identifier of the term in the format `term:{index}`
-            where `{index}` is a non-negative incrementing integer starting from zero.
+          pattern: ^term:.+$
+          description: The unique identifier of the term in the format `term:{identifier}`.
           examples:
           - term:3
         name:
@@ -3466,7 +3440,7 @@ components:
         person:
           type: string
           minLength: 5
-          pattern: ^per:(?:0|[1-9]\d*)$
+          pattern: ^per:.+$
           description: The unique identifier of the person that this website belongs
             to.
           examples:
