@@ -3497,7 +3497,8 @@ components:
           - $ref: '#/components/schemas/ILGSv1 Span'
           - type: 'null'
           description: The span defining the subtitle of the document or `null` if
-            the document has no subtitle or its subtitle cannot be resolved.
+            the document has no subtitle, its subtitle cannot be resolved, or has
+            no `title`. The document must have a `title` for it to have a `subtitle`.
           examples:
           - start: 116
             end: 133
