@@ -1691,12 +1691,7 @@ components:
       - model
       - texts
       title: Enrichment request
-      description: 'A request to enrich texts with an Isaacus enrichment model.
-
-
-        Note that this endpoint is currently in closed beta and is subject to change
-        or be removed without notice until its official release. To get access, apply
-        to the [Isaacus Beta Program](https://isaacus.com/beta).'
+      description: A request to enrich texts with an Isaacus enrichment model.
       examples:
       - model: kanon-2-enricher
         texts:
