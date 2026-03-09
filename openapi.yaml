@@ -1,7 +1,7 @@
 info:
   title: Isaacus API
   version: 0.8.2
-  description: A RESTful API for using Isaacus legal AI models, data and other solutions.
+  description: A RESTful API for using Isaacus legal models, data and other solutions.
   termsOfService: https://isaacus.com/terms
   contact:
     name: Isaacus Support
@@ -19,7 +19,7 @@ paths:
       tags:
       - Embeddings
       summary: Embedding
-      description: Embed legal texts with an Isaacus legal AI embedder.
+      description: Vectorize content with an Isaacus embedding model.
       operationId: CreateEmbeddings
       requestBody:
         content:
@@ -29,7 +29,7 @@ paths:
         required: true
       responses:
         '200':
-          description: Embeddings of legal texts produced by an Isaacus legal AI embedder.
+          description: Embeddings of texts produced by an Isaacus embedding model.
           content:
             application/json:
               schema:
@@ -196,8 +196,8 @@ paths:
       tags:
       - Rerankings
       summary: Reranking
-      description: Rank legal documents by their relevance to a query with an Isaacus
-        legal AI reranker.
+      description: Score and rank documents by their relevance to queries with an
+        Isaacus reranker.
       operationId: CreateReranking
       requestBody:
         content:
@@ -361,8 +361,8 @@ paths:
       tags:
       - Extractions
       summary: Extractive question answering
-      description: Extract answers to questions from legal documents with an Isaacus
-        legal AI answer extractor.
+      description: Extract information from documents with an Isaacus extractive question
+        answering model.
       operationId: CreateAnswerExtractions
       requestBody:
         content:
@@ -530,8 +530,7 @@ paths:
       tags:
       - Classifications
       summary: Universal classification
-      description: Classify the relevance of legal documents to a query with an Isaacus
-        universal legal AI classifier.
+      description: Classify documents with an Isaacus universal classification model.
       operationId: CreateUniversalClassifications
       requestBody:
         content:
@@ -541,8 +540,8 @@ paths:
         required: true
       responses:
         '200':
-          description: Classifications of the relevance of legal documents to a query
-            produced by an Isaacus universal legal AI classifier.
+          description: Classifications of the relevance of documents to a query produced
+            by an Isaacus universal classification model.
           content:
             application/json:
               schema:
@@ -709,7 +708,7 @@ paths:
       tags:
       - Enrichments
       summary: Enrichment
-      description: Enrich documents with an Isaacus enricher model.
+      description: Enrich documents with an Isaacus enrichment model.
       operationId: CreateEnrichments
       requestBody:
         content:
@@ -1319,8 +1318,8 @@ components:
       - query
       - texts
       title: Answer extraction request
-      description: A request to extract answers from legal documents with an Isaacus
-        legal AI extractive question answering model.
+      description: A request to extract answers from documents with an Isaacus extractive
+        question answering model.
       examples:
       - model: kanon-answer-extractor
         query: What is the punishment for murder in Victoria?
@@ -1567,7 +1566,7 @@ components:
       - model
       - texts
       title: Embedding request
-      description: A request to embed legal texts with an Isaacus legal AI embedder.
+      description: A request to vectorize content with an Isaacus embedding model.
       examples:
       - model: kanon-2-embedder
         texts:
@@ -4238,8 +4237,8 @@ components:
       - query
       - texts
       title: Reranking request
-      description: A request to rerank legal documents by their relevance to a query
-        with an Isaacus legal AI reranker.
+      description: A request to rerank documents by their relevance to a query with
+        an Isaacus reranker.
       examples:
       - model: kanon-2-reranker
         query: What are the essential elements required to establish a negligence
@@ -4629,8 +4628,8 @@ components:
       - query
       - texts
       title: Universal classification request
-      description: A request to classify the relevance of legal documents to a query
-        with an Isaacus universal legal AI classifier.
+      description: A request to classify the relevance of documents to a query with
+        an Isaacus universal classification model.
       examples:
       - model: kanon-universal-classifier
         query: This is a confidentiality clause.
@@ -4643,7 +4642,7 @@ components:
             $ref: '#/components/schemas/UniversalClassification'
           type: array
           description: The classifications of the texts, by relevance to the query,
-            in order from highest to lowest relevance score.
+            in order from highest to lowest confidence score.
           examples:
           - - index: 0
               score: 0.8825573934438159
@@ -4763,15 +4762,17 @@ components:
 security:
 - APIKeyBearerTokenAuth: []
 tags:
+- name: Enrichments
+  description: Enrich documents with an Isaacus enrichment model.
 - name: Embeddings
-  description: Embed legal texts with Isaacus legal AI embedders.
+  description: Vectorize content with an Isaacus embedding model.
 - name: Rerankings
-  description: Rerank legal documents by their relevance to queries with Isaacus legal
-    AI rerankers.
+  description: Score and rank documents by their relevance to queries with an Isaacus
+    reranker.
 - name: Extractions
-  description: Extract information from legal documents with Isaacus legal AI extractors.
+  description: Extract information from documents with an Isaacus extraction model.
 - name: Classifications
-  description: Classify legal documents with Isaacus legal AI classifiers.
+  description: Classify documents with an Isaacus classification model.
 externalDocs:
   url: https://docs.isaacus.com/api-reference
   description: Reference documentation for the Isaacus API.
