@@ -1241,7 +1241,7 @@ components:
           - kanon-answer-extractor
         query:
           type: string
-          maxLength: 5000
+          maxLength: 10000000
           minLength: 1
           pattern: \S
           description: 'The query to extract the answer to.
@@ -4124,7 +4124,7 @@ components:
           - kanon-2-reranker
         query:
           type: string
-          maxLength: 5000
+          maxLength: 10000000
           minLength: 1
           pattern: \S
           description: 'The query to evaluate the relevance of the texts to.
@@ -4547,7 +4547,7 @@ components:
           - kanon-universal-classifier
         query:
           type: string
-          maxLength: 5000
+          maxLength: 10000000
           minLength: 1
           pattern: \S
           description: 'The [Isaacus Query Language (IQL)](https://docs.isaacus.com/iql)
