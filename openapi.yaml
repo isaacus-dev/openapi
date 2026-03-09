@@ -4114,12 +4114,14 @@ components:
         model:
           type: string
           enum:
+          - kanon-2-reranker
           - kanon-universal-classifier
           - kanon-universal-classifier-mini
-          description: The ID of the [model](https://docs.isaacus.com/models#reranking)
-            to use for reranking.
+          description: The ID of the model to use for reranking, being either a [reranking
+            model](https://docs.isaacus.com/models/introduction#reranking) or [universal
+            classification model](https://docs.isaacus.com/models/introduction#universal-classification).
           examples:
-          - kanon-universal-classifier
+          - kanon-2-reranker
         query:
           type: string
           maxLength: 5000
@@ -4193,7 +4195,8 @@ components:
           - chunk_avg
           - chunk_min
           description: 'The method to use for producing an overall relevance score
-            for a text.
+            for a text that exceeds the model''s local context window and has, therefore,
+            been split into multiple chunks.
 
 
             `auto` is the default scoring method and is recommended for most use cases.
@@ -4238,7 +4241,7 @@ components:
       description: A request to rerank legal documents by their relevance to a query
         with an Isaacus legal AI reranker.
       examples:
-      - model: kanon-universal-classifier
+      - model: kanon-2-reranker
         query: What are the essential elements required to establish a negligence
           claim?
         texts:
@@ -4252,14 +4255,21 @@ components:
           owed to the plaintiff.
         - The concept of negligence is central to tort law, with courts assessing
           whether a breach of duty caused harm.
+        top_n: null
+        is_iql: false
+        scoring_method: auto
+        chunking_options:
+          size: null
+          overlap_ratio: null
+          overlap_tokens: null
     RerankingResponse:
       properties:
         results:
           items:
             $ref: '#/components/schemas/RerankingResult'
           type: array
-          description: The rerankings of the texts, by relevance to the query, in
-            order from highest to lowest relevance score.
+          description: The texts reranked by relevance to the query, in order from
+            highest to lowest relevance score.
           examples:
           - - index: 2
               score: 0.7727372261985272
