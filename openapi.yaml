@@ -1231,9 +1231,7 @@ components:
       properties:
         model:
           type: string
-          enum:
-          - kanon-answer-extractor
-          - kanon-answer-extractor-mini
+          const: kanon-answer-extractor
           description: The ID of the [model](https://docs.isaacus.com/models#extractive-question-answering)
             to use for extractive question answering.
           examples:
@@ -4111,11 +4109,11 @@ components:
     RerankingRequest:
       properties:
         model:
-          type: string
-          enum:
-          - kanon-2-reranker
-          - kanon-universal-classifier
-          - kanon-universal-classifier-mini
+          oneOf:
+          - type: string
+            const: kanon-2-reranker
+          - type: string
+            const: kanon-universal-classifier
           description: The ID of the model to use for reranking, being either a [reranking
             model](https://docs.isaacus.com/models/introduction#reranking) or [universal
             classification model](https://docs.isaacus.com/models/introduction#universal-classification).
@@ -4537,9 +4535,7 @@ components:
       properties:
         model:
           type: string
-          enum:
-          - kanon-universal-classifier
-          - kanon-universal-classifier-mini
+          const: kanon-universal-classifier
           description: The ID of the [model](https://docs.isaacus.com/models#universal-classification)
             to use for universal classification.
           examples:
