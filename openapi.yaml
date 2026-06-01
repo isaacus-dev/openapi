@@ -1,6 +1,6 @@
 info:
   title: Isaacus API
-  version: 0.8.2
+  version: 0.8.3
   description: A RESTful API for using Isaacus legal models, data and other solutions.
   termsOfService: https://isaacus.com/terms
   contact:
@@ -3832,7 +3832,7 @@ components:
       - version
       title: ILGSv1 Document
       description: 'The document enriched into version 1.0.0 of the [Isaacus Legal
-        Graph Schema (ILGS)](https://docs.isaacus.com/ilgs).
+        Document Graph Schema (ILDGS)](https://docs.isaacus.com/ildgs).
 
 
         All spans in an enriched document graph are indexed into the Unicode code
