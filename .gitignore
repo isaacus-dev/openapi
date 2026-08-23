@@ -91,3 +91,4 @@ cython_debug/
 *.vsix
 .archive/
 open.vbs
+stainless-isaacus.zip
