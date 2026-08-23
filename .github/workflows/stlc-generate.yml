@@ -1,0 +1,251 @@
+name: Generate SDKs with stlc
+
+# One workflow, three modes:
+# - pull_request: build every target, push a preview branch per staging repo, sticky-comment diff links.
+# - push to main: build and push staging main directly (Promote then fast-forwards production), then seal tracking files back here.
+# - schedule / dispatch: rebuild main; `stlc build` absorbs out-of-band staging custom code and re-seals, so this doubles as the tracking-file sync (the SDK repos' seal-dispatch fires it eagerly).
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'stainless/**'
+      - '.github/workflows/stlc-generate.yml'
+      - '.github/actions/setup-stlc/**'
+  push:
+    branches: [main]
+    paths:
+      - 'stainless/**'
+      - '.github/workflows/stlc-generate.yml'
+      - '.github/actions/setup-stlc/**'
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch: {}
+  repository_dispatch:
+    types: [seal-custom-code]
+
+run-name: ${{ (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch') && 'Sync custom-code tracking' || '' }}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+env:
+  STAINLESS_WORKSPACE: stainless
+  DEFAULT_TARGETS: all
+
+jobs:
+  guard:
+    runs-on: ${{ vars.STLC_RUNNER || 'ubuntu-latest' }}
+    outputs:
+      skip: ${{ steps.check.outputs.skip }}
+    steps:
+      - name: Decide whether this change only touches tracking files
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT: ${{ github.event_name }}
+          REPO: ${{ github.repository }}
+          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: |
+          case "$EVENT" in
+            push | pull_request) ;;
+            *) echo "skip=false" >> "$GITHUB_OUTPUT"; exit 0 ;;
+          esac
+          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ]; then
+            echo "skip=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          changed=$(gh api "repos/$REPO/compare/$BASE...$HEAD" --jq '.files[].filename')
+          echo "Changed files:"; printf '%s\n' "$changed"
+          if [ -n "$changed" ] && ! printf '%s\n' "$changed" | grep -qvE '^stainless/custom-code/'; then
+            echo "Only tracking files changed — skipping regeneration (loop-breaker)."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  generate:
+    needs: guard
+    if: ${{ needs.guard.outputs.skip != 'true' }}
+    runs-on: ${{ vars.STLC_RUNNER || 'ubuntu-latest' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Setup stlc
+        uses: ./.github/actions/setup-stlc
+        with:
+          stlc-read-token: ${{ secrets.STLC_READ_TOKEN }}
+
+      - name: Configure auth for stlc to push to SDK repos
+        env:
+          GH_TOKEN: ${{ secrets.SDK_WRITE_TOKEN }}
+        run: |
+          git config --global user.name "stlc-bot"
+          git config --global user.email "stlc-bot@users.noreply.github.com"
+          gh auth setup-git
+
+      - name: Resolve commit message
+        id: msg
+        if: github.event_name == 'push'
+        env:
+          SHA: ${{ github.sha }}
+          REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FALLBACK: ${{ github.event.head_commit.message }}
+        run: |
+          pr_title=$(gh api "repos/$REPO/commits/$SHA/pulls" --jq '.[0].title // empty')
+
+          if [ -n "$pr_title" ]; then
+            commit_msg="$pr_title"
+          else
+            commit_msg="$FALLBACK"
+          fi
+
+          {
+            echo "commit_msg<<MSG_EOF"
+            echo "$commit_msg"
+            echo "MSG_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Hold codegen while production is ahead (release not back-synced)
+        if: github.event_name != 'pull_request'
+        working-directory: ${{ env.STAINLESS_WORKSPACE }}
+        env:
+          GH_TOKEN: ${{ secrets.SDK_WRITE_TOKEN }}
+          GIT_TERMINAL_PROMPT: '0'
+        run: |
+          set -euo pipefail
+
+          ls_heads() { git -c credential.helper= ls-remote --heads "$1" main; }
+
+          held=""
+          while IFS=$'\t' read -r target staging prod; do
+            { [ -z "$prod" ] || [ "$prod" = "null" ] || [ "$staging" = "$prod" ]; } && continue
+
+            prod_url="https://github.com/${prod}.git"
+            if ! prod_heads=$(ls_heads "$prod_url"); then
+              prod_url="https://x-access-token:${GH_TOKEN}@github.com/${prod}.git"
+              if ! prod_heads=$(ls_heads "$prod_url"); then
+                echo "::warning title=Codegen hold skipped for ${target}::cannot verify production sync: ${prod} is unreachable with the configured credential. The hold is skipped for this target; grant the token read access to the production repo to enable it."
+                continue
+              fi
+            fi
+
+            [ -z "$prod_heads" ] && continue
+
+            staging_url="https://x-access-token:${GH_TOKEN}@github.com/${staging}.git"
+            if ! staging_heads=$(ls_heads "$staging_url"); then
+              echo "::warning title=Codegen hold skipped for ${target}::cannot verify production sync: staging repo ${staging} is unreachable. The hold is skipped for this target; if this is not transient, the build step will fail loudly on its own."
+              continue
+            fi
+
+            [ -z "$staging_heads" ] && continue
+
+            d=$(mktemp -d); git -C "$d" init -q
+            git -C "$d" -c credential.helper= fetch -q "$staging_url" main:refs/remotes/staging/main
+            git -C "$d" -c credential.helper= fetch -q "$prod_url" main:refs/remotes/prod/main
+            if ! git -C "$d" merge-base --is-ancestor prod/main staging/main; then
+              held="$held $target"
+            fi
+            rm -rf "$d"
+          done < <(yq -r '.targets | to_entries[] | [.key, (.value.staging_repo // .value.production_repo), (.value.production_repo // .value.staging_repo)] | @tsv' openapi.stainless.yml)
+          if [ -n "$held" ]; then
+            echo "::error title=Codegen held::production is ahead of the staging trunk (a release isn't back-synced yet) for:$held. Wait for the back-sync, then re-run."
+            exit 1
+          fi
+          echo "No target has production verified ahead of staging — proceeding to build."
+
+      - name: Generate SDKs and push
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          COMMIT_MSG: ${{ steps.msg.outputs.commit_msg }}
+          GH_TOKEN: ${{ secrets.SDK_WRITE_TOKEN }}
+        working-directory: ${{ env.STAINLESS_WORKSPACE }}
+        run: |
+          echo "Building targets: $DEFAULT_TARGETS to branch: $BRANCH"
+          commit_args=()
+          if [ -n "$COMMIT_MSG" ]; then
+            commit_args=(--commit "$COMMIT_MSG")
+          fi
+          stlc build \
+            --branch "$BRANCH" \
+            --trunk-branch main \
+            --output /tmp/sdk-output \
+            --push \
+            --targets "$DEFAULT_TARGETS" \
+            "${commit_args[@]}"
+
+      - name: Render build manifest
+        id: manifest
+        if: always() && github.event_name == 'pull_request'
+        continue-on-error: true
+        working-directory: ${{ env.STAINLESS_WORKSPACE }}
+        env:
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if ! stlc show --renderer=markdown --workflow-run-url "$RUN_URL" > /tmp/build-manifest.md; then
+            {
+              echo "## stlc build manifest"
+              echo ""
+              echo "Manifest render failed — no sticky comment will be posted."
+              echo "See the \"Generate SDKs and push\" step above for the underlying error."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          cat /tmp/build-manifest.md
+          cat /tmp/build-manifest.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Comment build manifest on PR
+        if: always() && steps.manifest.outcome == 'success'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: stlc-build-manifest
+          path: /tmp/build-manifest.md
+
+      - name: Seal tracking files back to the config repo
+        if: ${{ success() && github.event_name != 'pull_request' }}
+        env:
+          GH_TOKEN: ${{ secrets.SDK_WRITE_TOKEN || secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          if [ -z "$(git status --porcelain -- "$STAINLESS_WORKSPACE/custom-code")" ]; then
+            echo "Tracking files already in sync — nothing to seal."
+            exit 0
+          fi
+          branch="stlc/seal-tracking"
+          git checkout -B "$branch"
+          git add "$STAINLESS_WORKSPACE/custom-code"
+          git commit -m "chore(stlc): seal custom-code tracking files"
+          git push --force "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git" "$branch"
+          open_pr=$(gh pr list --head "$branch" --state open --json number --jq '.[0].number // empty')
+          if [ -z "$open_pr" ]; then
+            gh pr create --base main --head "$branch" \
+              --title "chore(stlc): seal custom-code tracking files" \
+              --body "Automated by the stlc generate workflow: \`stlc build\` re-sealed custom code (after a spec change on \`main\`, or after absorbing custom code that landed on a staging repo out of band), updating the tracking files under \`stainless/custom-code/\`. Merging brings the config repo in sync with the SDK repos. Safe to merge — tracking-files-only commits are skipped by this workflow, so it won't trigger another build."
+          fi
+          if ! gh pr merge --auto --squash "$branch" 2>/dev/null; then
+            echo "::warning::Could not enable auto-merge for $branch. Merge it promptly: stale tracking files block later builds until they're synced."
+          fi
+
+      - name: Alert on failure
+        if: failure()
+        env:
+          ALERT_WEBHOOK_URL: ${{ secrets.STLC_ALERT_WEBHOOK_URL }}
+        run: |
+          run_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          msg="stlc generate failed in ${{ github.repository }} (${{ github.event_name }}). SDK builds and the custom-code tracking sync are stalled until this is fixed — investigate before the next build. Run: $run_url"
+          echo "::error title=stlc workflow failed::$msg"
+          { echo "### ⚠️ stlc workflow failed"; echo ""; echo "$msg"; } >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "${ALERT_WEBHOOK_URL:-}" ]; then
+            curl -sS -X POST -H 'Content-Type: application/json' \
+              -d "$(jq -n --arg text "$msg" '{text:$text}')" "$ALERT_WEBHOOK_URL" \
+              || echo "::warning::Alert webhook POST failed"
+          fi
