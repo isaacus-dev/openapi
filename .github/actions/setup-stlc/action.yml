@@ -1,0 +1,49 @@
+name: 'Setup stlc'
+description: 'Install stlc CLI and language packages for Isaacus SDK generation.'
+
+inputs:
+  stlc-read-token:
+    description: 'PAT with repo scope on stainless/stlc* repos.'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+
+    - name: Enable corepack
+      shell: bash
+      run: corepack enable
+
+    - name: Setup uv
+      uses: astral-sh/setup-uv@v6
+      with:
+        enable-cache: false
+
+    - name: Setup rye
+      shell: bash
+      run: |
+        curl -sSf https://rye.astral.sh/get | RYE_INSTALL_OPTION="--yes" RYE_TOOLCHAIN_VERSION="3.13" bash
+        echo "$HOME/.rye/shims" >> "$GITHUB_PATH"
+
+    - name: Install stlc
+      shell: bash
+      env:
+        STLC_READ_TOKEN: ${{ inputs.stlc-read-token }}
+      run: |
+        git_config_key="url.https://x-access-token:${STLC_READ_TOKEN}@github.com/stainless/.insteadOf"
+        cleanup_stlc_auth() { git config --global --unset-all "$git_config_key" || true; }
+        trap cleanup_stlc_auth EXIT
+        git config --global --add "$git_config_key" "https://github.com/stainless/"
+
+        npm install -g \
+          "git+https://x-access-token:${STLC_READ_TOKEN}@github.com/stainless/stlc.git" \
+          "git+https://x-access-token:${STLC_READ_TOKEN}@github.com/stainless/stlc-mcp.git" \
+          "git+https://x-access-token:${STLC_READ_TOKEN}@github.com/stainless/stlc-python.git"
+
+    - name: Check stlc CLI is callable
+      shell: bash
+      run: stlc --help >/dev/null && echo "stlc is callable"

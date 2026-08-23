@@ -1,0 +1,4774 @@
+info:
+  title: Isaacus API
+  version: 0.8.3
+  description: A RESTful API for using Isaacus legal models, data and other solutions.
+  termsOfService: https://isaacus.com/terms
+  contact:
+    name: Isaacus Support
+    url: https://isaacus.com/support
+    email: support@isaacus.com
+  license:
+    name: Apache 2.0
+    url: https://github.com/isaacus-dev/openapi/blob/main/LICENSE
+openapi: 3.1.0
+servers:
+- url: https://api.isaacus.com/v1
+paths:
+  /embeddings:
+    post:
+      tags:
+      - Embeddings
+      summary: Embedding
+      description: Vectorize content with an Isaacus embedding model.
+      operationId: CreateEmbeddings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmbeddingRequest'
+        required: true
+      responses:
+        '200':
+          description: Embeddings of texts produced by an Isaacus embedding model.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmbeddingResponse'
+              examples:
+                example:
+                  value:
+                    embeddings:
+                    - index: 0
+                      embedding:
+                      - -0.0258
+                      - 0.02062
+                      - -0.0114
+                    - index: 1
+                      embedding:
+                      - -0.0358
+                      - -0.0128
+                      - 0.00251
+                    usage:
+                      input_tokens: 42
+        '400':
+          description: The request was invalid or could not be processed.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+              examples:
+                Validation error:
+                  summary: Validation error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Validation error
+                    status: 400
+                    detail: The request was invalid or could not be processed.
+                    instance: null
+                Embedding input too large error:
+                  summary: Embedding input too large error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Embedding input too large error
+                    status: 400
+                    detail: The input to the embedding model exceeds the maximum allowed
+                      size.
+                    instance: null
+                Unsupported embedding dimension error:
+                  summary: Unsupported embedding dimension error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Unsupported embedding dimension error
+                    status: 400
+                    detail: The provided embedding dimension is not supported by the
+                      model.
+                    instance: null
+                Unsupported embedding task error:
+                  summary: Unsupported embedding task error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Unsupported embedding task error
+                    status: 400
+                    detail: The provided embedding task is not supported by the model.
+                    instance: null
+        '401':
+          description: The API key you provided does not exist, is expired or revoked,
+            or is not authorized to access this resource.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedAPIKeyError'
+              examples:
+                Unauthorized API key error:
+                  summary: Unauthorized API key error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#401-not-authenticated
+                    title: Unauthorized API key error
+                    status: 401
+                    detail: The API key you provided does not exist, is expired or
+                      revoked, or is not authorized to access this resource.
+                    instance: null
+                Incorrect API key error:
+                  summary: Incorrect API key error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#401-not-authenticated
+                    title: Incorrect API key error
+                    status: 401
+                    detail: The API key you provided does not exist or is expired
+                      or revoked.
+                    instance: null
+        '402':
+          description: Your account is overdue, please pay any outstanding invoices
+            to continue using our services.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AccountOverdueError'
+              examples:
+                Account overdue error:
+                  summary: Account overdue error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#402-payment-required
+                    title: Account overdue error
+                    status: 402
+                    detail: Your account is overdue, please pay any outstanding invoices
+                      to continue using our services.
+                    instance: null
+        '403':
+          description: You are not allowed to access this resource.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AccessForbiddenError'
+              examples:
+                Access forbidden error:
+                  summary: Access forbidden error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#403-access-forbidden
+                    title: Access forbidden error
+                    status: 403
+                    detail: You are not allowed to access this resource.
+                    instance: null
+                No subscription error:
+                  summary: No subscription error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#403-access-forbidden
+                    title: No subscription error
+                    status: 403
+                    detail: You do not have an active subscription to our zero-flat
+                      fee, usage-based API plan.
+                    instance: null
+        '413':
+          description: The request is larger than the server is willing or able to
+            process.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/RequestTooLargeError'
+              examples:
+                Request too large error:
+                  summary: Request too large error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#413-request-too-large
+                    title: Request too large error
+                    status: 413
+                    detail: The request is larger than the server is willing or able
+                      to process.
+                    instance: null
+        '500':
+          description: An unexpected error occurred while processing the request.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+              examples:
+                Internal server error:
+                  summary: Internal server error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#500-internal-server-error
+                    title: Internal server error
+                    status: 500
+                    detail: An unexpected error occurred while processing the request.
+                    instance: null
+      deprecated: false
+  /rerankings:
+    post:
+      tags:
+      - Rerankings
+      summary: Reranking
+      description: Score and rank documents by their relevance to queries with an
+        Isaacus reranker.
+      operationId: CreateReranking
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RerankingRequest'
+        required: true
+      responses:
+        '200':
+          description: Request fulfilled, document follows
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RerankingResponse'
+        '400':
+          description: The request was invalid or could not be processed.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+              examples:
+                Validation error:
+                  summary: Validation error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Validation error
+                    status: 400
+                    detail: The request was invalid or could not be processed.
+                    instance: null
+                Invalid IQL query error:
+                  summary: Invalid IQL query error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Invalid IQL query error
+                    status: 400
+                    detail: The provided query is not valid Isaacus Query Language
+                      (IQL) syntax.
+                    instance: null
+                Query too long error:
+                  summary: Query too long error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Query too long error
+                    status: 400
+                    detail: The provided query exceeds the model's maximum input length
+                      less overhead.
+                    instance: null
+        '401':
+          description: The API key you provided does not exist, is expired or revoked,
+            or is not authorized to access this resource.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedAPIKeyError'
+              examples:
+                Unauthorized API key error:
+                  summary: Unauthorized API key error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#401-not-authenticated
+                    title: Unauthorized API key error
+                    status: 401
+                    detail: The API key you provided does not exist, is expired or
+                      revoked, or is not authorized to access this resource.
+                    instance: null
+                Incorrect API key error:
+                  summary: Incorrect API key error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#401-not-authenticated
+                    title: Incorrect API key error
+                    status: 401
+                    detail: The API key you provided does not exist or is expired
+                      or revoked.
+                    instance: null
+        '402':
+          description: Your account is overdue, please pay any outstanding invoices
+            to continue using our services.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AccountOverdueError'
+              examples:
+                Account overdue error:
+                  summary: Account overdue error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#402-payment-required
+                    title: Account overdue error
+                    status: 402
+                    detail: Your account is overdue, please pay any outstanding invoices
+                      to continue using our services.
+                    instance: null
+        '403':
+          description: You are not allowed to access this resource.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AccessForbiddenError'
+              examples:
+                Access forbidden error:
+                  summary: Access forbidden error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#403-access-forbidden
+                    title: Access forbidden error
+                    status: 403
+                    detail: You are not allowed to access this resource.
+                    instance: null
+                No subscription error:
+                  summary: No subscription error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#403-access-forbidden
+                    title: No subscription error
+                    status: 403
+                    detail: You do not have an active subscription to our zero-flat
+                      fee, usage-based API plan.
+                    instance: null
+        '413':
+          description: The request is larger than the server is willing or able to
+            process.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/RequestTooLargeError'
+              examples:
+                Request too large error:
+                  summary: Request too large error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#413-request-too-large
+                    title: Request too large error
+                    status: 413
+                    detail: The request is larger than the server is willing or able
+                      to process.
+                    instance: null
+        '500':
+          description: An unexpected error occurred while processing the request.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+              examples:
+                Internal server error:
+                  summary: Internal server error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#500-internal-server-error
+                    title: Internal server error
+                    status: 500
+                    detail: An unexpected error occurred while processing the request.
+                    instance: null
+                Chunking timeout error:
+                  summary: Chunking timeout error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#500-internal-server-error
+                    title: Chunking timeout error
+                    status: 500
+                    detail: Chunking timed out. Did you try to chunk a very large
+                      text with a very low chunk size or very little variation in
+                      levels of whitespace?
+                    instance: null
+      deprecated: false
+  /extractions/qa:
+    post:
+      tags:
+      - Extractions
+      summary: Extractive question answering
+      description: Extract information from documents with an Isaacus extractive question
+        answering model.
+      operationId: CreateAnswerExtractions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnswerExtractionRequest'
+        required: true
+      responses:
+        '200':
+          description: The results of extracting answers from texts.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnswerExtractionResponse'
+              examples:
+                example:
+                  value:
+                    extractions:
+                    - index: 0
+                      answers:
+                      - text: 30 years if the person murdered was a police officer
+                          and 25 years in any other case
+                        start: 61
+                        end: 144
+                        score: 0.11460486645671249
+                      inextractability_score: 0.0027424068182309302
+                    usage:
+                      input_tokens: 43
+        '400':
+          description: The request was invalid or could not be processed.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+              examples:
+                Validation error:
+                  summary: Validation error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Validation error
+                    status: 400
+                    detail: The request was invalid or could not be processed.
+                    instance: null
+                Query too long error:
+                  summary: Query too long error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Query too long error
+                    status: 400
+                    detail: The provided query exceeds the model's maximum input length
+                      less overhead.
+                    instance: null
+        '401':
+          description: The API key you provided does not exist, is expired or revoked,
+            or is not authorized to access this resource.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedAPIKeyError'
+              examples:
+                Unauthorized API key error:
+                  summary: Unauthorized API key error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#401-not-authenticated
+                    title: Unauthorized API key error
+                    status: 401
+                    detail: The API key you provided does not exist, is expired or
+                      revoked, or is not authorized to access this resource.
+                    instance: null
+                Incorrect API key error:
+                  summary: Incorrect API key error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#401-not-authenticated
+                    title: Incorrect API key error
+                    status: 401
+                    detail: The API key you provided does not exist or is expired
+                      or revoked.
+                    instance: null
+        '402':
+          description: Your account is overdue, please pay any outstanding invoices
+            to continue using our services.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AccountOverdueError'
+              examples:
+                Account overdue error:
+                  summary: Account overdue error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#402-payment-required
+                    title: Account overdue error
+                    status: 402
+                    detail: Your account is overdue, please pay any outstanding invoices
+                      to continue using our services.
+                    instance: null
+        '403':
+          description: You are not allowed to access this resource.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AccessForbiddenError'
+              examples:
+                Access forbidden error:
+                  summary: Access forbidden error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#403-access-forbidden
+                    title: Access forbidden error
+                    status: 403
+                    detail: You are not allowed to access this resource.
+                    instance: null
+                No subscription error:
+                  summary: No subscription error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#403-access-forbidden
+                    title: No subscription error
+                    status: 403
+                    detail: You do not have an active subscription to our zero-flat
+                      fee, usage-based API plan.
+                    instance: null
+        '413':
+          description: The request is larger than the server is willing or able to
+            process.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/RequestTooLargeError'
+              examples:
+                Request too large error:
+                  summary: Request too large error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#413-request-too-large
+                    title: Request too large error
+                    status: 413
+                    detail: The request is larger than the server is willing or able
+                      to process.
+                    instance: null
+        '500':
+          description: An unexpected error occurred while processing the request.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+              examples:
+                Internal server error:
+                  summary: Internal server error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#500-internal-server-error
+                    title: Internal server error
+                    status: 500
+                    detail: An unexpected error occurred while processing the request.
+                    instance: null
+                Chunking timeout error:
+                  summary: Chunking timeout error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#500-internal-server-error
+                    title: Chunking timeout error
+                    status: 500
+                    detail: Chunking timed out. Did you try to chunk a very large
+                      text with a very low chunk size or very little variation in
+                      levels of whitespace?
+                    instance: null
+      deprecated: false
+  /classifications/universal:
+    post:
+      tags:
+      - Classifications
+      summary: Universal classification
+      description: Classify documents with an Isaacus universal classification model.
+      operationId: CreateUniversalClassifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UniversalClassificationRequest'
+        required: true
+      responses:
+        '200':
+          description: Classifications of the relevance of documents to a query produced
+            by an Isaacus universal classification model.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UniversalClassificationResponse'
+              examples:
+                example:
+                  value:
+                    classifications:
+                    - index: 0
+                      score: 0.8825573934438159
+                      chunks:
+                      - index: 0
+                        start: 0
+                        end: 46
+                        score: 0.8825573934438159
+                        text: I agree not to tell anyone about the document.
+                    usage:
+                      input_tokens: 19
+        '400':
+          description: The request was invalid or could not be processed.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+              examples:
+                Validation error:
+                  summary: Validation error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Validation error
+                    status: 400
+                    detail: The request was invalid or could not be processed.
+                    instance: null
+                Invalid IQL query error:
+                  summary: Invalid IQL query error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Invalid IQL query error
+                    status: 400
+                    detail: The provided query is not valid Isaacus Query Language
+                      (IQL) syntax.
+                    instance: null
+                Query too long error:
+                  summary: Query too long error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Query too long error
+                    status: 400
+                    detail: The provided query exceeds the model's maximum input length
+                      less overhead.
+                    instance: null
+        '401':
+          description: The API key you provided does not exist, is expired or revoked,
+            or is not authorized to access this resource.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedAPIKeyError'
+              examples:
+                Unauthorized API key error:
+                  summary: Unauthorized API key error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#401-not-authenticated
+                    title: Unauthorized API key error
+                    status: 401
+                    detail: The API key you provided does not exist, is expired or
+                      revoked, or is not authorized to access this resource.
+                    instance: null
+                Incorrect API key error:
+                  summary: Incorrect API key error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#401-not-authenticated
+                    title: Incorrect API key error
+                    status: 401
+                    detail: The API key you provided does not exist or is expired
+                      or revoked.
+                    instance: null
+        '402':
+          description: Your account is overdue, please pay any outstanding invoices
+            to continue using our services.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AccountOverdueError'
+              examples:
+                Account overdue error:
+                  summary: Account overdue error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#402-payment-required
+                    title: Account overdue error
+                    status: 402
+                    detail: Your account is overdue, please pay any outstanding invoices
+                      to continue using our services.
+                    instance: null
+        '403':
+          description: You are not allowed to access this resource.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AccessForbiddenError'
+              examples:
+                Access forbidden error:
+                  summary: Access forbidden error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#403-access-forbidden
+                    title: Access forbidden error
+                    status: 403
+                    detail: You are not allowed to access this resource.
+                    instance: null
+                No subscription error:
+                  summary: No subscription error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#403-access-forbidden
+                    title: No subscription error
+                    status: 403
+                    detail: You do not have an active subscription to our zero-flat
+                      fee, usage-based API plan.
+                    instance: null
+        '413':
+          description: The request is larger than the server is willing or able to
+            process.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/RequestTooLargeError'
+              examples:
+                Request too large error:
+                  summary: Request too large error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#413-request-too-large
+                    title: Request too large error
+                    status: 413
+                    detail: The request is larger than the server is willing or able
+                      to process.
+                    instance: null
+        '500':
+          description: An unexpected error occurred while processing the request.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+              examples:
+                Internal server error:
+                  summary: Internal server error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#500-internal-server-error
+                    title: Internal server error
+                    status: 500
+                    detail: An unexpected error occurred while processing the request.
+                    instance: null
+                Chunking timeout error:
+                  summary: Chunking timeout error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#500-internal-server-error
+                    title: Chunking timeout error
+                    status: 500
+                    detail: Chunking timed out. Did you try to chunk a very large
+                      text with a very low chunk size or very little variation in
+                      levels of whitespace?
+                    instance: null
+      deprecated: false
+  /enrichments:
+    post:
+      tags:
+      - Enrichments
+      summary: Enrichment
+      description: Enrich documents with an Isaacus enrichment model.
+      operationId: CreateEnrichments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnrichmentRequest'
+        required: true
+      responses:
+        '200':
+          description: The enriched documents alongside usage statistics.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnrichmentResponse'
+              examples:
+                example:
+                  value:
+                    results:
+                    - index: 0
+                      document:
+                        version: ilgs@1
+                        text: '[42] The U.S. Attorney General, Mr. McGill, argued
+                          at ¶ 21 of the Filing that "§ 206 of Title 29 of the U.S.
+                          Code (the "Labor Title") does not apply to the plaintiff,
+                          Ms. Moody, given the definition of an "employee" at §203(e)(4)
+                          of the Labor Title does not include volunteers, and, regardless,
+                          she lives in Austria."'
+                        title: null
+                        subtitle: null
+                        type: other
+                        jurisdiction: US-FED
+                        segments:
+                        - id: seg:0
+                          kind: unit
+                          type: paragraph
+                          category: annotation
+                          type_name: null
+                          code:
+                            start: 0
+                            end: 4
+                          title: null
+                          parent: null
+                          children: []
+                          level: 0
+                          span:
+                            start: 0
+                            end: 317
+                        crossreferences: []
+                        locations:
+                        - id: loc:0
+                          name:
+                            start: 308
+                            end: 315
+                          type: country
+                          parent: null
+                          children: []
+                          mentions:
+                          - start: 308
+                            end: 315
+                        persons:
+                        - id: per:0
+                          name:
+                            start: 32
+                            end: 42
+                          type: natural
+                          role: defense_counsel
+                          parent: null
+                          children: []
+                          residence: null
+                          mentions:
+                          - start: 32
+                            end: 42
+                        - id: per:1
+                          name:
+                            start: 167
+                            end: 176
+                          type: natural
+                          role: plaintiff
+                          parent: null
+                          children: []
+                          residence: loc:0
+                          mentions:
+                          - start: 167
+                            end: 176
+                        emails: []
+                        websites: []
+                        phone_numbers: []
+                        id_numbers: []
+                        terms:
+                        - id: term:0
+                          name:
+                            start: 120
+                            end: 131
+                          meaning:
+                            start: 88
+                            end: 113
+                          mentions:
+                          - start: 237
+                            end: 248
+                        external_documents:
+                        - id: exd:0
+                          name:
+                            start: 66
+                            end: 72
+                          type: other
+                          jurisdiction: US-FED
+                          reception: neutral
+                          mentions:
+                          - start: 66
+                            end: 72
+                          pinpoints:
+                          - start: 54
+                            end: 58
+                        - id: exd:1
+                          name:
+                            start: 80
+                            end: 113
+                          type: statute
+                          jurisdiction: US-FED
+                          reception: neutral
+                          mentions:
+                          - start: 80
+                            end: 113
+                          pinpoints:
+                          - start: 79
+                            end: 84
+                          - start: 219
+                            end: 229
+                        quotes:
+                        - source_segment: null
+                          source_document: exd:0
+                          source_person: per:0
+                          amending: false
+                          span:
+                            start: 79
+                            end: 317
+                        dates: []
+                        headings: []
+                        junk: []
+                    usage:
+                      input_tokens: 91
+        '400':
+          description: The request was invalid or could not be processed.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+              examples:
+                Validation error:
+                  summary: Validation error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Validation error
+                    status: 400
+                    detail: The request was invalid or could not be processed.
+                    instance: null
+                Enrichment input too large error:
+                  summary: Enrichment input too large error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+                    title: Enrichment input too large error
+                    status: 400
+                    detail: The input to the enrichment model exceeds its maximum
+                      context window yet no overflow strategy was set. We recommend
+                      setting `overflow_strategy` to `auto` or `chunk`, both of which
+                      will break documents up into smaller chunks that fit within
+                      the model's context window and then intelligently merge the
+                      results into a single prediction at the cost of a minor accuracy
+                      drop.
+                    instance: null
+        '401':
+          description: The API key you provided does not exist, is expired or revoked,
+            or is not authorized to access this resource.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedAPIKeyError'
+              examples:
+                Unauthorized API key error:
+                  summary: Unauthorized API key error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#401-not-authenticated
+                    title: Unauthorized API key error
+                    status: 401
+                    detail: The API key you provided does not exist, is expired or
+                      revoked, or is not authorized to access this resource.
+                    instance: null
+                Incorrect API key error:
+                  summary: Incorrect API key error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#401-not-authenticated
+                    title: Incorrect API key error
+                    status: 401
+                    detail: The API key you provided does not exist or is expired
+                      or revoked.
+                    instance: null
+        '402':
+          description: Your account is overdue, please pay any outstanding invoices
+            to continue using our services.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AccountOverdueError'
+              examples:
+                Account overdue error:
+                  summary: Account overdue error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#402-payment-required
+                    title: Account overdue error
+                    status: 402
+                    detail: Your account is overdue, please pay any outstanding invoices
+                      to continue using our services.
+                    instance: null
+        '403':
+          description: You are not allowed to access this resource.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AccessForbiddenError'
+              examples:
+                Access forbidden error:
+                  summary: Access forbidden error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#403-access-forbidden
+                    title: Access forbidden error
+                    status: 403
+                    detail: You are not allowed to access this resource.
+                    instance: null
+                No subscription error:
+                  summary: No subscription error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#403-access-forbidden
+                    title: No subscription error
+                    status: 403
+                    detail: You do not have an active subscription to our zero-flat
+                      fee, usage-based API plan.
+                    instance: null
+        '413':
+          description: The request is larger than the server is willing or able to
+            process.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/RequestTooLargeError'
+              examples:
+                Request too large error:
+                  summary: Request too large error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#413-request-too-large
+                    title: Request too large error
+                    status: 413
+                    detail: The request is larger than the server is willing or able
+                      to process.
+                    instance: null
+        '500':
+          description: An unexpected error occurred while processing the request.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+              examples:
+                Internal server error:
+                  summary: Internal server error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#500-internal-server-error
+                    title: Internal server error
+                    status: 500
+                    detail: An unexpected error occurred while processing the request.
+                    instance: null
+                Chunking timeout error:
+                  summary: Chunking timeout error
+                  value:
+                    type: https://docs.isaacus.com/api-reference/errors#500-internal-server-error
+                    title: Chunking timeout error
+                    status: 500
+                    detail: Chunking timed out. Did you try to chunk a very large
+                      text with a very low chunk size or very little variation in
+                      levels of whitespace?
+                    instance: null
+      deprecated: false
+components:
+  schemas:
+    AccessForbiddenError:
+      properties:
+        type:
+          type: string
+          minLength: 1
+          title: Non-empty string
+          description: A URI reference that identifies the problem type.
+          default: https://docs.isaacus.com/api-reference/errors#403-access-forbidden
+          examples:
+          - https://docs.isaacus.com/api-reference/errors#403-access-forbidden
+        title:
+          type: string
+          minLength: 1
+          title: Non-empty string
+          description: A short, human-readable summary of the problem type.
+          default: Access forbidden error
+          examples:
+          - Access forbidden error
+        status:
+          type: integer
+          const: 403
+          description: The HTTP status code generated by the origin server for this
+            occurrence of the problem.
+          default: 403
+          examples:
+          - 403
+        detail:
+          oneOf:
+          - type: string
+            minLength: 1
+            title: Non-empty string
+            description: A string with at least one character.
+            default: You are not allowed to access this resource.
+            examples:
+            - A string.
+          - type: 'null'
+          description: An optional human-readable explanation specific to this occurrence
+            of the problem.
+          default: You are not allowed to access this resource.
+          examples:
+          - You are not allowed to access this resource.
+        instance:
+          oneOf:
+          - type: string
+            minLength: 1
+            title: Non-empty string
+            description: A string with at least one character.
+            examples:
+            - A string.
+          - type: 'null'
+          description: An optional URI reference that identifies the specific occurrence
+            of the problem.
+          examples:
+          - null
+      type: object
+      required: []
+      title: Access forbidden error
+      description: An RFC 7807 problem detail object.
+      examples:
+      - type: https://docs.isaacus.com/api-reference/errors#403-access-forbidden
+        title: Access forbidden error
+        status: 403
+        detail: You are not allowed to access this resource.
+        instance: null
+    AccountOverdueError:
+      properties:
+        type:
+          type: string
+          minLength: 1
+          title: Non-empty string
+          description: A URI reference that identifies the problem type.
+          default: https://docs.isaacus.com/api-reference/errors#402-payment-required
+          examples:
+          - https://docs.isaacus.com/api-reference/errors#402-payment-required
+        title:
+          type: string
+          minLength: 1
+          title: Non-empty string
+          description: A short, human-readable summary of the problem type.
+          default: Account overdue error
+          examples:
+          - Account overdue error
+        status:
+          type: integer
+          const: 402
+          description: The HTTP status code generated by the origin server for this
+            occurrence of the problem.
+          default: 402
+          examples:
+          - 402
+        detail:
+          oneOf:
+          - type: string
+            minLength: 1
+            title: Non-empty string
+            description: A string with at least one character.
+            default: Your account is overdue, please pay any outstanding invoices
+              to continue using our services.
+            examples:
+            - A string.
+          - type: 'null'
+          description: An optional human-readable explanation specific to this occurrence
+            of the problem.
+          default: Your account is overdue, please pay any outstanding invoices to
+            continue using our services.
+          examples:
+          - Your account is overdue, please pay any outstanding invoices to continue
+            using our services.
+        instance:
+          oneOf:
+          - type: string
+            minLength: 1
+            title: Non-empty string
+            description: A string with at least one character.
+            examples:
+            - A string.
+          - type: 'null'
+          description: An optional URI reference that identifies the specific occurrence
+            of the problem.
+          examples:
+          - null
+      type: object
+      required: []
+      title: Account overdue error
+      description: An RFC 7807 problem detail object.
+      examples:
+      - type: https://docs.isaacus.com/api-reference/errors#402-payment-required
+        title: Account overdue error
+        status: 402
+        detail: Your account is overdue, please pay any outstanding invoices to continue
+          using our services.
+        instance: null
+    Answer:
+      properties:
+        text:
+          type: string
+          minLength: 1
+          description: The text of the answer.
+          examples:
+          - 30 years if the person murdered was a police officer and 25 years in any
+            other case
+        start:
+          type: integer
+          minimum: 0.0
+          title: Non-negative integer
+          description: The index of the first character of the answer in the text,
+            starting from `0` (and, therefore, ending at the number of characters
+            in the text minus `1`).
+          examples:
+          - 61
+        end:
+          type: integer
+          minimum: 0.0
+          title: Non-negative integer
+          description: The index of the character immediately after the last character
+            of the answer in the text, starting from `0` (such that, in Python, the
+            answer is equivalent to `text[start:end]`).
+          examples:
+          - 144
+        score:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: Unit interval
+          description: A score between `0` and `1`, inclusive, representing the strength
+            of the answer.
+          examples:
+          - 0.11460486645671249
+      type: object
+      required:
+      - text
+      - start
+      - end
+      - score
+      title: Answer
+      description: An answer extracted from a text.
+      examples:
+      - text: 30 years if the person murdered was a police officer and 25 years in
+          any other case
+        start: 61
+        end: 144
+        score: 0.11460486645671249
+    AnswerExtraction:
+      properties:
+        index:
+          type: integer
+          minimum: 0.0
+          title: Non-negative integer
+          description: The index of the text in the input array of texts that this
+            result represents, starting from `0` (and, therefore, ending at the number
+            of texts minus `1`).
+          examples:
+          - 0
+        answers:
+          items:
+            $ref: '#/components/schemas/Answer'
+          type: array
+          description: Answers extracted from the text, ordered from highest to lowest
+            score.
+          examples:
+          - - text: 30 years if the person murdered was a police officer and 25 years
+                in any other case
+              start: 61
+              end: 144
+              score: 0.11460486645671249
+        inextractability_score:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: Unit interval
+          description: 'A score between `0` and `1`, inclusive, representing the likelihood
+            that an answer can not be extracted from the text.
+
+
+            Where this score is greater than the highest score of all possible answers,
+            the text should be regarded as not having an extractable answer to the
+            query. If that is the case and `ignore_inextractability` is `false`, no
+            answers will be returned.'
+          examples:
+          - 0.0027424068182309302
+      type: object
+      required:
+      - index
+      - answers
+      - inextractability_score
+      title: Answer extraction
+      description: The result of extracting answers from a text.
+      examples:
+      - index: 0
+        inextractability_score: 0.0027424068182309302
+        answers:
+        - text: 30 years if the person murdered was a police officer and 25 years
+            in any other case
+          start: 61
+          end: 144
+          score: 0.11460486645671249
+    AnswerExtractionRequest:
+      properties:
+        model:
+          type: string
+          const: kanon-answer-extractor
+          description: The ID of the [model](https://docs.isaacus.com/models#extractive-question-answering)
+            to use for extractive question answering.
+          examples:
+          - kanon-answer-extractor
+        query:
+          type: string
+          maxLength: 10000000
+          minLength: 1
+          pattern: \S
+          description: 'The query to extract the answer to.
+
+
+            The query must contain at least one non-whitespace character.
+
+
+            Unlike the texts from which the answer will be extracted, the query cannot
+            be so long that it exceeds the maximum input length of the model.'
+          examples:
+          - What is the punishment for murder in Victoria?
+        texts:
+          items:
+            type: string
+          type: array
+          description: 'The texts to search for the answer in and extract the answer
+            from.
+
+
+            There must be at least one text.
+
+
+            Each text must contain at least one non-whitespace character.'
+          examples:
+          - - The standard sentence for murder in the State of Victoria is 30 years
+              if the person murdered was a police officer and 25 years in any other
+              case.
+        ignore_inextractability:
+          type: boolean
+          description: 'Whether to, if the model''s score of the likelihood that an
+            answer can not be extracted from a text is greater than the highest score
+            of all possible answers, still return the highest scoring answers for
+            that text.
+
+
+            If you have already determined that the texts answer the query, for example,
+            by using one of our classification or reranker models, then you should
+            set this to `true`.'
+          default: false
+          examples:
+          - false
+        top_k:
+          type: integer
+          minimum: 1.0
+          title: Positive integer
+          description: 'The number of highest scoring answers to return.
+
+
+            If `null`, which is the default, all answers will be returned.'
+          default: 1
+          examples:
+          - 1
+        chunking_options:
+          oneOf:
+          - $ref: '#/components/schemas/ChunkingOptions'
+          - type: 'null'
+          description: 'Settings for how texts should be chunked into smaller segments
+            by [semchunk](https://github.com/isaacus-dev/semchunk) before extraction.
+
+
+            If `null`, the texts will not be chunked and will instead be truncated
+            to the maximum input length of the model less overhead if found to exceed
+            that limit.
+
+
+            Chunking is enabled by default.'
+          examples:
+          - size: null
+            overlap_ratio: null
+            overlap_tokens: null
+      type: object
+      required:
+      - model
+      - query
+      - texts
+      title: Answer extraction request
+      description: A request to extract answers from documents with an Isaacus extractive
+        question answering model.
+      examples:
+      - model: kanon-answer-extractor
+        query: What is the punishment for murder in Victoria?
+        texts:
+        - The standard sentence for murder in the State of Victoria is 30 years if
+          the person murdered was a police officer and 25 years in any other case.
+    AnswerExtractionResponse:
+      properties:
+        extractions:
+          items:
+            $ref: '#/components/schemas/AnswerExtraction'
+          type: array
+          description: The results of extracting answers from the texts, ordered from
+            highest to lowest answer confidence score (or else lowest to highest inextractability
+            score if there are no answers for a text).
+          examples:
+          - - index: 0
+              answers:
+              - text: 30 years if the person murdered was a police officer and 25
+                  years in any other case
+                start: 61
+                end: 144
+                score: 0.11460486645671249
+              inextractability_score: 0.0027424068182309302
+        usage:
+          $ref: '#/components/schemas/AnswerExtractionUsage'
+      type: object
+      required:
+      - extractions
+      - usage
+      title: Answer extraction response
+      examples:
+      - extractions:
+        - index: 0
+          answers:
+          - text: 30 years if the person murdered was a police officer and 25 years
+              in any other case
+            start: 61
+            end: 144
+            score: 0.11460486645671249
+          inextractability_score: 0.0027424068182309302
+        usage:
+          input_tokens: 43
+    AnswerExtractionUsage:
+      properties:
+        input_tokens:
+          type: integer
+          minimum: 1.0
+          title: Positive integer
+          description: The number of tokens inputted to the model.
+          examples:
+          - 43
+      type: object
+      required:
+      - input_tokens
+      title: Answer extraction usage
+      description: Statistics about the usage of resources in the process of extracting
+        answers from the texts.
+      examples:
+      - input_tokens: 43
+    ChunkingOptions:
+      properties:
+        size:
+          oneOf:
+          - type: integer
+            minimum: 1.0
+            title: Positive integer
+            description: A whole number greater than or equal to 1.
+            examples:
+            - 1
+          - type: 'null'
+          description: 'The maximum number of tokens allowed in a chunk.
+
+
+            If `null`, the maximum input length of the model will be used less overhead.'
+          examples:
+          - 512
+        overlap_ratio:
+          oneOf:
+          - type: number
+            exclusiveMaximum: 1.0
+            minimum: 0.0
+            title: Unit interval (closed, open)
+            description: A number greater than or equal to 0 and less than 1.
+            examples:
+            - 0.5
+          - type: 'null'
+          description: 'The proportion of the chunk size by which chunks should overlap.
+
+
+            The ratio must be less than 1.
+
+
+            If `null`, no overlapping will occur unless `overlap_tokens` is set.
+
+
+            `overlap_ratio` and `overlap_tokens` cannot both be set.'
+          examples:
+          - 0.1
+          - null
+        overlap_tokens:
+          oneOf:
+          - type: integer
+            minimum: 0.0
+            title: Non-negative integer
+            description: A whole number greater than or equal to 0.
+            examples:
+            - 0
+          - type: 'null'
+          description: 'The number of tokens by which chunks should overlap.
+
+
+            If `null`, no overlapping will occur unless `overlap_ratio` is set.
+
+
+            `overlap_tokens` and `overlap_ratio` cannot both be set.'
+          examples:
+          - null
+          - 10
+      type: object
+      required: []
+      title: Chunking options
+      description: Options for how to split text into smaller chunks.
+      examples:
+      - size: 512
+        overlap_ratio: 0.1
+      - size: 512
+        overlap_tokens: 10
+      - size: 512
+    Embedding:
+      properties:
+        index:
+          type: integer
+          minimum: 0.0
+          title: Non-negative integer
+          description: The position of the content in the input array of contents,
+            starting from `0` (and, therefore, ending at the number of contents minus
+            `1`).
+          examples:
+          - 0
+        embedding:
+          items:
+            type: number
+          type: array
+          description: The embedding of the content represented as an array of floating
+            point numbers.
+          examples:
+          - - -0.0258
+            - 0.02062
+            - -0.0114
+      type: object
+      required:
+      - index
+      - embedding
+      title: Embedding
+      examples:
+      - index: 0
+        embedding:
+        - -0.0258
+        - 0.02062
+        - -0.0114
+    EmbeddingRequest:
+      properties:
+        model:
+          type: string
+          const: kanon-2-embedder
+          description: The ID of the [model](https://docs.isaacus.com/models#embedding)
+            to use for embedding.
+          examples:
+          - kanon-2-embedder
+        texts:
+          oneOf:
+          - items:
+              type: string
+            type: array
+          - type: string
+          description: 'The text or array of texts to embed.
+
+
+            Each text must contain at least one non-whitespace character.
+
+
+            No more than 128 texts can be embedded in a single request.'
+          examples:
+          - - Are restraints of trade enforceable under English law?
+            - What is a non-compete clause?
+        task:
+          type:
+          - 'null'
+          - string
+          enum:
+          - retrieval/query
+          - retrieval/document
+          - null
+          description: 'The task the embeddings will be used for.
+
+
+            `retrieval/query` is meant for queries and statements, and `retrieval/document`
+            is meant for anything to be retrieved using query embeddings.
+
+
+            If `null`, which is the default setting, embeddings will not be optimized
+            for any particular task.'
+          examples:
+          - retrieval/query
+        overflow_strategy:
+          type:
+          - 'null'
+          - string
+          enum:
+          - drop_end
+          - null
+          description: 'The strategy to employ when content exceeds the model''s maximum
+            input length.
+
+
+            `drop_end`, which is the default setting, drops tokens from the end of
+            the content exceeding the limit.
+
+
+            If `null`, an error will be raised if any content exceeds the model''s
+            maximum input length.'
+          default: drop_end
+          examples:
+          - drop_end
+        dimensions:
+          oneOf:
+          - type: integer
+            minimum: 1.0
+            title: Positive integer
+            description: A whole number greater than or equal to 1.
+            examples:
+            - 1
+          - type: 'null'
+          description: 'The number of dimensions the embeddings should have, not exceeding
+            the maximum dimensions of the model.
+
+
+            If `null`, the model''s default dimensions will be used.'
+          examples:
+          - 1792
+      type: object
+      required:
+      - model
+      - texts
+      title: Embedding request
+      description: A request to vectorize content with an Isaacus embedding model.
+      examples:
+      - model: kanon-2-embedder
+        texts:
+        - Are restraints of trade enforceable under English law?
+        - What is a non-compete clause?
+        task: retrieval/query
+    EmbeddingResponse:
+      properties:
+        embeddings:
+          items:
+            $ref: '#/components/schemas/Embedding'
+          type: array
+          description: The embeddings of the inputs.
+          examples:
+          - - index: 0
+              embedding:
+              - -0.0258
+              - 0.02062
+              - -0.0114
+            - index: 1
+              embedding:
+              - -0.0358
+              - -0.0128
+              - 0.00251
+        usage:
+          $ref: '#/components/schemas/EmbeddingUsage'
+      type: object
+      required:
+      - embeddings
+      - usage
+      title: Embedding response
+      examples:
+      - embeddings:
+        - index: 0
+          embedding:
+          - -0.0258
+          - 0.02062
+          - -0.0114
+        - index: 1
+          embedding:
+          - -0.0358
+          - -0.0128
+          - 0.00251
+        usage:
+          input_tokens: 42
+    EmbeddingUsage:
+      properties:
+        input_tokens:
+          type: integer
+          minimum: 1.0
+          title: Positive integer
+          description: The number of tokens inputted to the model.
+          examples:
+          - 42
+      type: object
+      required:
+      - input_tokens
+      title: Embedding usage
+      description: Statistics about the usage of resources in the process of embedding
+        the inputs.
+      examples:
+      - input_tokens: 42
+    EnrichmentRequest:
+      properties:
+        model:
+          type: string
+          const: kanon-2-enricher
+          description: The ID of the [model](https://docs.isaacus.com/models#enrichment)
+            to use for enrichment.
+          examples:
+          - kanon-2-enricher
+        texts:
+          oneOf:
+          - items:
+              type: string
+            type: array
+          - type: string
+          description: 'A text or array of texts to be enriched, each containing at
+            least one non-whitespace character.
+
+
+            No more than 8 texts can be enriched in a single request.'
+          examples:
+          - - 1.5 You (the "User") agree to be bound by these Terms.
+        overflow_strategy:
+          type:
+          - 'null'
+          - string
+          enum:
+          - auto
+          - drop_end
+          - chunk
+          - null
+          description: 'The strategy for handling content exceeding the model''s maximum
+            input length.
+
+
+            `auto`, which is the recommended setting, currently behaves the same as
+            `chunk`, which intelligently breaks the input up into smaller chunks and
+            then stitches the results back together into a single prediction. In the
+            future `auto` may implement even more sophisticated strategies for handling
+            long contexts such as leveraging chunk overlap and/or a specialized stitching
+            model.
+
+
+            `chunk` breaks the input up into smaller chunks that fit within the model''s
+            context window and then intelligently merges the results into a single
+            prediction at the cost of a minor accuracy drop.
+
+
+            `drop_end` drops tokens from the end of input exceeding the model''s maximum
+            input length.
+
+
+            `null`, which is the default setting, raises an error if the input exceeds
+            the model''s maximum input length.'
+          examples:
+          - auto
+      type: object
+      required:
+      - model
+      - texts
+      title: Enrichment request
+      description: A request to enrich texts with an Isaacus enrichment model.
+      examples:
+      - model: kanon-2-enricher
+        texts:
+        - '[42] The U.S. Attorney General, Mr. McGill, argued at ¶ 21 of the Filing
+          that "§ 206 of Title 29 of the U.S. Code (the "Labor Title") does not apply
+          to the plaintiff, Ms. Moody, given the definition of an "employee" at §203(e)(4)
+          of the Labor Title does not include volunteers, and, regardless, she lives
+          in Austria."'
+        overflow_strategy: auto
+    EnrichmentResponse:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/EnrichmentResult'
+          type: array
+          description: The enriched documents alongside, and in order of, their indices
+            in the input array of texts.
+          examples:
+          - version: ilgs@1
+            text: '[42] The U.S. Attorney General, Mr. McGill, argued at ¶ 21 of the
+              Filing that "§ 206 of Title 29 of the U.S. Code (the "Labor Title")
+              does not apply to the plaintiff, Ms. Moody, given the definition of
+              an "employee" at §203(e)(4) of the Labor Title does not include volunteers,
+              and, regardless, she lives in Austria."'
+            title: null
+            subtitle: null
+            type: other
+            jurisdiction: US-FED
+            segments:
+            - id: seg:0
+              kind: unit
+              type: paragraph
+              category: annotation
+              type_name: null
+              code:
+                start: 0
+                end: 4
+              title: null
+              parent: null
+              children: []
+              level: 0
+              span:
+                start: 0
+                end: 317
+            crossreferences: []
+            locations:
+            - id: loc:0
+              name:
+                start: 308
+                end: 315
+              type: country
+              parent: null
+              children: []
+              mentions:
+              - start: 308
+                end: 315
+            persons:
+            - id: per:0
+              name:
+                start: 32
+                end: 42
+              type: natural
+              role: defense_counsel
+              parent: null
+              children: []
+              residence: null
+              mentions:
+              - start: 32
+                end: 42
+            - id: per:1
+              name:
+                start: 167
+                end: 176
+              type: natural
+              role: plaintiff
+              parent: null
+              children: []
+              residence: loc:0
+              mentions:
+              - start: 167
+                end: 176
+            emails: []
+            websites: []
+            phone_numbers: []
+            id_numbers: []
+            terms:
+            - id: term:0
+              name:
+                start: 120
+                end: 131
+              meaning:
+                start: 88
+                end: 113
+              mentions:
+              - start: 237
+                end: 248
+            external_documents:
+            - id: exd:0
+              name:
+                start: 66
+                end: 72
+              type: other
+              jurisdiction: US-FED
+              reception: neutral
+              mentions:
+              - start: 66
+                end: 72
+              pinpoints:
+              - start: 54
+                end: 58
+            - id: exd:1
+              name:
+                start: 80
+                end: 113
+              type: statute
+              jurisdiction: US-FED
+              reception: neutral
+              mentions:
+              - start: 80
+                end: 113
+              pinpoints:
+              - start: 79
+                end: 84
+              - start: 219
+                end: 229
+            quotes:
+            - source_segment: null
+              source_document: exd:0
+              source_person: per:0
+              amending: false
+              span:
+                start: 79
+                end: 317
+            dates: []
+            headings: []
+            junk: []
+        usage:
+          $ref: '#/components/schemas/EnrichmentUsage'
+      type: object
+      required:
+      - results
+      - usage
+      title: Enrichment response
+      examples:
+      - results:
+        - index: 0
+          document:
+            version: ilgs@1
+            text: '[42] The U.S. Attorney General, Mr. McGill, argued at ¶ 21 of the
+              Filing that "§ 206 of Title 29 of the U.S. Code (the "Labor Title")
+              does not apply to the plaintiff, Ms. Moody, given the definition of
+              an "employee" at §203(e)(4) of the Labor Title does not include volunteers,
+              and, regardless, she lives in Austria."'
+            title: null
+            subtitle: null
+            type: other
+            jurisdiction: US-FED
+            segments:
+            - id: seg:0
+              kind: unit
+              type: paragraph
+              category: annotation
+              type_name: null
+              code:
+                start: 0
+                end: 4
+              title: null
+              parent: null
+              children: []
+              level: 0
+              span:
+                start: 0
+                end: 317
+            crossreferences: []
+            locations:
+            - id: loc:0
+              name:
+                start: 308
+                end: 315
+              type: country
+              parent: null
+              children: []
+              mentions:
+              - start: 308
+                end: 315
+            persons:
+            - id: per:0
+              name:
+                start: 32
+                end: 42
+              type: natural
+              role: defense_counsel
+              parent: null
+              children: []
+              residence: null
+              mentions:
+              - start: 32
+                end: 42
+            - id: per:1
+              name:
+                start: 167
+                end: 176
+              type: natural
+              role: plaintiff
+              parent: null
+              children: []
+              residence: loc:0
+              mentions:
+              - start: 167
+                end: 176
+            emails: []
+            websites: []
+            phone_numbers: []
+            id_numbers: []
+            terms:
+            - id: term:0
+              name:
+                start: 120
+                end: 131
+              meaning:
+                start: 88
+                end: 113
+              mentions:
+              - start: 237
+                end: 248
+            external_documents:
+            - id: exd:0
+              name:
+                start: 66
+                end: 72
+              type: other
+              jurisdiction: US-FED
+              reception: neutral
+              mentions:
+              - start: 66
+                end: 72
+              pinpoints:
+              - start: 54
+                end: 58
+            - id: exd:1
+              name:
+                start: 80
+                end: 113
+              type: statute
+              jurisdiction: US-FED
+              reception: neutral
+              mentions:
+              - start: 80
+                end: 113
+              pinpoints:
+              - start: 79
+                end: 84
+              - start: 219
+                end: 229
+            quotes:
+            - source_segment: null
+              source_document: exd:0
+              source_person: per:0
+              amending: false
+              span:
+                start: 79
+                end: 317
+            dates: []
+            headings: []
+            junk: []
+        usage:
+          input_tokens: 91
+    EnrichmentResult:
+      properties:
+        index:
+          type: integer
+          minimum: 0.0
+          title: Non-negative integer
+          description: The index of this document in the input array of texts, starting
+            at `0` (and, therefore, ending at the number of inputs minus `1`).
+          examples:
+          - 0
+        document:
+          $ref: '#/components/schemas/ILGSv1Document'
+      type: object
+      required:
+      - index
+      - document
+      title: Enrichment result
+      description: An enriched document alongside its index in the input array of
+        texts.
+      examples:
+      - index: 0
+        document:
+          version: ilgs@1
+          text: '[42] The U.S. Attorney General, Mr. McGill, argued at ¶ 21 of the
+            Filing that "§ 206 of Title 29 of the U.S. Code (the "Labor Title") does
+            not apply to the plaintiff, Ms. Moody, given the definition of an "employee"
+            at §203(e)(4) of the Labor Title does not include volunteers, and, regardless,
+            she lives in Austria."'
+          title: null
+          subtitle: null
+          type: other
+          jurisdiction: US-FED
+          segments:
+          - id: seg:0
+            kind: unit
+            type: paragraph
+            category: annotation
+            type_name: null
+            code:
+              start: 0
+              end: 4
+            title: null
+            parent: null
+            children: []
+            level: 0
+            span:
+              start: 0
+              end: 317
+          crossreferences: []
+          locations:
+          - id: loc:0
+            name:
+              start: 308
+              end: 315
+            type: country
+            parent: null
+            children: []
+            mentions:
+            - start: 308
+              end: 315
+          persons:
+          - id: per:0
+            name:
+              start: 32
+              end: 42
+            type: natural
+            role: defense_counsel
+            parent: null
+            children: []
+            residence: null
+            mentions:
+            - start: 32
+              end: 42
+          - id: per:1
+            name:
+              start: 167
+              end: 176
+            type: natural
+            role: plaintiff
+            parent: null
+            children: []
+            residence: loc:0
+            mentions:
+            - start: 167
+              end: 176
+          emails: []
+          websites: []
+          phone_numbers: []
+          id_numbers: []
+          terms:
+          - id: term:0
+            name:
+              start: 120
+              end: 131
+            meaning:
+              start: 88
+              end: 113
+            mentions:
+            - start: 237
+              end: 248
+          external_documents:
+          - id: exd:0
+            name:
+              start: 66
+              end: 72
+            type: other
+            jurisdiction: US-FED
+            reception: neutral
+            mentions:
+            - start: 66
+              end: 72
+            pinpoints:
+            - start: 54
+              end: 58
+          - id: exd:1
+            name:
+              start: 80
+              end: 113
+            type: statute
+            jurisdiction: US-FED
+            reception: neutral
+            mentions:
+            - start: 80
+              end: 113
+            pinpoints:
+            - start: 79
+              end: 84
+            - start: 219
+              end: 229
+          quotes:
+          - source_segment: null
+            source_document: exd:0
+            source_person: per:0
+            amending: false
+            span:
+              start: 79
+              end: 317
+          dates: []
+          headings: []
+          junk: []
+    EnrichmentUsage:
+      properties:
+        input_tokens:
+          type: integer
+          minimum: 1.0
+          title: Positive integer
+          description: The total number of tokens inputted to the model.
+          examples:
+          - 91
+      type: object
+      required:
+      - input_tokens
+      title: Enrichment usage
+      description: Statistics about the usage of resources in the process of enriching
+        the input.
+      examples:
+      - input_tokens: 91
+    ILGSv1 Crossreference:
+      properties:
+        start:
+          type: string
+          minLength: 5
+          pattern: ^seg:.+$
+          description: The unique identifier of the earliest segment in the span of
+            segments being cross-referenced with ties broken in favor of the least-nested
+            (i.e., largest) segment. If the cross-reference points to a single segment,
+            `start` and `end` will be identical.
+          examples:
+          - seg:49
+        end:
+          type: string
+          minLength: 5
+          pattern: ^seg:.+$
+          description: The unique identifier of the latest segment in the span of
+            segments being cross-referenced with ties broken in favor of the least-nested
+            (i.e., largest) segment. If the cross-reference points to a single segment,
+            `start` and `end` will be identical.
+          examples:
+          - seg:51
+        span:
+          $ref: '#/components/schemas/ILGSv1 Span'
+      type: object
+      required:
+      - start
+      - end
+      - span
+      title: ILGSv1 Crossreference
+      description: A cross-reference within the document pointing to one or more segments.
+      examples:
+      - start: seg:49
+        end: seg:51
+        span:
+          start: 2213
+          end: 2229
+    ILGSv1 Date:
+      properties:
+        value:
+          type: string
+          maxLength: 10
+          minLength: 10
+          pattern: ^(?:[1-9]\d{3})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$
+          description: The date in ISO 8601 format (YYYY-MM-DD).
+          examples:
+          - '2028-01-01'
+        type:
+          type: string
+          enum:
+          - creation
+          - signature
+          - effective
+          - expiry
+          - delivery
+          - renewal
+          - payment
+          - birth
+          - death
+          description: 'The type of the date, being one of `creation`, `signature`,
+            `effective`, `expiry`, `delivery`, `renewal`, `payment`, `birth`, or `death`.
+            If a date is mentioned in a document that does not fit into a supported
+            type, it will not be extracted.
+
+
+            `creation` denotes the date the document was created or last updated.
+            There may only be one `creation` date per document.
+
+
+            `signature` denotes the date the document was signed.
+
+
+            `effective` denotes the date when the document or a part thereof comes
+            into effect (e.g., commencement or enactment dates).
+
+
+            `expiry` denotes the date when the document or a part thereof is no longer
+            in effect.
+
+
+            `delivery` denotes the date when goods or services are to be delivered
+            under the document.
+
+
+            `renewal` denotes the date when one or more of the document''s terms are
+            to be renewed.
+
+
+            `payment` denotes the date when payment is to be made under the document.
+
+
+            `birth` denotes the birth date of a natural person or establishment (e.g.,
+            incorporation) date of a non-natural legal person identified in the document.
+            There can only be one `birth` date linked to a single person and all `birth`
+            dates must be linked to a person. A person''s `birth` date will never
+            be after their `death` date.
+
+
+            `death` denotes the death date of a natural person or dissolution date
+            of a non-natural legal person identified in the document. There can only
+            be one `death` date linked to a single person and all `death` dates must
+            be linked to a person. A person''s `death` date will never be before their
+            `birth` date.'
+          examples:
+          - signature
+        person:
+          oneOf:
+          - type: string
+            title: ILGSv1 Person ID
+            description: A unique identifier for a legal person in the format `per:{identifier}`.
+            examples:
+            - per:8
+          - type: 'null'
+          description: 'The unique identifier of the legal person that this date is
+            associated with or `null` if the date is not associated with any legal
+            person.
+
+
+            For `birth` and `death` dates, this field will always be populated.'
+          examples:
+          - per:12
+        mentions:
+          items:
+            $ref: '#/components/schemas/ILGSv1 Span'
+          type: array
+          description: An array of one or more spans within the document's text where
+            the date is mentioned.
+          examples:
+          - - start: 1179
+              end: 1194
+            - start: 8784
+              end: 8799
+      type: object
+      required:
+      - value
+      - type
+      - person
+      - mentions
+      title: ILGSv1 Date
+      description: 'An array of dates identified in the document belonging to one
+        of the following types: `creation`, `signature`, `effective`, `expiry`, `delivery`,
+        `renewal`, `payment`, `birth`, or `death`.
+
+
+        Only full Gregorian dates (i.e., including a day, month, and year) between
+        the years 1000 and 9999 (inclusive) fitting into one of the supported date
+        types are extractable.'
+      examples:
+      - value: '2028-01-01'
+        type: signature
+        person: null
+        mentions:
+        - start: 1179
+          end: 1194
+        - start: 8784
+          end: 8799
+    ILGSv1 Email:
+      properties:
+        address:
+          type: string
+          minLength: 5
+          pattern: ^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,63}$
+          description: The normalized email address.
+          examples:
+          - hello@example.com
+        person:
+          type: string
+          minLength: 5
+          pattern: ^per:.+$
+          description: The unique identifier of the person that this email address
+            belongs to.
+          examples:
+          - per:3
+        mentions:
+          items:
+            $ref: '#/components/schemas/ILGSv1 Span'
+          type: array
+          description: An array of one or more spans within the document's text where
+            the email address is mentioned.
+          examples:
+          - - start: 5142
+              end: 5164
+      type: object
+      required:
+      - address
+      - person
+      - mentions
+      title: ILGSv1 Email
+      description: 'An email address identified in a document belonging to a legal
+        person.
+
+
+        If an email address was mentioned in the document but is not attributable
+        to a legal person, it will not be extracted.'
+      examples:
+      - address: hello@example.com
+        person: per:3
+        mentions:
+        - start: 5142
+          end: 5164
+    ILGSv1 External Document:
+      properties:
+        id:
+          type: string
+          minLength: 5
+          pattern: ^exd:.+$
+          description: The unique identifier of the external document in the format
+            `exd:{identifier}`.
+          examples:
+          - exd:2
+        name:
+          $ref: '#/components/schemas/ILGSv1 Span'
+        type:
+          type: string
+          enum:
+          - statute
+          - regulation
+          - decision
+          - contract
+          - other
+          description: 'The type of the external document, being one of `statute`,
+            `regulation`, `decision`, `contract`, or `other`.
+
+
+            `statute` denotes primary legislation such as acts, bills, codes, and
+            constitutions.
+
+
+            `regulation` denotes secondary legislation such as rules, statutory instruments,
+            and ordinances.
+
+
+            `decision` denotes judicial or quasi-judicial decisions such as court
+            judgments, judicial opinions, and tribunal rulings.
+
+
+            `other` is used for all other types of legal documents that do not fit
+            into any of the predefined types.'
+          examples:
+          - statute
+        jurisdiction:
+          oneOf:
+          - type: string
+            title: ILGSv1 Jurisdiction
+            description: 'A jurisdiction code representing a country (via an initial
+              country code) and, optionally, a subdivision within that country (via
+              a subsequent subdivision code prefixed by a hyphen).
+
+
+              All 249 ISO 3166-1 alpha-2 country codes are representable in addition
+              to special `INT` and `EU` codes for international and European Union
+              law, respectively.
+
+
+              All 5,046 ISO 3166-2 codes are also representable in addition to a special
+              `FED` code for federal law.'
+            examples:
+            - AU-FED
+          - type: 'null'
+          description: 'The jurisdiction of the external document or `null` if the
+            jurisdiction is unknown.
+
+
+            Jurisdictions are composed of a country code and, where applicable, a
+            subdivision code prefixed by a hyphen.
+
+
+            All 249 ISO 3166-1 alpha-2 country codes are representable in addition
+            to special `INT` and `EU` codes for international and European Union law,
+            respectively.
+
+
+            All 5,046 ISO 3166-2 codes are also representable in addition to a special
+            `FED` code for federal law.'
+          examples:
+          - AU-FED
+        reception:
+          type: string
+          enum:
+          - positive
+          - mixed
+          - negative
+          - neutral
+          description: 'The sentiment of the document towards the external document,
+            being one of `positive`, `mixed`, `negative`, or `neutral`.
+
+
+            `positive` indicates that the document expresses a favorable view of the
+            external document whether by endorsing or approving it.
+
+
+            `mixed` indicates that the document expresses both favorable and unfavorable
+            views of the external document, for example, by affirming parts of it
+            and disapproving others.
+
+
+            `negative` indicates that the document expresses an unfavorable view of
+            the external document whether by criticizing, repealing, overruling, or
+            explicitly contradicting it.
+
+
+            `neutral` indicates that the document references the external document
+            without expressing any particular sentiment towards it.'
+          examples:
+          - positive
+        mentions:
+          items:
+            $ref: '#/components/schemas/ILGSv1 Span'
+          type: array
+          description: An array of one or more spans within the document's text where
+            the external document is mentioned by name, for example, 'the US Constitution'
+            in 'the Second Amendment to the US Constitution protects freedom of speech'.
+          examples:
+          - - start: 937
+              end: 941
+            - start: 1972
+              end: 2005
+            - start: 3713
+              end: 3734
+        pinpoints:
+          items:
+            $ref: '#/components/schemas/ILGSv1 Span'
+          type: array
+          description: An array of spans within the document's text where specific
+            parts of the external document are referenced, for example, 'Section 2'
+            in 'as defined in Section 2 of the US Constitution'.
+          examples:
+          - - start: 7696
+              end: 7712
+      type: object
+      required:
+      - id
+      - name
+      - type
+      - jurisdiction
+      - reception
+      - mentions
+      - pinpoints
+      title: ILGSv1 External Document
+      description: A document identified within another document.
+      examples:
+      - id: exd:2
+        name:
+          start: 1972
+          end: 2005
+        type: statute
+        jurisdiction: US
+        reception: positive
+        mentions:
+        - start: 937
+          end: 941
+        - start: 1972
+          end: 2005
+        - start: 3713
+          end: 3734
+        pinpoints:
+        - start: 7696
+          end: 7712
+    ILGSv1 ID Number:
+      properties:
+        number:
+          type: string
+          minLength: 1
+          pattern: \S
+          description: The identification number.
+          examples:
+          - 999-99-9999
+        person:
+          type: string
+          minLength: 5
+          pattern: ^per:.+$
+          description: The unique identifier of the person that this identification
+            number belongs to.
+          examples:
+          - per:7
+        mentions:
+          items:
+            $ref: '#/components/schemas/ILGSv1 Span'
+          type: array
+          description: An array of one or more spans within the document's text where
+            the identification number is mentioned.
+          examples:
+          - - start: 7180
+              end: 7194
+      type: object
+      required:
+      - number
+      - person
+      - mentions
+      title: ILGSv1 ID Number
+      description: 'An identification number mentioned in a document belonging to
+        a legal person.
+
+
+        If an identification number was mentioned in the document but is not attributable
+        to a legal person, it will not be extracted.'
+      examples:
+      - number: 999-99-9999
+        person: per:7
+        mentions:
+        - start: 7180
+          end: 7194
+    ILGSv1 Location:
+      properties:
+        id:
+          type: string
+          minLength: 5
+          pattern: ^loc:.+$
+          description: The unique identifier of the location in the format `loc:{identifier}`.
+          examples:
+          - loc:6
+        name:
+          $ref: '#/components/schemas/ILGSv1 Span'
+        type:
+          type: string
+          enum:
+          - country
+          - state
+          - city
+          - address
+          - other
+          description: The type of the location, being one of `country`, `state`,
+            `city`, `address`, or `other`.
+          examples:
+          - address
+        parent:
+          oneOf:
+          - type: string
+            title: ILGSv1 Location ID
+            description: A unique identifier for a location in the format `loc:{identifier}`.
+            examples:
+            - loc:6
+          - type: 'null'
+          description: 'The unique identifier of the ''parent'' location immediately
+            containing this location or `null` if the location has no ancestors identified
+            in the document.
+
+
+            Locations with the `address` and `other` types can have locations of any
+            type as their parents.
+
+
+            A location with the `city` type cannot have a location with the `address`
+            type as its parent.
+
+
+            A location with the `state` type cannot have a location with the `address`
+            or `city` types as its parent.
+
+
+            A location with the `country` type cannot have a location with the `address`,
+            `city`, or `state` types as its parent.
+
+
+            It is impossible for a location to be its own ancestor.'
+          examples:
+          - loc:1
+        children:
+          items:
+            type: string
+            title: ILGSv1 Location ID
+            description: A unique identifier for a location in the format `loc:{identifier}`.
+            examples:
+            - loc:6
+          type: array
+          description: The unique identifiers of any 'child' locations having this
+            location as their immediate parent.
+          examples:
+          - loc:3
+          - loc:4
+        mentions:
+          items:
+            $ref: '#/components/schemas/ILGSv1 Span'
+          type: array
+          description: An array of one or more spans within the document's text where
+            the location is mentioned.
+          examples:
+          - - start: 5074
+              end: 5133
+            - start: 6523
+              end: 6582
+            - start: 8094
+              end: 8153
+      type: object
+      required:
+      - id
+      - name
+      - type
+      - parent
+      - children
+      - mentions
+      title: ILGSv1 Location
+      description: A location identified within a document.
+      examples:
+      - id: loc:6
+        name:
+          start: 6523
+          end: 6582
+        type: address
+        parent: loc:1
+        children:
+        - loc:3
+        - loc:4
+        mentions:
+        - start: 5074
+          end: 5133
+        - start: 6523
+          end: 6582
+        - start: 8094
+          end: 8153
+    ILGSv1 Person:
+      properties:
+        id:
+          type: string
+          minLength: 5
+          pattern: ^per:.+$
+          description: The unique identifier of the person in the format `per:{identifier}`.
+          examples:
+          - per:8
+        name:
+          $ref: '#/components/schemas/ILGSv1 Span'
+        type:
+          type: string
+          enum:
+          - natural
+          - corporate
+          - politic
+          description: 'The legal entity type of the person, being one of `natural`,
+            `corporate`, or `politic`.
+
+
+            `natural` denotes a human being in their capacity as a natural legal person,
+            including when representing unincorporated entities such as partnerships
+            and trusts.
+
+
+            `corporate` denotes a body corporate such as a company, incorporated partnership,
+            or statutory corporation.
+
+
+            `politic` denotes a body politic, political entity, or part thereof such
+            as a court, state, government, or intergovernmental organization.'
+          examples:
+          - natural
+        role:
+          type: string
+          enum:
+          - plaintiff
+          - petitioner
+          - applicant
+          - appellant
+          - appellee
+          - claimant
+          - complainant
+          - defendant
+          - respondent
+          - prior_authority
+          - prosecutor
+          - defense_counsel
+          - amicus
+          - intervener
+          - borrower
+          - lender
+          - guarantor
+          - lessee
+          - lessor
+          - employer
+          - employee
+          - licensor
+          - licensee
+          - franchisor
+          - franchisee
+          - buyer
+          - seller
+          - contractor
+          - shareholder
+          - joint_venturer
+          - investor
+          - insurer
+          - insured
+          - enacting_authority
+          - empowered_authority
+          - settlor
+          - trustee
+          - beneficiary
+          - debater
+          - director
+          - governing_jurisdiction
+          - clerk
+          - witness
+          - other
+          - non_party
+          description: 'The role of the person in relation to the subject of the document.
+
+
+            The following roles are currently supported:
+
+            |                          |                                                                                                                                                                                                                                                                                                                                      |
+
+            | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            |
+
+            | `plaintiff`              | A party initiating the case that is the subject
+            of the document.                                                                                                                                                                                                                                                                     |
+
+            | `petitioner`             | A party initiating the petition that is the
+            subject of the document.                                                                                                                                                                                                                                                                 |
+
+            | `applicant`              | A party initiating the application that is
+            the subject of the document.                                                                                                                                                                                                                                                              |
+
+            | `appellant`              | A party appealing the decision that is the
+            subject of the document.                                                                                                                                                                                                                                                                  |
+
+            | `appellee`               | A party responding to the appeal that is
+            the subject of the document if they are explicitly referred to as an ''appellee''.                                                                                                                                                                                                            |
+
+            | `claimant`               | A party making a claim in the case that is
+            the subject of the document.                                                                                                                                                                                                                                                              |
+
+            | `complainant`            | A party making a complaint in the case that
+            is the subject of the document.                                                                                                                                                                                                                                                          |
+
+            | `defendant`              | A party defending against the case that is
+            the subject of the document.                                                                                                                                                                                                                                                              |
+
+            | `respondent`             | A party responding to the petition, appeal,
+            or application that is the subject of the document.                                                                                                                                                                                                                                      |
+
+            | `prior_authority`        | An authority (e.g., judge, tribunal, court)
+            that made a prior decision in the case that is the subject of the document.
+            Both individual judges and courts should be annotated with this role where
+            applicable. This is not to be used for authorities cited as precedent,
+            only for those that made prior decisions in the same case. |
+
+            | `prosecutor`             | A lawyer prosecuting the case that is the
+            subject of the document.                                                                                                                                                                                                                                                                   |
+
+            | `defense_counsel`        | A lawyer defending the case that is the subject
+            of the document.                                                                                                                                                                                                                                                                     |
+
+            | `amicus`                 | A party filing an amicus curiae brief in
+            the case that is the subject of the document.                                                                                                                                                                                                                                               |
+
+            | `intervener`             | A party attempting to or that has intervened
+            in the case that is the subject of the document.                                                                                                                                                                                                                                        |
+
+            | `borrower`               | A party borrowing money or other assets under
+            the agreement that is the subject of the document, including ''mortgagors''
+            and ''debtors''.                                                                                                                                                                                               |
+
+            | `lender`                 | A party lending money or other assets under
+            the agreement that is the subject of the document, including ''mortgagees''
+            and ''creditors''.                                                                                                                                                                                               |
+
+            | `guarantor`              | A party guaranteeing obligations under the
+            agreement that is the subject of the document, including ''sureties''.                                                                                                                                                                                                                      |
+
+            | `lessee`                 | A party leasing goods or services under the
+            agreement that is the subject of the document, including ''tenants''.                                                                                                                                                                                                                      |
+
+            | `lessor`                 | A party leasing goods or services under the
+            agreement that is the subject of the document, including ''landlords''.                                                                                                                                                                                                                    |
+
+            | `employer`               | A party employing personnel under the agreement
+            that is the subject of the document.                                                                                                                                                                                                                                                 |
+
+            | `employee`               | A party employed under the agreement that
+            is the subject of the document.                                                                                                                                                                                                                                                            |
+
+            | `licensor`               | A party licensing intellectual property or
+            other rights under the agreement that are the subject of the document.                                                                                                                                                                                                                    |
+
+            | `licensee`               | A party licensed to use intellectual property
+            or other rights under the agreement that are the subject of the document.                                                                                                                                                                                                              |
+
+            | `franchisor`             | A party granting a franchise under the agreement
+            that is the subject of the document.                                                                                                                                                                                                                                                |
+
+            | `franchisee`             | A party granted a franchise under the agreement
+            that is the subject of the document.                                                                                                                                                                                                                                                 |
+
+            | `buyer`                  | A party purchasing goods or services under
+            the agreement that is the subject of the document, including ''purchasers'',
+            ''customers'', and ''clients''.                                                                                                                                                                                    |
+
+            | `seller`                 | A party selling or providing goods or services
+            under the agreement that is the subject of the document, including ''Vendors'',
+            ''Suppliers'', and ''Service Providers'' (where such parties are actually
+            providing goods or services under the agreement).                                                                                 |
+
+            | `contractor`             | A party contracted to perform work or services
+            under the agreement that is the subject of the document, including ''consultants''.                                                                                                                                                                                                     |
+
+            | `shareholder`            | A party holding shares or equity under the
+            agreement that is the subject of the document.                                                                                                                                                                                                                                            |
+
+            | `joint_venturer`         | A party participating in a joint venture
+            under the agreement that is the subject of the document.                                                                                                                                                                                                                                    |
+
+            | `investor`               | A party investing money or assets under the
+            agreement that is the subject of the document.                                                                                                                                                                                                                                           |
+
+            | `insurer`                | A party providing insurance under the agreement
+            that is the subject of the document.                                                                                                                                                                                                                                                 |
+
+            | `insured`                | A party insured under the agreement that
+            is the subject of the document.                                                                                                                                                                                                                                                             |
+
+            | `settlor`                | A party establishing the trust that is the
+            subject of the document.                                                                                                                                                                                                                                                                  |
+
+            | `trustee`                | A party managing the trust that is the subject
+            of the document.                                                                                                                                                                                                                                                                      |
+
+            | `beneficiary`            | A party benefiting from the trust that is
+            the subject of the document.                                                                                                                                                                                                                                                               |
+
+            | `enacting_authority`     | An authority (e.g., legislature, regulator,
+            Minister/Secretary, President/Prime Minister, tribunal, court, judge)
+            giving legal effect to or authorizing the document. All relevant individuals
+            and bodies should be annotated with this role where applicable.                                                                       |
+
+            | `empowered_authority`    | An authority (e.g., government agency, regulator,
+            Minister/Secretary, President/Prime Minister, tribunal, court) empowered
+            by the document to carry out functions or duties.                                                                                                                                                         |
+
+            | `debater`                | A person participating in the debate that
+            is the subject of the document.                                                                                                                                                                                                                                                            |
+
+            | `governing_jurisdiction` | The jurisdiction whose laws govern the document.                                                                                                                                                                                                                                                                                     |
+
+            | `director`               | A director or other officer of a corporate
+            legal person mentioned in the document.                                                                                                                                                                                                                                                   |
+
+            | `clerk`                  | A clerk, notary, or other official certifying,
+            witnessing, filing, recording, registering, or otherwise administering
+            the document.                                                                                                                                                                                                  |
+
+            | `witness`                | A witness witnessing the signing of the document,
+            or whose testimony is part of the case that is the subject of the document.                                                                                                                                                                                                        |
+
+            | `other`                  | A party to the case, agreement, legislation,
+            or regulation that is the subject of the document that does not fit into
+            any of the other roles.                                                                                                                                                                                        |
+
+            | `non_party`              | A legal person mentioned in the document
+            that is not a party to the case, agreement, legislation, or regulation
+            that is the subject of the document.                                                                                                                                                                                 |'
+          examples:
+          - enacting_authority
+        parent:
+          oneOf:
+          - type: string
+            title: ILGSv1 Person ID
+            description: A unique identifier for a legal person in the format `per:{identifier}`.
+            examples:
+            - per:8
+          - type: 'null'
+          description: 'The unique identifier of the immediate legal entity that owns
+            or controls this person (e.g., a parent company) or that this person represents
+            if this person is identified only in their capacity as a representative
+            (e.g., a director) of that entity or `null` if the person has no parent
+            entity mentioned in the document or their parentage is unknown.
+
+
+            It is impossible for a person to be their own parent.'
+          examples:
+          - per:1
+        children:
+          items:
+            type: string
+            title: ILGSv1 Person ID
+            description: A unique identifier for a legal person in the format `per:{identifier}`.
+            examples:
+            - per:8
+          type: array
+          description: The unique identifiers of any persons having this person as
+            their immediate parent.
+          examples:
+          - per:9
+          - per:10
+        residence:
+          oneOf:
+          - type: string
+            title: ILGSv1 Location ID
+            description: A unique identifier for a location in the format `loc:{identifier}`.
+            examples:
+            - loc:6
+          - type: 'null'
+          description: The unique identifier of the location at which the person primarily
+            resides or `null` if the person's residence is unknown or not mentioned
+            in the document.
+          examples:
+          - loc:5
+        mentions:
+          items:
+            $ref: '#/components/schemas/ILGSv1 Span'
+          type: array
+          description: An array of one or more spans within the document's text where
+            the person is mentioned.
+          examples:
+          - - start: 6943
+              end: 6968
+      type: object
+      required:
+      - id
+      - name
+      - type
+      - role
+      - parent
+      - children
+      - residence
+      - mentions
+      title: ILGSv1 Person
+      description: A legal person identified in a document.
+      examples:
+      - id: per:8
+        name:
+          start: 6943
+          end: 6968
+        type: natural
+        role: defense_counsel
+        parent: per:1
+        children:
+        - per:9
+        - per:10
+        residence: loc:5
+        mentions:
+        - start: 6943
+          end: 6968
+    ILGSv1 Phone Number:
+      properties:
+        number:
+          type: string
+          minLength: 3
+          pattern: '^\+(?:\d+(?: |\-)?)+\d+(?:\s*[Ee][Xx][Tt]\.\s*\d+)?$'
+          description: The normalized phone number in E.123 international notation
+            conforming with local conventions on the use of spaces and hyphens as
+            separators.
+          examples:
+          - +1 202-555-0143
+        person:
+          type: string
+          minLength: 5
+          pattern: ^per:.+$
+          description: The unique identifier of the person that this phone number
+            belongs to.
+          examples:
+          - per:5
+        mentions:
+          items:
+            $ref: '#/components/schemas/ILGSv1 Span'
+          type: array
+          description: An array of one or more spans within the document's text where
+            the phone number is mentioned.
+          examples:
+          - - start: 5173
+              end: 5188
+            - start: 5367
+              end: 5382
+      type: object
+      required:
+      - number
+      - person
+      - mentions
+      title: ILGSv1 Phone Number
+      description: 'A valid phone number identified in a document belonging to a legal
+        person.
+
+
+        If a phone number was mentioned in the document but is not valid, possible,
+        or attributable to a legal person, it will not be extracted.'
+      examples:
+      - number: +1 202-555-0143
+        person: per:5
+        mentions:
+        - start: 5173
+          end: 5188
+        - start: 5367
+          end: 5382
+    ILGSv1 Quote:
+      properties:
+        source_segment:
+          oneOf:
+          - type: string
+            title: ILGSv1 Segment ID
+            description: A unique identifier for a segment in the format `seg:{identifier}`.
+            examples:
+            - seg:42
+          - type: 'null'
+          description: 'The unique identifier of the segment that is the source of
+            the quote or `null` if the quote is not from or attributable to a segment
+            within the document.
+
+
+            It is not possible for a quote to be simultaneously from a segment and
+            an external document.'
+          examples:
+          - null
+        source_document:
+          oneOf:
+          - type: string
+            title: ILGSv1 External Document ID
+            description: A unique identifier for an external document in the format
+              `exd:{identifier}`.
+            examples:
+            - exd:2
+          - type: 'null'
+          description: 'The unique identifier of the external document that is the
+            source of the quote or `null` if the quote is not from or attributable
+            to an external document.
+
+
+            It is not possible for a quote to be simultaneously from a segment and
+            an external document.'
+          examples:
+          - exd:2
+        source_person:
+          oneOf:
+          - type: string
+            title: ILGSv1 Person ID
+            description: A unique identifier for a legal person in the format `per:{identifier}`.
+            examples:
+            - per:8
+          - type: 'null'
+          description: The unique identifier of the legal person that is the source
+            of the quote or `null` if the quote is not from or attributable to a mentioned
+            legal person.
+          examples:
+          - per:10
+        amending:
+          type: boolean
+          description: Whether the quote is being used to amend or modify content,
+            typically in other documents.
+          examples:
+          - false
+        span:
+          $ref: '#/components/schemas/ILGSv1 Span'
+      type: object
+      required:
+      - source_segment
+      - source_document
+      - source_person
+      - amending
+      - span
+      title: ILGSv1 Quote
+      description: A quotation within a document.
+      examples:
+      - source_segment: null
+        source_document: exd:2
+        source_person: per:10
+        amending: false
+        span:
+          start: 949
+          end: 985
+    ILGSv1 Segment:
+      properties:
+        id:
+          type: string
+          minLength: 5
+          pattern: ^seg:.+$
+          description: The unique identifier of the segment in the format `seg:{identifier}`.
+          examples:
+          - seg:46
+        kind:
+          type: string
+          enum:
+          - container
+          - unit
+          - item
+          - figure
+          description: 'The structural ''kind'' of the segment, being one of `container`,
+            `unit`, `item`, or `figure`.
+
+
+            A `container` is a structural or semantic grouping of content such as
+            a chapter. It can contain segments of any kind or none at all.
+
+
+            A `unit` is a single syntactically independent unit of text such as a
+            paragraph. It can only contain `item`s and `figure`s.
+
+
+            An `item` is a syntactically subordinate unit of text such as an item
+            in a run-in list. It can only contain other `item`s. Note that an `item`
+            is conceptually distinct from a list item—it is perfectly possible to
+            encounter list items that are syntactically independent of their surrounding
+            items just as it is possible to encounter dependent clauses that do not
+            appear as part of a list.
+
+
+            A `figure` is a visually structured or tabular unit of content such as
+            a diagram, equation, or table. It cannot contain segments.'
+          examples:
+          - container
+        type:
+          type:
+          - 'null'
+          - string
+          enum:
+          - title
+          - book
+          - part
+          - chapter
+          - subchapter
+          - division
+          - subdivision
+          - subpart
+          - subtitle
+          - table_of_contents
+          - article
+          - section
+          - regulation
+          - rule
+          - clause
+          - paragraph
+          - subarticle
+          - subsection
+          - subregulation
+          - subrule
+          - subclause
+          - subparagraph
+          - item
+          - subitem
+          - point
+          - indent
+          - schedule
+          - annex
+          - appendix
+          - exhibit
+          - recital
+          - signature
+          - note
+          - figure
+          - table
+          - formula
+          - null
+          description: 'The addressable ''type'' of the segment within the document''s
+            referential scheme and hierarchy, whether defined explicitly (e.g., by
+            headings, such as ''Section 2. Definitions''), implicitly (e.g., by way
+            of reference, such as ''as defined in Section 2''), or by convention (e.g.,
+            [42] in a judgment often denotes a `paragraph`, independent provisions
+            in statute are often `section`s, etc.). If the type is not known or not
+            applicable, it will be set to `null`.
+
+
+            Note that, although many segment types may coincide with syntactic constructs,
+            they should be thought of purely as distinct formal citable units. Most
+            paragraphs (in the syntactic sense) will not have the `paragraph` type,
+            for example. That type is reserved for segments that would formally be
+            cited as a ''Paragraph'' within the document''s referential scheme.
+
+
+            The following types are currently supported: `title`, `book`, `part`,
+            `chapter`, `subchapter`, `division`, `subdivision`, `subpart`, `subtitle`,
+            `table_of_contents`, `article`, `section`, `regulation`, `rule`, `clause`,
+            `paragraph`, `subarticle`, `subsection`, `subregulation`, `subrule`, `subclause`,
+            `subparagraph`, `item`, `subitem`, `point`, `indent`, `schedule`, `annex`,
+            `appendix`, `exhibit`, `recital`, `signature`, `note`, `figure`, `table`,
+            and `formula`.
+
+
+            The `title`, `book`, `part`, `chapter`, `subchapter`, `division`, `subdivision`,
+            `subpart`, `subtitle`, and `table_of_contents` types are exclusive to
+            the `container` kind.
+
+
+            The `figure` kind only supports the `figure`, `table`, and `formula` types,
+            all of which are exclusive to it.'
+          examples:
+          - section
+        category:
+          type: string
+          enum:
+          - front_matter
+          - scope
+          - main
+          - annotation
+          - back_matter
+          - other
+          description: 'The functional ''category'' of the segment within the document,
+            being one of `front_matter`, `scope`, `main`, `annotation`, `back_matter`,
+            or `other`.
+
+
+            `front_matter` denotes non-operative contextualizing content occurring
+            at the start of a document such as a preamble or recitals.
+
+
+            `scope` denotes operative content defining the application or interpretation
+            of a document such as definition sections and governing law clauses.
+
+
+            `main` denotes operative, non-scopal content.
+
+
+            `annotation` denotes non-operative annotative content providing explanatory
+            or referential information such as commentary, footnotes, and endnotes.
+
+
+            `back_matter` denotes non-operative contextualizing content occurring
+            at the end of a document such as authority statements.
+
+
+            `other` denotes content that does not fit into any of the other categories.'
+          examples:
+          - main
+        type_name:
+          oneOf:
+          - $ref: '#/components/schemas/ILGSv1 Span'
+          - type: 'null'
+          description: The span within the segment defining its type (for example,
+            'Section' in 'Section 2 - Definitions') or `null` if no such span exists.
+          examples:
+          - start: 3453
+            end: 3460
+        code:
+          oneOf:
+          - $ref: '#/components/schemas/ILGSv1 Span'
+          - type: 'null'
+          description: The span within the segment defining its code (for example,
+            '2' in 'Section 2 - Definitions') or `null` if no such span exists.
+          examples:
+          - start: 3461
+            end: 3462
+        title:
+          oneOf:
+          - $ref: '#/components/schemas/ILGSv1 Span'
+          - type: 'null'
+          description: The span within the segment defining its title (for example,
+            'Definitions' in 'Section 2 - Definitions') or `null` if no such span
+            exists.
+          examples:
+          - start: 3465
+            end: 3480
+        parent:
+          oneOf:
+          - type: string
+            title: ILGSv1 Segment ID
+            description: A unique identifier for a segment in the format `seg:{identifier}`.
+            examples:
+            - seg:42
+          - type: 'null'
+          description: 'The unique identifier of the ''parent'' segment immediately
+            containing this segment or `null` if the segment has no parent (i.e.,
+            it is a root-level segment).
+
+
+            A segment with the `container` kind can be the parent of segments of any
+            kind, including other `container`s.
+
+
+            A segment with the `unit` kind can only be the parent of `item`s and `figure`s.
+
+
+            A segment with the `item` kind can only be the parent of other `item`s.
+
+
+            A segment with the `figure` kind cannot be the parent of any segments.'
+          examples:
+          - seg:0
+        children:
+          items:
+            type: string
+            title: ILGSv1 Segment ID
+            description: A unique identifier for a segment in the format `seg:{identifier}`.
+            examples:
+            - seg:42
+          type: array
+          description: The unique identifiers of any segments having this segment
+            as their immediate parent.
+          examples:
+          - seg:47
+          - seg:48
+        level:
+          type: integer
+          minimum: 0.0
+          description: The level of the segment within the document's segment hierarchy
+            starting from `0` for root-level segments.
+          examples:
+          - 1
+        span:
+          $ref: '#/components/schemas/ILGSv1 Span'
+      type: object
+      required:
+      - id
+      - kind
+      - type
+      - category
+      - type_name
+      - code
+      - title
+      - parent
+      - children
+      - level
+      - span
+      title: ILGSv1 Segment
+      description: A segment within the document representing a structurally distinct
+        portion of the document's content.
+      examples:
+      - id: seg:46
+        kind: container
+        type: section
+        category: main
+        type_name:
+          start: 3453
+          end: 3460
+        code:
+          start: 3461
+          end: 3462
+        title:
+          start: 3465
+          end: 3480
+        parent: seg:0
+        children:
+        - seg:47
+        - seg:48
+        level: 1
+        span:
+          start: 3453
+          end: 4074
+    ILGSv1 Span:
+      properties:
+        start:
+          type: integer
+          minimum: 0.0
+          description: The zero-based start index of the half-open span of Unicode
+            code points in the input text.
+          examples:
+          - 5805
+        end:
+          type: integer
+          minimum: 0.0
+          description: The zero-based end index of the half-open span (i.e., the end
+            is exclusive) of Unicode code points in the input text.
+          examples:
+          - 6036
+      type: object
+      required:
+      - start
+      - end
+      title: ILGSv1 Span
+      description: 'A zero-based, half-open span into the Unicode code point space
+        of input text.
+
+
+        All spans are globally laminar and well-nested similar to XML—it is impossible
+        for any two spans to partially overlap; they can only be disjoint, adjacent,
+        or wholly nested. Spans of the exact same type (e.g., segments) will never
+        be duplicated.
+
+
+        A span cannot be empty and will never start or end at whitespace (though a
+        span''s `end` index, being an exclusive index, may obviosuly land on a whitespace
+        character).
+
+
+        Note that, when using programming languages other than Python (which uses
+        zero-based, half-open, Unicode code point-spaced string indexing), indices
+        may need to be translated accordingly (for example, JavaScript slices into
+        UTF-16 code units instead of Unicode code points).'
+      examples:
+      - start: 5805
+        end: 6036
+    ILGSv1 Term:
+      properties:
+        id:
+          type: string
+          minLength: 6
+          pattern: ^term:.+$
+          description: The unique identifier of the term in the format `term:{identifier}`.
+          examples:
+          - term:3
+        name:
+          $ref: '#/components/schemas/ILGSv1 Span'
+        meaning:
+          $ref: '#/components/schemas/ILGSv1 Span'
+        mentions:
+          items:
+            $ref: '#/components/schemas/ILGSv1 Span'
+          type: array
+          description: 'An array of spans within the document''s text where the term
+            is mentioned outside of its definition.
+
+
+            It is possible for the term to have no mentions if, outside of its definition,
+            it is never referred to in the document.'
+          examples:
+          - - start: 3347
+              end: 3357
+      type: object
+      required:
+      - id
+      - name
+      - meaning
+      - mentions
+      title: ILGSv1 Term
+      description: A term assigned a definite meaning within a document.
+      examples:
+      - id: term:3
+        name:
+          start: 1564
+          end: 1578
+        meaning:
+          start: 1586
+          end: 1603
+        mentions:
+        - start: 3347
+          end: 3357
+    ILGSv1 Website:
+      properties:
+        url:
+          type: string
+          minLength: 10
+          pattern: ^https:\/\/[^\/]+\/$
+          description: The normalized URL of the website in the form `https://{host}/`.
+          examples:
+          - https://www.example.com/
+        person:
+          type: string
+          minLength: 5
+          pattern: ^per:.+$
+          description: The unique identifier of the person that this website belongs
+            to.
+          examples:
+          - per:4
+        mentions:
+          items:
+            $ref: '#/components/schemas/ILGSv1 Span'
+          type: array
+          description: An array of one or more spans within the document's text where
+            the website is mentioned (including paths and slugs which are not part
+            of the website's normalized URL).
+          examples:
+          - - start: 5199
+              end: 5223
+      type: object
+      required:
+      - url
+      - person
+      - mentions
+      title: ILGSv1 Website
+      description: 'A website identified in a document belonging to a legal person.
+
+
+        If a website was mentioned in the document but is not attributable to a legal
+        person, it will not be extracted.'
+      examples:
+      - url: https://www.example.com/
+        person: per:4
+        mentions:
+        - start: 5199
+          end: 5223
+    ILGSv1Document:
+      properties:
+        text:
+          type: string
+          description: The text of the document.
+          examples:
+          - '[42] The U.S. Attorney General, Mr. McGill, argued at ¶ 21 of the Filing
+            that "§ 206 of Title 29 of the U.S. Code (the "Labor Title") does not
+            apply to the plaintiff, Ms. Moody, given the definition of an "employee"
+            at §203(e)(4) of the Labor Title does not include volunteers, and, regardless,
+            she lives in Austria."'
+        title:
+          oneOf:
+          - $ref: '#/components/schemas/ILGSv1 Span'
+          - type: 'null'
+          description: The span defining the title of the document or `null` if the
+            document has no title or its title cannot be resolved.
+          examples:
+          - start: 0
+            end: 30
+        subtitle:
+          oneOf:
+          - $ref: '#/components/schemas/ILGSv1 Span'
+          - type: 'null'
+          description: The span defining the subtitle of the document or `null` if
+            the document has no subtitle, its subtitle cannot be resolved, or has
+            no `title`. The document must have a `title` for it to have a `subtitle`.
+          examples:
+          - start: 116
+            end: 133
+        type:
+          type: string
+          enum:
+          - statute
+          - regulation
+          - decision
+          - contract
+          - other
+          description: 'The type of the document, being one of `statute`, `regulation`,
+            `decision`, `contract`, or `other`.
+
+
+            `statute` denotes primary legislation such as acts, bills, codes, and
+            constitutions.
+
+
+            `regulation` denotes secondary legislation such as rules, statutory instruments,
+            and ordinances.
+
+
+            `decision` denotes judicial or quasi-judicial decisions such as court
+            judgments, judicial opinions, and tribunal rulings.
+
+
+            `contract` denotes contracts, covenants, and agreements.
+
+
+            `other` is used for all other types of legal documents that do not fit
+            into any of the predefined types.'
+          examples:
+          - statute
+        jurisdiction:
+          oneOf:
+          - type: string
+            title: ILGSv1 Jurisdiction
+            description: 'A jurisdiction code representing a country (via an initial
+              country code) and, optionally, a subdivision within that country (via
+              a subsequent subdivision code prefixed by a hyphen).
+
+
+              All 249 ISO 3166-1 alpha-2 country codes are representable in addition
+              to special `INT` and `EU` codes for international and European Union
+              law, respectively.
+
+
+              All 5,046 ISO 3166-2 codes are also representable in addition to a special
+              `FED` code for federal law.'
+            examples:
+            - AU-FED
+          - type: 'null'
+          description: 'The jurisdiction of the document or `null` if the jurisdiction
+            is unknown.
+
+
+            Jurisdictions are composed of a country code and, where applicable, a
+            subdivision code prefixed by a hyphen.
+
+
+            All 249 ISO 3166-1 alpha-2 country codes are representable in addition
+            to special `INT` and `EU` codes for international and European Union law,
+            respectively.
+
+
+            All 5,046 ISO 3166-2 codes are also representable in addition to a special
+            `FED` code for federal law.'
+          examples:
+          - AU-FED
+        segments:
+          items:
+            $ref: '#/components/schemas/ILGSv1 Segment'
+          type: array
+          description: An array of segments within the document representing structurally
+            distinct portions of its content.
+          examples:
+          - - id: seg:46
+              kind: container
+              type: section
+              category: main
+              type_name:
+                start: 3453
+                end: 3460
+              code:
+                start: 3461
+                end: 3462
+              title:
+                start: 3465
+                end: 3480
+              parent: seg:0
+              children:
+              - seg:47
+              - seg:48
+              level: 1
+              span:
+                start: 3453
+                end: 4074
+        crossreferences:
+          items:
+            $ref: '#/components/schemas/ILGSv1 Crossreference'
+          type: array
+          description: An array of cross-references within the document pointing to
+            a single segment or a span of segments.
+          examples:
+          - - start: seg:49
+              end: seg:51
+              span:
+                start: 2213
+                end: 2229
+        locations:
+          items:
+            $ref: '#/components/schemas/ILGSv1 Location'
+          type: array
+          description: An array of locations identified in the document.
+          examples:
+          - - id: loc:6
+              name:
+                start: 6523
+                end: 6582
+              type: address
+              parent: loc:1
+              children:
+              - loc:3
+              - loc:4
+              mentions:
+              - start: 5074
+                end: 5133
+              - start: 6523
+                end: 6582
+              - start: 8094
+                end: 8153
+        persons:
+          items:
+            $ref: '#/components/schemas/ILGSv1 Person'
+          type: array
+          description: An array of legal persons identified in the document.
+          examples:
+          - - id: per:8
+              name:
+                start: 6943
+                end: 6968
+              type: natural
+              role: defense_counsel
+              parent: per:1
+              children:
+              - per:9
+              - per:10
+              residence: loc:5
+              mentions:
+              - start: 6943
+                end: 6968
+        emails:
+          items:
+            $ref: '#/components/schemas/ILGSv1 Email'
+          type: array
+          description: 'An array of email addresses identified in the document belonging
+            to legal persons.
+
+
+            Email addresses mentioned in the document that are not attributable to
+            legal persons will not be extracted.'
+          examples:
+          - - address: hello@example.com
+              person: per:3
+              mentions:
+              - start: 5142
+                end: 5164
+        websites:
+          items:
+            $ref: '#/components/schemas/ILGSv1 Website'
+          type: array
+          description: 'An array of websites identified in the document belonging
+            to legal persons.
+
+
+            Websites mentioned in the document that are not attributable to legal
+            persons will not be extracted.'
+          examples:
+          - - url: https://www.example.com/
+              person: per:4
+              mentions:
+              - start: 5199
+                end: 5223
+        phone_numbers:
+          items:
+            $ref: '#/components/schemas/ILGSv1 Phone Number'
+          type: array
+          description: 'An array of valid phone numbers identified in the document
+            belonging to legal persons.
+
+
+            Phone numbers mentioned in the document that are not valid, possible,
+            or attributable to legal persons will not be extracted.'
+          examples:
+          - - number: +1 202-555-0143
+              person: per:5
+              mentions:
+              - start: 5173
+                end: 5188
+              - start: 5367
+                end: 5382
+        id_numbers:
+          items:
+            $ref: '#/components/schemas/ILGSv1 ID Number'
+          type: array
+          description: 'An array of identification numbers identified in the document
+            belonging to legal persons.
+
+
+            Identification numbers mentioned in the document that are not attributable
+            to legal persons will not be extracted.'
+          examples:
+          - - number: 999-99-9999
+              person: per:7
+              mentions:
+              - start: 7180
+                end: 7194
+        terms:
+          items:
+            $ref: '#/components/schemas/ILGSv1 Term'
+          type: array
+          description: An array of terms assigned definite meanings within the document.
+          examples:
+          - - id: term:3
+              name:
+                start: 1564
+                end: 1578
+              meaning:
+                start: 1586
+                end: 1603
+              mentions:
+              - start: 3347
+                end: 3357
+        external_documents:
+          items:
+            $ref: '#/components/schemas/ILGSv1 External Document'
+          type: array
+          description: An array of documents identified within the document.
+          examples:
+          - - id: exd:2
+              name:
+                start: 1972
+                end: 2005
+              type: statute
+              jurisdiction: US
+              reception: positive
+              mentions:
+              - start: 937
+                end: 941
+              - start: 1972
+                end: 2005
+              - start: 3713
+                end: 3734
+              pinpoints:
+              - start: 7696
+                end: 7712
+        quotes:
+          items:
+            $ref: '#/components/schemas/ILGSv1 Quote'
+          type: array
+          description: An array of quotations within the document.
+          examples:
+          - - source_segment: null
+              source_document: exd:2
+              source_person: per:10
+              amending: false
+              span:
+                start: 949
+                end: 985
+        dates:
+          items:
+            $ref: '#/components/schemas/ILGSv1 Date'
+          type: array
+          description: 'An array of dates identified in the document belonging to
+            one of the following types: `creation`, `signature`, `effective`, `expiry`,
+            `delivery`, `renewal`, `payment`, `birth`, or `death`.
+
+
+            Only full Gregorian dates (i.e., including a day, month, and year) between
+            the years 1000 and 9999 (inclusive) fitting into one of the supported
+            date types are extractable.'
+          examples:
+          - - value: '2028-01-01'
+              type: signature
+              person: null
+              mentions:
+              - start: 1179
+                end: 1194
+              - start: 8784
+                end: 8799
+        headings:
+          items:
+            $ref: '#/components/schemas/ILGSv1 Span'
+          type: array
+          description: An array of spans within the document's text constituting headings.
+          examples:
+          - - start: 0
+              end: 30
+            - start: 116
+              end: 133
+        junk:
+          items:
+            $ref: '#/components/schemas/ILGSv1 Span'
+          type: array
+          description: An array of spans within the document's text constituting non-operative,
+            non-substantive 'junk' content such as headers, footers, page numbers,
+            and OCR artifacts.
+          examples:
+          - - start: 83
+              end: 114
+        version:
+          type: string
+          const: ilgs@1
+      type: object
+      required:
+      - text
+      - title
+      - subtitle
+      - type
+      - jurisdiction
+      - segments
+      - crossreferences
+      - locations
+      - persons
+      - emails
+      - websites
+      - phone_numbers
+      - id_numbers
+      - terms
+      - external_documents
+      - quotes
+      - dates
+      - headings
+      - junk
+      - version
+      title: ILGSv1 Document
+      description: 'The document enriched into version 1.0.0 of the [Isaacus Legal
+        Document Graph Schema (ILDGS)](https://docs.isaacus.com/ildgs).
+
+
+        All spans in an enriched document graph are indexed into the Unicode code
+        point space of a source document.
+
+
+        The start and end indices of spans are zero-based (i.e., the first Unicode
+        code point in the document is at index 0) and half-open (i.e., the end index
+        is exclusive).
+
+
+        All spans are globally laminar and well-nested similar to XML—it is impossible
+        for any two spans to partially overlap; they can only be disjoint, adjacent,
+        or wholly nested.
+
+
+        Spans of the exact same type (e.g., segments) will never be duplicated.
+
+
+        Spans cannot be empty and will never start or end at whitespace.
+
+
+        When using programming languages other than Python (which uses zero-based,
+        half-open, Unicode code point-spaced string indexing), indices may need to
+        be translated accordingly (for example, JavaScript slices into UTF-16 code
+        units instead of Unicode code points).'
+      examples:
+      - version: ilgs@1
+        text: '[42] The U.S. Attorney General, Mr. McGill, argued at ¶ 21 of the Filing
+          that "§ 206 of Title 29 of the U.S. Code (the "Labor Title") does not apply
+          to the plaintiff, Ms. Moody, given the definition of an "employee" at §203(e)(4)
+          of the Labor Title does not include volunteers, and, regardless, she lives
+          in Austria."'
+        title: null
+        subtitle: null
+        type: other
+        jurisdiction: US-FED
+        segments:
+        - id: seg:0
+          kind: unit
+          type: paragraph
+          category: annotation
+          type_name: null
+          code:
+            start: 0
+            end: 4
+          title: null
+          parent: null
+          children: []
+          level: 0
+          span:
+            start: 0
+            end: 317
+        crossreferences: []
+        locations:
+        - id: loc:0
+          name:
+            start: 308
+            end: 315
+          type: country
+          parent: null
+          children: []
+          mentions:
+          - start: 308
+            end: 315
+        persons:
+        - id: per:0
+          name:
+            start: 32
+            end: 42
+          type: natural
+          role: defense_counsel
+          parent: null
+          children: []
+          residence: null
+          mentions:
+          - start: 32
+            end: 42
+        - id: per:1
+          name:
+            start: 167
+            end: 176
+          type: natural
+          role: plaintiff
+          parent: null
+          children: []
+          residence: loc:0
+          mentions:
+          - start: 167
+            end: 176
+        emails: []
+        websites: []
+        phone_numbers: []
+        id_numbers: []
+        terms:
+        - id: term:0
+          name:
+            start: 120
+            end: 131
+          meaning:
+            start: 88
+            end: 113
+          mentions:
+          - start: 237
+            end: 248
+        external_documents:
+        - id: exd:0
+          name:
+            start: 66
+            end: 72
+          type: other
+          jurisdiction: US-FED
+          reception: neutral
+          mentions:
+          - start: 66
+            end: 72
+          pinpoints:
+          - start: 54
+            end: 58
+        - id: exd:1
+          name:
+            start: 80
+            end: 113
+          type: statute
+          jurisdiction: US-FED
+          reception: neutral
+          mentions:
+          - start: 80
+            end: 113
+          pinpoints:
+          - start: 79
+            end: 84
+          - start: 219
+            end: 229
+        quotes:
+        - source_segment: null
+          source_document: exd:0
+          source_person: per:0
+          amending: false
+          span:
+            start: 79
+            end: 317
+        dates: []
+        headings: []
+        junk: []
+    InternalServerError:
+      properties:
+        type:
+          type: string
+          minLength: 1
+          title: Non-empty string
+          description: A URI reference that identifies the problem type.
+          default: https://docs.isaacus.com/api-reference/errors#500-internal-server-error
+          examples:
+          - https://docs.isaacus.com/api-reference/errors#500-internal-server-error
+        title:
+          type: string
+          minLength: 1
+          title: Non-empty string
+          description: A short, human-readable summary of the problem type.
+          default: Internal server error
+          examples:
+          - Internal server error
+        status:
+          type: integer
+          const: 500
+          description: The HTTP status code generated by the origin server for this
+            occurrence of the problem.
+          default: 500
+          examples:
+          - 500
+        detail:
+          oneOf:
+          - type: string
+            minLength: 1
+            title: Non-empty string
+            description: A string with at least one character.
+            default: An unexpected error occurred while processing the request.
+            examples:
+            - A string.
+          - type: 'null'
+          description: An optional human-readable explanation specific to this occurrence
+            of the problem.
+          default: An unexpected error occurred while processing the request.
+          examples:
+          - An unexpected error occurred while processing the request.
+        instance:
+          oneOf:
+          - type: string
+            minLength: 1
+            title: Non-empty string
+            description: A string with at least one character.
+            examples:
+            - A string.
+          - type: 'null'
+          description: An optional URI reference that identifies the specific occurrence
+            of the problem.
+          examples:
+          - null
+      type: object
+      required: []
+      title: Internal server error
+      description: An RFC 7807 problem detail object.
+      examples:
+      - type: https://docs.isaacus.com/api-reference/errors#500-internal-server-error
+        title: Internal server error
+        status: 500
+        detail: An unexpected error occurred while processing the request.
+        instance: null
+    RequestTooLargeError:
+      properties:
+        type:
+          type: string
+          minLength: 1
+          title: Non-empty string
+          description: A URI reference that identifies the problem type.
+          default: https://docs.isaacus.com/api-reference/errors#413-request-too-large
+          examples:
+          - https://docs.isaacus.com/api-reference/errors#413-request-too-large
+        title:
+          type: string
+          minLength: 1
+          title: Non-empty string
+          description: A short, human-readable summary of the problem type.
+          default: Request too large error
+          examples:
+          - Request too large error
+        status:
+          type: integer
+          const: 413
+          description: The HTTP status code generated by the origin server for this
+            occurrence of the problem.
+          default: 413
+          examples:
+          - 413
+        detail:
+          oneOf:
+          - type: string
+            minLength: 1
+            title: Non-empty string
+            description: A string with at least one character.
+            default: The request is larger than the server is willing or able to process.
+            examples:
+            - A string.
+          - type: 'null'
+          description: An optional human-readable explanation specific to this occurrence
+            of the problem.
+          default: The request is larger than the server is willing or able to process.
+          examples:
+          - The request is larger than the server is willing or able to process.
+        instance:
+          oneOf:
+          - type: string
+            minLength: 1
+            title: Non-empty string
+            description: A string with at least one character.
+            examples:
+            - A string.
+          - type: 'null'
+          description: An optional URI reference that identifies the specific occurrence
+            of the problem.
+          examples:
+          - null
+      type: object
+      required: []
+      title: Request too large error
+      description: An RFC 7807 problem detail object.
+      examples:
+      - type: https://docs.isaacus.com/api-reference/errors#413-request-too-large
+        title: Request too large error
+        status: 413
+        detail: The request is larger than the server is willing or able to process.
+        instance: null
+    RerankingRequest:
+      properties:
+        model:
+          oneOf:
+          - type: string
+            const: kanon-2-reranker
+          - type: string
+            const: kanon-universal-classifier
+          description: The ID of the model to use for reranking, being either a [reranking
+            model](https://docs.isaacus.com/models/introduction#reranking) or [universal
+            classification model](https://docs.isaacus.com/models/introduction#universal-classification).
+          examples:
+          - kanon-2-reranker
+        query:
+          type: string
+          maxLength: 10000000
+          minLength: 1
+          pattern: \S
+          description: 'The query to evaluate the relevance of the texts to.
+
+
+            The query must contain at least one non-whitespace character.
+
+
+            Unlike the texts being reranked, the query cannot be so long that it exceeds
+            the maximum input length of the reranker.'
+          examples:
+          - What are the essential elements required to establish a negligence claim?
+        texts:
+          items:
+            type: string
+          type: array
+          description: 'The texts to rerank.
+
+
+            There must be at least one text.
+
+
+            Each text must contain at least one non-whitespace character.'
+          examples:
+          - - To form a contract, there must be an offer, acceptance, consideration,
+              and mutual intent to be bound.
+            - Criminal cases involve a completely different standard, requiring proof
+              beyond a reasonable doubt.
+            - In a negligence claim, the plaintiff must prove duty, breach, causation,
+              and damages.
+            - Negligence in tort law requires establishing a duty of care that the
+              defendant owed to the plaintiff.
+            - The concept of negligence is central to tort law, with courts assessing
+              whether a breach of duty caused harm.
+        top_n:
+          oneOf:
+          - type: integer
+            minimum: 1.0
+            title: Positive integer
+            description: A whole number greater than or equal to 1.
+            examples:
+            - 1
+          - type: 'null'
+          description: 'The number of highest scoring results to return.
+
+
+            If `null`, which is the default, all results will be returned.'
+          examples:
+          - null
+        is_iql:
+          type: boolean
+          description: 'Whether the query should be interpreted as an [Isaacus Query
+            Language (IQL)](https://docs.isaacus.com/iql) query, which is not the
+            case by default.
+
+
+            If you allow untrusted users to construct their own queries, think carefully
+            before enabling IQL since queries can be crafted to consume an excessively
+            large amount of tokens.'
+          default: false
+          examples:
+          - false
+        scoring_method:
+          type: string
+          enum:
+          - auto
+          - chunk_max
+          - chunk_avg
+          - chunk_min
+          description: 'The method to use for producing an overall relevance score
+            for a text that exceeds the model''s local context window and has, therefore,
+            been split into multiple chunks.
+
+
+            `auto` is the default scoring method and is recommended for most use cases.
+            Currently, it is equivalent to `chunk_max`. In the future, it will automatically
+            select the best method based on the model and inputs.
+
+
+            `chunk_max` uses the highest relevance score of all of a text''s chunks.
+
+
+            `chunk_avg` averages the relevance scores of all of a text''s chunks.
+
+
+            `chunk_min` uses the lowest relevance score of all of a text''s chunks.'
+          default: auto
+          examples:
+          - auto
+        chunking_options:
+          oneOf:
+          - $ref: '#/components/schemas/ChunkingOptions'
+          - type: 'null'
+          description: 'Settings for how texts should be chunked into smaller segments
+            by [semchunk](https://github.com/isaacus-dev/semchunk) before reranking.
+
+
+            If `null`, the texts will not be chunked and will instead be truncated
+            to the maximum input length of the reranker less overhead if found to
+            exceed that limit.
+
+
+            Chunking is enabled by default.'
+          examples:
+          - size: null
+            overlap_ratio: null
+            overlap_tokens: null
+      type: object
+      required:
+      - model
+      - query
+      - texts
+      title: Reranking request
+      description: A request to rerank documents by their relevance to a query with
+        an Isaacus reranker.
+      examples:
+      - model: kanon-2-reranker
+        query: What are the essential elements required to establish a negligence
+          claim?
+        texts:
+        - To form a contract, there must be an offer, acceptance, consideration, and
+          mutual intent to be bound.
+        - Criminal cases involve a completely different standard, requiring proof
+          beyond a reasonable doubt.
+        - In a negligence claim, the plaintiff must prove duty, breach, causation,
+          and damages.
+        - Negligence in tort law requires establishing a duty of care that the defendant
+          owed to the plaintiff.
+        - The concept of negligence is central to tort law, with courts assessing
+          whether a breach of duty caused harm.
+        top_n: null
+        is_iql: false
+        scoring_method: auto
+        chunking_options:
+          size: null
+          overlap_ratio: null
+          overlap_tokens: null
+    RerankingResponse:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/RerankingResult'
+          type: array
+          description: The texts reranked by relevance to the query, in order from
+            highest to lowest relevance score.
+          examples:
+          - - index: 2
+              score: 0.7727372261985272
+            - index: 3
+              score: 0.7332913519466231
+            - index: 4
+              score: 0.32399687407609323
+            - index: 1
+              score: 0.09480246485705024
+            - index: 0
+              score: 0.06929198572432578
+        usage:
+          $ref: '#/components/schemas/RerankingUsage'
+      type: object
+      required:
+      - results
+      - usage
+      title: Reranking response
+      examples:
+      - results:
+        - index: 2
+          score: 0.7727372261985272
+        - index: 3
+          score: 0.7332913519466231
+        - index: 4
+          score: 0.32399687407609323
+        - index: 1
+          score: 0.09480246485705024
+        - index: 0
+          score: 0.06929198572432578
+        usage:
+          input_tokens: 170
+    RerankingResult:
+      properties:
+        index:
+          type: integer
+          minimum: 0.0
+          title: Non-negative integer
+          description: The index of the text in the input array of texts, starting
+            from `0` (and, therefore, ending at the number of texts minus `1`).
+          examples:
+          - 2
+        score:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: Unit interval
+          description: A score between `0` and `1`, inclusive, representing the relevance
+            of the text to the query.
+          examples:
+          - 0.7727372261985272
+      type: object
+      required:
+      - index
+      - score
+      title: Reranking result
+      examples:
+      - index: 2
+        score: 0.7727372261985272
+    RerankingUsage:
+      properties:
+        input_tokens:
+          type: integer
+          minimum: 1.0
+          title: Positive integer
+          description: The number of tokens inputted to the model.
+          examples:
+          - 170
+      type: object
+      required:
+      - input_tokens
+      title: Reranking usage
+      description: Statistics about the usage of resources in the process of reranking
+        the texts.
+      examples:
+      - input_tokens: 170
+    UnauthorizedAPIKeyError:
+      properties:
+        type:
+          type: string
+          minLength: 1
+          title: Non-empty string
+          description: A URI reference that identifies the problem type.
+          default: https://docs.isaacus.com/api-reference/errors#401-not-authenticated
+          examples:
+          - https://docs.isaacus.com/api-reference/errors#401-not-authenticated
+        title:
+          type: string
+          minLength: 1
+          title: Non-empty string
+          description: A short, human-readable summary of the problem type.
+          default: Unauthorized API key error
+          examples:
+          - Unauthorized API key error
+        status:
+          type: integer
+          const: 401
+          description: The HTTP status code generated by the origin server for this
+            occurrence of the problem.
+          default: 401
+          examples:
+          - 401
+        detail:
+          oneOf:
+          - type: string
+            minLength: 1
+            title: Non-empty string
+            description: A string with at least one character.
+            default: The API key you provided does not exist, is expired or revoked,
+              or is not authorized to access this resource.
+            examples:
+            - A string.
+          - type: 'null'
+          description: An optional human-readable explanation specific to this occurrence
+            of the problem.
+          default: The API key you provided does not exist, is expired or revoked,
+            or is not authorized to access this resource.
+          examples:
+          - The API key you provided does not exist, is expired or revoked, or is
+            not authorized to access this resource.
+        instance:
+          oneOf:
+          - type: string
+            minLength: 1
+            title: Non-empty string
+            description: A string with at least one character.
+            examples:
+            - A string.
+          - type: 'null'
+          description: An optional URI reference that identifies the specific occurrence
+            of the problem.
+          examples:
+          - null
+      type: object
+      required: []
+      title: Unauthorized API key error
+      description: An RFC 7807 problem detail object.
+      examples:
+      - type: https://docs.isaacus.com/api-reference/errors#401-not-authenticated
+        title: Unauthorized API key error
+        status: 401
+        detail: The API key you provided does not exist, is expired or revoked, or
+          is not authorized to access this resource.
+        instance: null
+    UniversalClassification:
+      properties:
+        index:
+          type: integer
+          minimum: 0.0
+          title: Non-negative integer
+          description: The index of the text in the input array of texts, starting
+            from `0` (and, therefore, ending at the number of texts minus `1`).
+          examples:
+          - 0
+        score:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: Unit interval
+          description: 'A score of the likelihood that the query expressed about the
+            text is supported by the text.
+
+
+            A score greater than `0.5` indicates that the text supports the query,
+            while a score less than `0.5` indicates that the text does not support
+            the query.'
+          examples:
+          - 0.8825573934438159
+        chunks:
+          oneOf:
+          - items:
+              $ref: '#/components/schemas/UniversalClassificationChunk'
+            type: array
+          - type: 'null'
+          description: 'The text as broken into chunks by [semchunk](https://github.com/isaacus-dev/semchunk),
+            each chunk with its own confidence score, ordered from highest to lowest
+            score.
+
+
+            If no chunking occurred, this will be `null`.'
+          examples:
+          - - index: 0
+              start: 0
+              end: 46
+              score: 0.8825573934438159
+              text: I agree not to tell anyone about the document.
+      type: object
+      required:
+      - index
+      - score
+      - chunks
+      title: Universal classification
+      examples:
+      - index: 0
+        score: 0.8825573934438159
+        chunks:
+        - index: 0
+          start: 0
+          end: 46
+          score: 0.8825573934438159
+          text: I agree not to tell anyone about the document.
+    UniversalClassificationChunk:
+      properties:
+        index:
+          type: integer
+          minimum: 0.0
+          title: Non-negative integer
+          description: The original position of the chunk in the outputted list of
+            chunks before sorting, starting from `0` (and, therefore, ending at the
+            number of chunks minus `1`).
+          examples:
+          - 0
+        start:
+          type: integer
+          minimum: 0.0
+          title: Non-negative integer
+          description: The index of the character in the original text where the chunk
+            starts, beginning from `0`.
+          examples:
+          - 0
+        end:
+          type: integer
+          minimum: 1.0
+          title: Positive integer
+          description: The index of the character immediately after the last character
+            of the chunk in the original text, beginning from `0` (such that, in Python,
+            the chunk is equivalent to `text[start:end]`).
+          examples:
+          - 46
+        score:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: Unit interval
+          description: 'The model''s score of the likelihood that the query expressed
+            about the chunk is supported by the chunk.
+
+
+            A score greater than `0.5` indicates that the chunk supports the query,
+            while a score less than `0.5` indicates that the chunk does not support
+            the query.'
+          examples:
+          - 0.8825573934438159
+        text:
+          type: string
+          minLength: 1
+          pattern: \S
+          description: The text of the chunk.
+          examples:
+          - I agree not to tell anyone about the document.
+      type: object
+      required:
+      - index
+      - start
+      - end
+      - score
+      - text
+      title: Universal classification chunk
+      examples:
+      - index: 0
+        start: 0
+        end: 46
+        score: 0.8825573934438159
+        text: I agree not to tell anyone about the document.
+    UniversalClassificationRequest:
+      properties:
+        model:
+          type: string
+          const: kanon-universal-classifier
+          description: The ID of the [model](https://docs.isaacus.com/models#universal-classification)
+            to use for universal classification.
+          examples:
+          - kanon-universal-classifier
+        query:
+          type: string
+          maxLength: 10000000
+          minLength: 1
+          pattern: \S
+          description: 'The [Isaacus Query Language (IQL)](https://docs.isaacus.com/iql)
+            query or, if IQL is disabled, the statement, to evaluate the texts against.
+
+
+            The query must contain at least one non-whitespace character.
+
+
+            Unlike the texts being classified, the query cannot be so long that it
+            exceeds the maximum input length of the universal classifier.'
+          examples:
+          - This is a confidentiality clause.
+          - '{IS confidentiality clause} AND {IS clause obligating "Supplier"} AND
+            {IS unilateral clause}'
+        texts:
+          items:
+            type: string
+          type: array
+          description: 'The texts to classify.
+
+
+            Each text must contain at least one non-whitespace character.'
+          examples:
+          - - I agree not to tell anyone about the document.
+        is_iql:
+          type: boolean
+          description: Whether the query should be interpreted as an [IQL](https://docs.isaacus.com/iql)
+            query or else as a statement.
+          default: true
+          examples:
+          - true
+        scoring_method:
+          type: string
+          enum:
+          - auto
+          - chunk_max
+          - chunk_avg
+          - chunk_min
+          description: 'The method to use for producing an overall confidence score.
+
+
+            `auto` is the default scoring method and is recommended for most use cases.
+            Currently, it is equivalent to `chunk_max`. In the future, it will automatically
+            select the best method based on the model and inputs.
+
+
+            `chunk_max` uses the highest confidence score of all of the texts'' chunks.
+
+
+            `chunk_avg` averages the confidence scores of all of the texts'' chunks.
+
+
+            `chunk_min` uses the lowest confidence score of all of the texts'' chunks.'
+          default: auto
+          examples:
+          - auto
+        chunking_options:
+          oneOf:
+          - $ref: '#/components/schemas/ChunkingOptions'
+          - type: 'null'
+          description: 'Settings for how the texts should be chunked into smaller
+            segments before classification using [semchunk](https://github.com/isaacus-dev/semchunk).
+
+
+            If `null`, the texts will not be chunked and will instead be truncated
+            to the maximum input length of the model less overhead if found to exceed
+            that limit.
+
+
+            Chunking is enabled by default.'
+          examples:
+          - size: 512
+            overlap_ratio: null
+            overlap_tokens: null
+      type: object
+      required:
+      - model
+      - query
+      - texts
+      title: Universal classification request
+      description: A request to classify the relevance of documents to a query with
+        an Isaacus universal classification model.
+      examples:
+      - model: kanon-universal-classifier
+        query: This is a confidentiality clause.
+        texts:
+        - I agree not to tell anyone about the document.
+    UniversalClassificationResponse:
+      properties:
+        classifications:
+          items:
+            $ref: '#/components/schemas/UniversalClassification'
+          type: array
+          description: The classifications of the texts, by relevance to the query,
+            in order from highest to lowest confidence score.
+          examples:
+          - - index: 0
+              score: 0.8825573934438159
+              chunks:
+              - index: 0
+                start: 0
+                end: 46
+                score: 0.8825573934438159
+                text: I agree not to tell anyone about the document.
+        usage:
+          $ref: '#/components/schemas/UniversalClassificationUsage'
+      type: object
+      required:
+      - classifications
+      - usage
+      title: Universal classification response
+      examples:
+      - classifications:
+        - index: 0
+          score: 0.8825573934438159
+          chunks:
+          - index: 0
+            start: 0
+            end: 46
+            score: 0.8825573934438159
+            text: I agree not to tell anyone about the document.
+        usage:
+          input_tokens: 19
+    UniversalClassificationUsage:
+      properties:
+        input_tokens:
+          type: integer
+          minimum: 1.0
+          title: Positive integer
+          description: The number of tokens inputted to the model.
+          examples:
+          - 19
+      type: object
+      required:
+      - input_tokens
+      title: Universal classification usage
+      description: Statistics about the usage of resources in the process of classifying
+        the text.
+      examples:
+      - input_tokens: 19
+    ValidationError:
+      properties:
+        type:
+          type: string
+          minLength: 1
+          title: Non-empty string
+          description: A URI reference that identifies the problem type.
+          default: https://docs.isaacus.com/api-reference/errors#400-validation-error
+          examples:
+          - https://docs.isaacus.com/api-reference/errors#400-validation-error
+        title:
+          type: string
+          minLength: 1
+          title: Non-empty string
+          description: A short, human-readable summary of the problem type.
+          default: Validation error
+          examples:
+          - Validation error
+        status:
+          type: integer
+          const: 400
+          description: The HTTP status code generated by the origin server for this
+            occurrence of the problem.
+          default: 400
+          examples:
+          - 400
+        detail:
+          oneOf:
+          - type: string
+            minLength: 1
+            title: Non-empty string
+            description: A string with at least one character.
+            default: The request was invalid or could not be processed.
+            examples:
+            - A string.
+          - type: 'null'
+          description: An optional human-readable explanation specific to this occurrence
+            of the problem.
+          default: The request was invalid or could not be processed.
+          examples:
+          - The request was invalid or could not be processed.
+        instance:
+          oneOf:
+          - type: string
+            minLength: 1
+            title: Non-empty string
+            description: A string with at least one character.
+            examples:
+            - A string.
+          - type: 'null'
+          description: An optional URI reference that identifies the specific occurrence
+            of the problem.
+          examples:
+          - null
+      type: object
+      required: []
+      title: Validation error
+      description: An RFC 7807 problem detail object.
+      examples:
+      - type: https://docs.isaacus.com/api-reference/errors#400-validation-error
+        title: Validation error
+        status: 400
+        detail: The request was invalid or could not be processed.
+        instance: null
+  securitySchemes:
+    APIKeyBearerTokenAuth:
+      type: http
+      description: 'An Isaacus-issued API key passed as a bearer token via the `Authorization`
+        header in the format `Authorization: Bearer YOUR_API_KEY`.'
+      scheme: bearer
+      bearerFormat: iuak_v1_APIKEYSECRET_CHECKSUM
+security:
+- APIKeyBearerTokenAuth: []
+tags:
+- name: Enrichments
+  description: Enrich documents with an Isaacus enrichment model.
+- name: Embeddings
+  description: Vectorize content with an Isaacus embedding model.
+- name: Rerankings
+  description: Score and rank documents by their relevance to queries with an Isaacus
+    reranker.
+- name: Extractions
+  description: Extract information from documents with an Isaacus extraction model.
+- name: Classifications
+  description: Classify documents with an Isaacus classification model.
+externalDocs:
+  url: https://docs.isaacus.com/api-reference
+  description: Reference documentation for the Isaacus API.
