@@ -4,6 +4,11 @@ name: Generate SDKs with stlc
 # - pull_request: build every target, push a preview branch per staging repo, sticky-comment diff links.
 # - push to main: build and push staging main directly (Promote then fast-forwards production), then seal tracking files back here.
 # - schedule / dispatch: rebuild main; `stlc build` absorbs out-of-band staging custom code and re-seals, so this doubles as the tracking-file sync (the SDK repos' seal-dispatch fires it eagerly).
+#
+# The schedule is only a backstop: `repository_dispatch: seal-custom-code` already
+# fires as soon as an SDK repo seals custom code, so the cron exists purely to catch
+# a missed dispatch. It ran every 6h until it was found to be the sole source of a
+# no-op seal PR per run — see the churn guard in "Seal tracking files" below.
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -18,7 +23,7 @@ on:
       - '.github/workflows/stlc-generate.yml'
       - '.github/actions/setup-stlc/**'
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: '0 6 * * *'
   workflow_dispatch: {}
   repository_dispatch:
     types: [seal-custom-code]
@@ -220,6 +225,74 @@ jobs:
             echo "Tracking files already in sync — nothing to seal."
             exit 0
           fi
+
+          # `stlc build` writes a fresh empty `seal` commit into each SDK repo on every
+          # run, so `base`/`integrated` get a new SHA even when the generated code is
+          # byte-identical. Sealing that opens a no-op PR per run (and force-pushes the
+          # open one, mailing every watcher). Resolve each SHA to the tree it points at
+          # and skip when no tree actually moved. Anything we cannot resolve is treated
+          # as a real change, so the guard can only ever suppress verified churn.
+          declare -A repo_of
+          while IFS=$'\t' read -r target repo; do
+            repo_of["$target"]="$repo"
+          done < <(yq -r '.targets | to_entries[] | [.key, (.value.staging_repo // .value.production_repo)] | @tsv' "$STAINLESS_WORKSPACE/openapi.stainless.yml")
+
+          tree_of() { gh api "repos/$1/commits/$2" --jq '.commit.tree.sha' 2>/dev/null; }
+
+          substantive=0
+          while IFS= read -r line; do
+            state="${line:0:2}"; path="${line:3}"
+
+            case "$state" in
+              " M" | "M " | "MM") ;;
+              *) echo "$path: $state is not a plain modification — real change."; substantive=1; break ;;
+            esac
+
+            target="$(basename "$(dirname "$path")")"
+            repo="${repo_of[$target]:-}"
+            if [ -z "$repo" ]; then
+              echo "$path: no repo configured for target '$target' — real change."
+              substantive=1; break
+            fi
+
+            old_json="$(git show "HEAD:$path")" || { substantive=1; break; }
+            new_json="$(cat "$path")"
+
+            old_rest="$(printf '%s' "$old_json" | jq -S 'del(.base, .integrated)')" || old_rest=""
+            new_rest="$(printf '%s' "$new_json" | jq -S 'del(.base, .integrated)')" || new_rest=""
+            if [ -z "$old_rest" ] || [ "$old_rest" != "$new_rest" ]; then
+              echo "$path: fields other than base/integrated changed — real change."
+              substantive=1; break
+            fi
+
+            for field in base integrated; do
+              o="$(printf '%s' "$old_json" | jq -r --arg f "$field" '.[$f] // ""')" || o=""
+              n="$(printf '%s' "$new_json" | jq -r --arg f "$field" '.[$f] // ""')" || n=""
+              [ "$o" = "$n" ] && continue
+              if [ -z "$o" ] || [ -z "$n" ]; then
+                echo "$path: $field missing on one side — real change."
+                substantive=1; break 2
+              fi
+              ot="$(tree_of "$repo" "$o")" || ot=""
+              nt="$(tree_of "$repo" "$n")" || nt=""
+              if [ -z "$ot" ] || [ -z "$nt" ]; then
+                echo "$path: cannot resolve $field ($o -> $n) in $repo — real change."
+                substantive=1; break 2
+              fi
+              if [ "$ot" != "$nt" ]; then
+                echo "$path: $field tree moved ($ot -> $nt) — real change."
+                substantive=1; break 2
+              fi
+              echo "$path: $field $o -> $n, but tree $ot is unchanged — SHA churn."
+            done
+          done < <(git status --porcelain -- "$STAINLESS_WORKSPACE/custom-code")
+
+          if [ "$substantive" -eq 0 ]; then
+            echo "Every tracking-file change is empty-seal SHA churn — discarding, no PR."
+            git checkout HEAD -- "$STAINLESS_WORKSPACE/custom-code"
+            exit 0
+          fi
+
           branch="stlc/seal-tracking"
           git checkout -B "$branch"
           git add "$STAINLESS_WORKSPACE/custom-code"
