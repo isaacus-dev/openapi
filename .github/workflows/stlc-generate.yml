@@ -1,14 +1,20 @@
 name: Generate SDKs with stlc
 
-# One workflow, three modes:
+# One workflow, two modes:
 # - pull_request: build every target, push a preview branch per staging repo, sticky-comment diff links.
-# - push to main: build and push staging main directly (Promote then fast-forwards production), then seal tracking files back here.
-# - schedule / dispatch: rebuild main; `stlc build` absorbs out-of-band staging custom code and re-seals, so this doubles as the tracking-file sync (the SDK repos' seal-dispatch fires it eagerly).
+# - push to main (or manual dispatch): back-sync release commits from production into staging,
+#   build and push staging main directly (Promote then fast-forwards production), then seal
+#   tracking files back here.
 #
-# The schedule is only a backstop: `repository_dispatch: seal-custom-code` already
-# fires as soon as an SDK repo seals custom code, so the cron exists purely to catch
-# a missed dispatch. It ran every 6h until it was found to be the sole source of a
-# no-op seal PR per run — see the churn guard in "Seal tracking files" below.
+# There is deliberately no cron here, and nothing runs unless you push. The schedule this
+# workflow used to carry was not the backstop its comment claimed: the `repository_dispatch`
+# chain it was meant to back up never fired even once, because the PATs those dispatch jobs
+# needed (CONFIG_DISPATCH_TOKEN, STAGING_DISPATCH_TOKEN) were never created, so both jobs hit
+# their "not configured" skip on every run. The cron was doing 100% of the sync work — and
+# was the sole source of the no-op seal PR churn. Rather than reinstate that cross-repo
+# chain, the back-sync it depended on now runs inline below, with the credentials this
+# workflow already has. If you are tempted to add a schedule back, add the missing sync
+# to the push path instead.
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -22,13 +28,9 @@ on:
       - 'stainless/**'
       - '.github/workflows/stlc-generate.yml'
       - '.github/actions/setup-stlc/**'
-  schedule:
-    - cron: '0 6 * * *'
   workflow_dispatch: {}
-  repository_dispatch:
-    types: [seal-custom-code]
 
-run-name: ${{ (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch') && 'Sync custom-code tracking' || '' }}
+run-name: ${{ github.event_name == 'workflow_dispatch' && 'Manual rebuild and tracking sync' || '' }}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -120,7 +122,7 @@ jobs:
             echo "MSG_EOF"
           } >> "$GITHUB_OUTPUT"
 
-      - name: Hold codegen while production is ahead (release not back-synced)
+      - name: Back-sync production into staging
         if: github.event_name != 'pull_request'
         working-directory: ${{ env.STAINLESS_WORKSPACE }}
         env:
@@ -129,9 +131,14 @@ jobs:
         run: |
           set -euo pipefail
 
+          # Release commits (version bumps, changelogs) land on the production repos, so a
+          # staging trunk trails production after every release and codegen would otherwise
+          # rebuild on a stale base. Fast-forward staging from production right here, so a
+          # push to this repo is the only event the pipeline ever needs. This replaces the
+          # cross-repo back-sync workflow that used to poll every 30 minutes.
           ls_heads() { git -c credential.helper= ls-remote --heads "$1" main; }
 
-          held=""
+          diverged=""
           while IFS=$'\t' read -r target staging prod; do
             { [ -z "$prod" ] || [ "$prod" = "null" ] || [ "$staging" = "$prod" ]; } && continue
 
@@ -139,7 +146,7 @@ jobs:
             if ! prod_heads=$(ls_heads "$prod_url"); then
               prod_url="https://x-access-token:${GH_TOKEN}@github.com/${prod}.git"
               if ! prod_heads=$(ls_heads "$prod_url"); then
-                echo "::warning title=Codegen hold skipped for ${target}::cannot verify production sync: ${prod} is unreachable with the configured credential. The hold is skipped for this target; grant the token read access to the production repo to enable it."
+                echo "::warning title=Back-sync skipped for ${target}::production repo ${prod} is unreachable with the configured credential. The build proceeds on staging as-is; grant the token read access to ${prod} to enable the back-sync."
                 continue
               fi
             fi
@@ -148,7 +155,7 @@ jobs:
 
             staging_url="https://x-access-token:${GH_TOKEN}@github.com/${staging}.git"
             if ! staging_heads=$(ls_heads "$staging_url"); then
-              echo "::warning title=Codegen hold skipped for ${target}::cannot verify production sync: staging repo ${staging} is unreachable. The hold is skipped for this target; if this is not transient, the build step will fail loudly on its own."
+              echo "::warning title=Back-sync skipped for ${target}::staging repo ${staging} is unreachable. If this is not transient, the build step will fail loudly on its own."
               continue
             fi
 
@@ -157,16 +164,25 @@ jobs:
             d=$(mktemp -d); git -C "$d" init -q
             git -C "$d" -c credential.helper= fetch -q "$staging_url" main:refs/remotes/staging/main
             git -C "$d" -c credential.helper= fetch -q "$prod_url" main:refs/remotes/prod/main
-            if ! git -C "$d" merge-base --is-ancestor prod/main staging/main; then
-              held="$held $target"
+
+            if git -C "$d" merge-base --is-ancestor prod/main staging/main; then
+              echo "${target}: staging already contains production — nothing to back-sync."
+            elif git -C "$d" merge-base --is-ancestor staging/main prod/main; then
+              git -C "$d" -c credential.helper= push -q "$staging_url" prod/main:refs/heads/main
+              echo "${target}: fast-forwarded ${staging} main to ${prod} main."
+            else
+              # Neither is an ancestor of the other, so something was committed to production
+              # outside the promote path. Fast-forwarding would silently drop it — stop instead.
+              diverged="$diverged $target"
             fi
             rm -rf "$d"
           done < <(yq -r '.targets | to_entries[] | [.key, (.value.staging_repo // .value.production_repo), (.value.production_repo // .value.staging_repo)] | @tsv' openapi.stainless.yml)
-          if [ -n "$held" ]; then
-            echo "::error title=Codegen held::production is ahead of the staging trunk (a release isn't back-synced yet) for:$held. Wait for the back-sync, then re-run."
+
+          if [ -n "$diverged" ]; then
+            echo "::error title=Back-sync blocked::staging and production have diverged for:$diverged. Production carries commits that are not on the staging trunk, so it cannot be fast-forwarded. Reconcile by hand, then re-run."
             exit 1
           fi
-          echo "No target has production verified ahead of staging — proceeding to build."
+          echo "Staging trunks are level with production — proceeding to build."
 
       - name: Generate SDKs and push
         env:
@@ -293,22 +309,42 @@ jobs:
             exit 0
           fi
 
-          branch="stlc/seal-tracking"
-          git checkout -B "$branch"
-          git add "$STAINLESS_WORKSPACE/custom-code"
-          git commit -m "chore(stlc): seal custom-code tracking files"
-          git push --force "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git" "$branch"
-          open_pr=$(gh pr list --head "$branch" --state open --json number --jq '.[0].number // empty')
-          if [ -z "$open_pr" ]; then
-            gh pr create --base main --head "$branch" \
-              --title "chore(stlc): seal custom-code tracking files" \
-              --body "Automated by the stlc generate workflow: \`stlc build\` re-sealed custom code (after a spec change on \`main\`, or after absorbing custom code that landed on a staging repo out of band), updating the tracking files under \`stainless/custom-code/\`. Merging brings the config repo in sync with the SDK repos. Safe to merge — tracking-files-only commits are skipped by this workflow, so it won't trigger another build."
-          fi
-          # Deliberately not auto-merged. With the churn guard above, a seal PR only
-          # appears when custom code genuinely moved, which is worth a human look.
-          # Surface it loudly instead: stale tracking files block later builds.
-          pr_num="${open_pr:-$(gh pr list --head "$branch" --state open --json number --jq '.[0].number // empty')}"
-          echo "::warning title=Seal PR awaiting review::Custom code genuinely changed — review and merge ${REPO}#${pr_num:-?}. Stale tracking files block later builds until they are synced."
+          # Committed straight to main rather than raised as a PR. A seal is bookkeeping —
+          # it records the SHAs of custom code that already exists in the SDK repos, so
+          # there is no decision in it to review, and an unmerged seal PR blocks later
+          # builds. The `guard` job skips regeneration for tracking-files-only pushes, so
+          # this cannot loop. The churn guard above still runs first, so SHA-only churn is
+          # discarded rather than committed.
+          target_branch="${GITHUB_REF_NAME}"
+          push_url="https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git"
+
+          staged="$(mktemp -d)"
+          cp -a "$STAINLESS_WORKSPACE/custom-code/." "$staged/"
+
+          for attempt in 1 2 3; do
+            # Re-anchor on the current tip each time: main may have moved while we built.
+            git fetch -q --depth=1 "$push_url" "$target_branch"
+            git checkout -q -B stlc-seal FETCH_HEAD
+            rm -rf "${STAINLESS_WORKSPACE:?}/custom-code"
+            mkdir -p "$STAINLESS_WORKSPACE/custom-code"
+            cp -a "$staged/." "$STAINLESS_WORKSPACE/custom-code/"
+            git add -A "$STAINLESS_WORKSPACE/custom-code"
+
+            if git diff --cached --quiet; then
+              echo "Tracking files already sealed on ${target_branch} — nothing to push."
+              exit 0
+            fi
+
+            git commit -q -m "chore(stlc): seal custom-code tracking files"
+            if git push -q "$push_url" "HEAD:refs/heads/${target_branch}"; then
+              echo "Sealed custom-code tracking files onto ${target_branch}."
+              exit 0
+            fi
+            echo "Push rejected (${target_branch} moved) — retrying (attempt ${attempt}/3)."
+          done
+
+          echo "::error title=Seal failed::could not push tracking files to ${target_branch} after 3 attempts. Stale tracking files block later builds — reseal by re-running this workflow."
+          exit 1
 
       - name: Alert on failure
         if: failure()
